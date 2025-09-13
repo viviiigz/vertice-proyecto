@@ -47,12 +47,11 @@ section {
 
 /* ---- Navbar ---- */
 header {
-    background-color: #4cd3091c; /*para las trasnsparencias en verde*/
+    background-color: #b0aeae83;
     padding: 20px 30px;
 }
 
 .navbar {
-    background-color: #ffffff;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -187,7 +186,7 @@ header {
 
 /* ---- Hero Section ---- */
 .hero-section {
-    background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('../imgs/img-landingPage.jpeg') no-repeat center center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.449), rgba(0,0,0,0.8)), url('../imgs/paraLanding.jpg') no-repeat center center/cover;
     color: #fff;
     padding: 150px 20px;
 }
@@ -237,6 +236,30 @@ header {
     gap: 20px;
     flex-wrap: wrap;
     justify-content: flex-start; /* Alinea los botones a la izquierda */
+}
+ /* hero section2 */
+.hero-section-2 {
+    background: linear-gradient(rgba(0, 0, 0, 0.449), rgba(0,0,0,0.8)), url('../../assets/imgs/comidaSinFondo.png') no-repeat center center/cover;
+    color: #fff;
+    padding: 150px 20px;
+    text-align: center;
+}
+.hero-section-2 .headline {
+    font-size: 3rem; /* Título grande */
+    margin-bottom: 20px;
+    line-height: 1.2;
+    font-weight: 600;
+}
+
+.hero-section-2 .sub-headline {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #a0a0a0; 
+    max-width: 800px;
+    margin: 0 auto 30px;
+}
+.hero-section-2 .hero-cta-buttons {
+    justify-content: center; /* Centra los botones */
 }
 
 
