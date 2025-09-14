@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import express from 'express';
 import dotenv from 'dotenv/config';
 import cors from 'cors';
@@ -21,3 +22,6 @@ sequelize.sync()
   .catch(err => {
     console.error('Error de conexión a la base de datos:', err);
   });
+=======
+//hola, es para no tener problemas como la otra vez
+>>>>>>> 57e0f4f772eb33af4de24d2dcd0dab547c269aeb
