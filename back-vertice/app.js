@@ -3,6 +3,7 @@ import dotenv from 'dotenv/config';
 import cors from 'cors';
 import sequelize from './src/config/database.js';
 import cookieParser from 'cookie-parser';
+import routes from './src/routes/index.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,6 +11,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
+//rutas de la API
+app.use('/api', routes);  
 
 sequelize.sync()
   .then(() => {

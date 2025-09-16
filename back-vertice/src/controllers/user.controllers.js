@@ -1,34 +1,45 @@
-import { UserModel, ProfileModel } from "../models/index.js";
+// controllers/user.controllers.js
+import UserModel from "../models/user.models.js";
+import bcrypt from "bcryptjs";
 
-export const getUsers = async (req, res) => {
-  try {
-    const users = await UserModel.findAll({
-      include: [{ model: ProfileModel, as: "profile" }]
-    });
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: "Error obteniendo usuarios" });
-  }
-};
+// Registrar usuario
+export const registerUser = async (req, res) => {
+    try {
+        const { username, email, password, role } = req.body;
 
-export const getUserById = async (req, res) => {
-  try {
-    const user = await UserModel.findByPk(req.params.id, {
-      include: [{ model: ProfileModel, as: "profile" }]
-    });
-    if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
-    res.json(user);
-  } catch (err) {
-    res.status(500).json({ error: "Error obteniendo usuario" });
-  }
-};
+        // Verificar si el email ya existe
+        const existingUser = await UserModel.findOne({ where: { email } });
+        if (existingUser) {
+            return res.status(400).json({ error: "El email ya está registrado" });
+        }
 
-export const deleteUser = async (req, res) => {
-  try {
-    const deleted = await UserModel.destroy({ where: { id: req.params.id } });
-    if (!deleted) return res.status(404).json({ error: "Usuario no encontrado" });
-    res.json({ msg: "Usuario eliminado" });
-  } catch (err) {
-    res.status(500).json({ error: "Error eliminando usuario" });
-  }
+        // Hashear la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Crear el usuario
+        const newUser = await UserModel.create({
+            username,
+            email,
+            password: hashedPassword,
+            role
+        });
+
+        // Devolver respuesta sin la contraseña
+        const userResponse = {
+            id: newUser.id,
+            username: newUser.username,
+            email: newUser.email,
+            role: newUser.role,
+            fecha_registro: newUser.fecha_registro
+        };
+
+        res.status(201).json({
+            message: "Usuario registrado exitosamente",
+            user: userResponse
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error registrando usuario" });
+    }
 };
