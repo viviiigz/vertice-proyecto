@@ -28,7 +28,7 @@
                 <p class="subtitle">¡Únete a Vértice!</p>
                 <h2 class="title">Crea una cuenta</h2>
             </div>
-            <!-- Formulario con id para JS -->
+
             <form id="registerForm">
                 <div class="input-group">
                     <input type="text" id="username" name="username" placeholder="Nombre completo" required>
@@ -52,15 +52,12 @@
                     </select>
                     <small class="error-message" id="roleError"></small>
                 </div>
-                <div id="successMessage" class="success-message"></div>
 
-                <div id="generalError" style="color:red; margin-bottom: 10px;"></div>
-
+                <!-- Contenedor para errores -->
+                <div id="messagesBox" style="color:red; margin-bottom: 10px;"></div>
 
                 <button type="submit" class="btn-form btn-primary-form">Registrarse</button>
-
             </form>
-
         </div>
     </main>
 
@@ -68,15 +65,15 @@
         document.getElementById("registerForm").addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const generalErrorDiv = document.getElementById("generalError");
-            generalErrorDiv.innerHTML = ""; // limpiar errores previos
-
             const data = {
                 username: document.getElementById("username").value,
                 email: document.getElementById("email").value,
                 password: document.getElementById("password").value,
                 role: document.getElementById("role").value
             };
+
+            const messagesBox = document.getElementById("messagesBox");
+            messagesBox.innerHTML = ""; // Limpiar mensajes anteriores
 
             try {
                 const res = await fetch("http://localhost:3000/api/user/register", {
@@ -88,26 +85,26 @@
                 const result = await res.json();
 
                 if (res.ok) {
-                    alert("Registro exitoso!");
+                    // Registro exitoso → redirige al login automáticamente
                     window.location.href = "login.html";
                 } else {
-                    if (Array.isArray(result.errors)) {
-                        // Mostrar cada mensaje en rojo
-                        const mensajes = result.errors.map(err => err.msg);
-                        generalErrorDiv.innerHTML = mensajes.map(m => `<p>${m}</p>`).join("");
-                    } else {
-                        generalErrorDiv.innerHTML = `<p>${result.error || "Error desconocido"}</p>`;
-                    }
+                    // Mostrar errores en rojo
+                    const errores = Array.isArray(result.errors) ? result.errors : [{ msg: result.error || "Error desconocido" }];
+                    errores.forEach(err => {
+                        const p = document.createElement("p");
+                        p.textContent = err.msg || err;
+                        messagesBox.appendChild(p);
+                    });
                 }
 
             } catch (err) {
+                const p = document.createElement("p");
+                p.textContent = "Error conectando con el servidor";
+                messagesBox.appendChild(p);
                 console.error(err);
-                generalErrorDiv.innerHTML = "<p>Error conectando con el servidor</p>";
             }
         });
     </script>
-
-
 
 </body>
 

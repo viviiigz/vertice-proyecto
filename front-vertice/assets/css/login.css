@@ -423,3 +423,10 @@ section {
         flex-direction: column;
     }
 }
+
+/*mensajes de errrorrr*/
+#errorsBox p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
