@@ -4,7 +4,6 @@ import sequelize from '../config/database.js';
 const UserModel = sequelize.define('User', {
   username: {
     type: DataTypes.STRING(20),
-    unique: true,
     allowNull: false
   },
   email: {
