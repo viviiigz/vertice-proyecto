@@ -28,41 +28,87 @@
                 <p class="subtitle">¡Únete a Vértice!</p>
                 <h2 class="title">Crea una cuenta</h2>
             </div>
-            <form action="#">
+            <!-- Formulario con id para JS -->
+            <form id="registerForm">
                 <div class="input-group">
-                    <input type="text" id="fullname" name="fullname" placeholder="Nombre completo" required>
-                </div>
-                <div class="input-group">
-                    <input type="date" id="dob" name="dob" placeholder="Fecha de nacimiento" required>
-                </div>
-                <div class="input-group">
-                    <input type="text" id="username" name="username" placeholder="Nombre de usuario" required>
+                    <input type="text" id="username" name="username" placeholder="Nombre completo" required>
+                    <small class="error-message" id="usernameError"></small>
                 </div>
                 <div class="input-group">
                     <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
+                    <small class="error-message" id="emailError"></small>
                 </div>
                 <div class="input-group">
                     <input type="password" id="password" name="password" placeholder="Contraseña" required>
+                    <small class="error-message" id="passwordError"></small>
                 </div>
-
                 <div class="input-group">
                     <label for="role" class="select-label">¿Qué tipo de usuario eres?</label>
                     <select id="role" name="role" required>
                         <option value="">Selecciona tu perfil</option>
                         <option value="consumidor">Consumidor</option>
-                        <option value="comerciante">Comerciante</option>
-                        <option value="banco_alimentos">Banco de Alimentos</option>
+                        <option value="comercio">Comerciante</option>
+                        <option value="banco">Banco de Alimentos</option>
                     </select>
+                    <small class="error-message" id="roleError"></small>
                 </div>
+                <div id="successMessage" class="success-message"></div>
+
+                <div id="generalError" style="color:red; margin-bottom: 10px;"></div>
+
 
                 <button type="submit" class="btn-form btn-primary-form">Registrarse</button>
 
-                <div class="signup-link">
-                    ¿Ya tienes una cuenta? <a href="login.html">Iniciar sesión</a>
-                </div>
             </form>
+
         </div>
     </main>
-    
+
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const generalErrorDiv = document.getElementById("generalError");
+            generalErrorDiv.innerHTML = ""; // limpiar errores previos
+
+            const data = {
+                username: document.getElementById("username").value,
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value,
+                role: document.getElementById("role").value
+            };
+
+            try {
+                const res = await fetch("http://localhost:3000/api/user/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+
+                if (res.ok) {
+                    alert("Registro exitoso!");
+                    window.location.href = "login.html";
+                } else {
+                    if (Array.isArray(result.errors)) {
+                        // Mostrar cada mensaje en rojo
+                        const mensajes = result.errors.map(err => err.msg);
+                        generalErrorDiv.innerHTML = mensajes.map(m => `<p>${m}</p>`).join("");
+                    } else {
+                        generalErrorDiv.innerHTML = `<p>${result.error || "Error desconocido"}</p>`;
+                    }
+                }
+
+            } catch (err) {
+                console.error(err);
+                generalErrorDiv.innerHTML = "<p>Error conectando con el servidor</p>";
+            }
+        });
+    </script>
+
+
+
 </body>
+
 </html>

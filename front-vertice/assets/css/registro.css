@@ -460,3 +460,17 @@ section {
     border-color: #4cd309;
     box-shadow: 0 0 0 3px rgba(76, 211, 9, 0.2);
 }
+
+/*mensajes de error**/
+.error-message {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 2px;
+  display: block;
+}
+
+.success-message {
+  color: green;
+  margin-top: 10px;
+  font-weight: bold;
+}
