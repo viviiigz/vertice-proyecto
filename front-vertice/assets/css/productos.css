@@ -1,0 +1,396 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Jersey+10&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Press+Start+2P&family=Quicksand:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sulphur+Point:wght@300;400;700&display=swap');
+
+
+/* ---- Estilos generales para el cuerpo de la página ---- */
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f7f5e8;
+    color: #333;
+}
+
+/* ---- Contenedor principal para la barra lateral y el contenido ---- */
+.page-container {
+    display: flex;
+    min-height: 100vh; /* Asegura que ocupe al menos toda la altura de la pantalla */
+}
+
+/* ---- Sidebar Navbar ---- */
+.sidebar {
+    width: 280px; /* Ancho fijo de la barra lateral */
+    background-color: #ffffff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1); 
+    position: sticky; /* Se queda fija al hacer scroll */
+    top: 0;
+    left: 0;
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+    box-sizing: border-box; /* Incluye padding en el ancho */
+}
+
+.sidebar-header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee; /* Línea separadora */
+}
+
+.sidebar-header .logo img {
+    height: 50px;
+    width: auto;
+    margin-bottom: 15px;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 30px 0;
+    flex-grow: 1; /* Permite que la lista ocupe el espacio disponible */
+}
+
+.nav-links li a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    color: #555;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-links li a i {
+    font-size: 1.1rem;
+    color: #888;
+    transition: color 0.2s ease;
+}
+
+.nav-links li a:hover {
+    background-color: #e6f7e3;
+    color: #4cd309;
+}
+
+.nav-links li a:hover i {
+    color: #4cd309;
+}
+
+.nav-links li a.active {
+    background-color: #4cd309;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.nav-links li a.active i {
+    color: #ffffff;
+}
+
+.sidebar-footer {
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+/* ---- Contenido principal de la página ---- */
+.main-content {
+    flex-grow: 1; /* Ocupa el espacio restante */
+    padding: 30px;
+}
+
+.main-header {
+    display: flex;
+    justify-content: flex-start; /* Esto alinea los elementos a la izquierda */
+    align-items: center;
+    padding-bottom: 20px;
+    gap: 30px; /* Añade un espacio entre el título y el buscador */
+}
+
+.page-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4cd309;
+}
+
+.search-input {
+    width: 100%; /* Ahora el input ocupa todo el espacio del contenedor */
+    max-width: 500px; /* O el tamaño que prefieras para que no sea demasiado largo */
+    padding: 12px 20px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 1rem;
+    outline: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.search-filter-container {
+    flex-grow: 1; /* Esto hace que el contenedor se expanda */
+}
+
+/* ---- Estilo de los nuevos botones de 'Iniciar Sesión' y 'Regístrate' ---- */
+.sidebar-footer .nav-links {
+    margin: 0;
+}
+
+.cta-link {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centra el texto en el botón */
+    gap: 15px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cta-link:hover {
+    background-color: #e6f7e3;
+    color: #4cd309;
+}
+
+.cta-link.register {
+    background-color: #4cd309;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.cta-link.register:hover {
+    background-color: #38a508;
+    color: #ffffff;
+}
+
+/* ---- Cuadrícula de productos ---- */
+.products-grid {
+    display: grid;
+    /* Ajusta el minmax para que las tarjetas ocupen más espacio y se distribuyan */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px; /* Aumenta el espacio entre las tarjetas */
+    margin-top: 20px;
+}
+
+/* ---- Estilo de la tarjeta de producto ---- */
+.product-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Esto empuja el botón al final */
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+}
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+.product-image-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #e53935;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 5px 8px;
+    border-radius: 5px;
+}
+.product-info {
+    padding: 15px;
+    text-align: left;
+}
+.product-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+    color: #333;
+}
+.store-name {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+.price-container {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+.original-price {
+    font-size: 0.9rem;
+    color: #aaa;
+    text-decoration: line-through;
+}
+.current-price {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #4cd309;
+}
+/* ---- Estilo del botón de "Más Información" ---- */
+.more-info-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px; /* Tamaño del botón más pequeño */
+    background-color: #4cd309;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0 0 8px 8px; /* Bordes redondeados solo abajo */
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+.more-info-btn:hover {
+    background-color: #38a508;
+}
+
+/* ---- Footer ---- */
+.main-footer {
+    padding: 32px 0 16px 0;
+    font-family: 'Quicksand', sans-serif;
+    background-color:#f7f5e8; /* Color de fondo similar al de la imagen */
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Distribuye el espacio entre los elementos */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+/* 1. Sección del logo: Izquierda */
+.footer-logo-section {
+    display: flex; 
+    align-items: center;
+    gap: 12px; /* Espacio entre el logo y el texto de copyright */
+}
+
+.footer-logo-section img {
+    height: 40px; /* Tamaño del logo */
+    width: auto;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.footer-logo-section p {
+    font-size: 1rem;
+    color: #888; /* Color de texto similar al de la imagen */
+    margin: 0; /* Elimina márgenes por defecto del párrafo */
+}
+
+.footer-links-section {
+    flex-grow: 1; /* Permite que esta sección ocupe el espacio disponible en el centro */
+    text-align: right; /* Alinea el contenido de esta sección a la derecha */
+}
+
+.footer-links-section ul {
+    display: flex;
+    justify-content: flex-end; /* Alinea los ítems de la lista a la derecha */
+    gap: 18px; /* Espacio entre los links */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-links-section a {
+    color: #888;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links-section a:hover {
+    color: #4cd309; /* Color de hover */
+    text-decoration: underline;
+}
+
+
+.footer-socials-section .social-icons {
+    display: flex;
+    gap: 18px;
+    /* Para que los íconos se mantengan alineados si hay un "download free" */
+    align-items: center; 
+}
+
+.social-icons a {
+    color: #888;
+    font-size: 1.5rem;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.social-icons a:hover {
+    color: #4cd309;
+    transform: scale(1.15);
+}
+
+/* Si tuvieras un botón de descarga en el HTML, podrías usar algo así */
+.download-button {
+    background-color: #000;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+    margin-left: 20px; /* Para separarlo de los links */
+}
+
+.download-button:hover {
+    background-color: #333;
+}
+
+
+/* Footer inferior (si aplica, según tu HTML original) */
+.footer-bottom {
+    text-align: center;
+    color: #888;
+    font-size: 0.95rem;
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+        text-align: center;
+    }
+    .footer-links-section ul {
+        flex-direction: column;
+        gap: 8px;
+        justify-content: center; /* Centrar en columna */
+    }
+    .footer-logo-section {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .footer-socials-section .social-icons {
+        justify-content: center; /* Centrar los iconos en columna */
+    }
+}

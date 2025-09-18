@@ -1,0 +1,227 @@
+/* Sección Cómo Funciona: Consumidor */
+
+body {
+    background-color: #ffffff;
+    /* Puedes añadir aquí otras reglas de estilo que quieras que se apliquen a todas las páginas */
+}
+.how-it-works-consumer-section {
+  background: linear-gradient(135deg, #ffffff 70%, #f7f5e8 100%); /* degradado suave */
+  padding: 80px 0;
+  position: relative;
+}
+
+.container-split {
+  display: flex;
+  align-items: center; /* centra verticalmente texto e imagen */
+  justify-content: space-between;
+  gap: 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.container-split .text-content {
+  flex: 1;
+  max-width: 55%;
+  background-color: #fff; /* caja blanca para texto */
+  padding: 30px;
+  border-left: 5px solid #4cd309; /* detalle verde */
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.section-title-vertice {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #4cd309;
+  margin-bottom: 20px;
+}
+
+.text-content p {
+  font-size: 1.1rem;
+  color: #333;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.container-split .image-content {
+  flex: 1;
+  max-width: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-split .image-content img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px; /* bordes más suaves */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1); /* sombra más profunda */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container-split .image-content img:hover {
+  transform: scale(1.03); /* efecto sutil al pasar el mouse */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container-split {
+    flex-direction: column;
+    text-align: center;
+  }
+  .container-split .text-content {
+    max-width: 100%;
+    border-left: none;
+    border-top: 5px solid #4cd309; /* detalle arriba en mobile */
+  }
+  .container-split .image-content {
+    max-width: 100%;
+  }
+}
+
+
+/* ---- sección de "Cómo Funciona Vértice"  ---- */
+.how-it-works-vertice-section {
+    background-color: #4cd309; 
+    padding: 80px 0;
+    color: #fff;
+    text-align: center;
+}
+
+.how-it-works-vertice-section .section-title-white {
+    margin-bottom: 50px;
+}
+
+.steps-container {
+    display: flex;
+    flex-wrap: nowrap; /* Evita que los elementos se envuelvan a la siguiente línea */
+    justify-content: center; /* Centra los elementos */
+    gap: 30px; /* Mantiene la separación entre los elementos */
+}
+
+.step-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    flex-basis: 30%; /* Da a cada tarjeta un ancho base del 30% del contenedor */
+    flex-grow: 0; /* Evita que las tarjetas crezcan para no desbordar */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.step-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.step-card i {
+    font-size: 3rem;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    padding: 20px;
+}
+
+.step-card p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* ---- Estilos para la sección de Donaciones ---- */
+.donations-section {
+    background-color: #fff; /* Fondo blanco */
+    padding: 80px 0;
+    text-align: center;
+    color: #333; /* Color de texto para el fondo blanco */
+}
+.donations-section p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #333; /* fuerza el color oscuro */
+}
+
+
+.donations-section .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.donations-section .section-title {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #4cd309; 
+    margin-bottom: 20px;
+}
+
+.donations-section p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* Botón de la sección donaciones */
+.btn-donations {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 12px 30px;
+  background-color: #4cd309; 
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-donations:hover {
+  background-color: #3aa507; 
+  transform: translateY(-3px);
+}
+
+/* ---- Estilos para la sección de Preguntas Frecuentes ---- */
+
+.faq-section {
+  background-color: #f7f5e8;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.faq-title {
+  color: #4cd309;
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.faq-item {
+  border: 2px solid #4cd309;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.faq-question {
+  padding: 15px 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4cd309;/* Pregunta en negro */
+  background-color: #fff;
+}
+
+.faq-answer {
+  padding: 15px 20px;
+  font-size: 1rem;
+  color: #333; /* Respuesta en gris oscuro */
+  background-color: #fff;
+  border-top: 1px solid #4cd309;
+}
