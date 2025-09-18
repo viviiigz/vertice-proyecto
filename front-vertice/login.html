@@ -98,6 +98,11 @@
                 const result = await res.json();
 
                 if (res.ok) {
+                    // Guardar token para futuras solicitudes autenticadas
+                    if (result.token) {
+                        localStorage.setItem("token", result.token);
+                    }
+
                     // Login exitoso → redirige según rol
                     switch (result.user.role) {
                         case "comercio":
@@ -135,6 +140,7 @@
             }
         });
     </script>
+
 </body>
 
 </html>
