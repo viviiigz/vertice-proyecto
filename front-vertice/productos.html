@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+    <!-- header -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vértice</title>
+
+    <link rel="stylesheet" href="./assets/css/productos.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sulphur+Point:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="./assets/imgs/v-vertice.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="page-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="vertice.html" class="logo">
+                    <img src="./assets/imgs/vertice-logo-largo (1).png" alt="Vértice Logo">
+                </a>
+            </div>
+
+            <!-- navbar -->
+            <ul class="nav-links">
+                <li><a href="#buscador" class="active"><i class="fas fa-search"></i> Explorar Productos</a></li>
+                <li><a href="consumidorcomofunciona.html"><i class="fas fa-info-circle"></i> Cómo Funciona</a></li>
+                <li><a href="#"><i class="fas fa-hands-helping"></i> Donaciones</a></li>
+                <li><a href="#"><i class="fas fa-users"></i> Nosotros</a></li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <ul class="nav-links">
+                    <li><a href="login.html" class="cta-link">Iniciar Sesión</a></li>
+                    <li><a href="registro.html" class="cta-link register">Regístrate</a></li>
+                </ul>
+            </div>
+        </nav>
+        <!-- productos section -->
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1 class="page-title">Productos disponibles</h1>
+                <div class="search-filter-container">
+                    <input type="text" placeholder="Buscar productos..." class="search-input" id="buscador">
+                </div>
+            </header>
+            
+            <section class="products-grid">
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="assets/imgs/pollo.jpg" alt="Pollo fresco" class="product-image">
+                        <span class="discount-badge">-30%</span>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Pollo entero</h3>
+                        <p class="store-name">Punto Norte</p>
+                        <div class="price-container">
+                            <span class="original-price">$12.000</span>
+                            <span class="current-price">$8.400</span>
+                        </div>
+                    </div>
+                    <a href="registro.html" class="more-info-btn">Más Información</a>
+                </div>
+            
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="assets/imgs/manzana.jpg" alt="Manzanas rojas" class="product-image">
+                        <span class="discount-badge">-50%</span>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Manzanas por kg</h3>
+                        <p class="store-name">Verdulería Formosa</p>
+                        <div class="price-container">
+                            <span class="original-price">$2.000</span>
+                            <span class="current-price">$1.000</span>
+                        </div>
+                    </div>
+                    <a href="registro.html" class="more-info-btn">Más Información</a>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="assets/imgs/brocoli.jpg" alt="Brócoli fresco" class="product-image">
+                        <span class="discount-badge">-40%</span>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Brócoli</h3>
+                        <p class="store-name">Verdulería Formosa</p>
+                        <div class="price-container">
+                            <span class="original-price">$3.500</span>
+                            <span class="current-price">$2.100</span>
+                        </div>
+                    </div>
+                    <a href="registro.html" class="more-info-btn">Más Información</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- footer -->
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo-section">
+                    <img src="./assets/imgs/v-vertice.png" alt="Vértice Logo" class="footer-logo">
+                    <p>IPF &copy;2025 Vértice.</p>
+                </div>
+                <div class="footer-links-section">
+                    <ul> 
+                        <li><a href="vertice.html">| Inicio</a></li>
+                        <li><a href="productos.html">| Explorar</a></li>
+                        <li><a href="donaciones.html">| Donaciones</a></li>
+                        <li><a href="nosotros.html">| Nosotros |</a></li>
+                    </ul>
+                </div>
+                <div class="footer-socials-section">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

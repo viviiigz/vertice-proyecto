@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vértice - Donaciones</title>
+
+    <link rel="stylesheet" href="./assets/css/vertice.css">
+    <link rel="stylesheet" href="./assets/css/donaciones.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sulphur+Point:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="./assets/imgs/v-vertice.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="vertice.html" class="logo">    
+                <img src="assets/imgs/vertice-logo-largo (1).png" alt="Vértice Logo">
+            </a>
+            <div class="nav-links">
+                <a href="vertice.html">Inicio</a>
+                <a href="productos.html">Explorar Productos</a>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Cómo Funciona</a>
+                    <div class="dropdown-content">
+                        <a href="#">Para Consumidores</a>
+                        <a href="#">Para Comercios</a>
+                    </div>
+                </div>
+                <a href="donaciones.html" class="active">Donaciones</a>
+                <a href="nosotros.html">Nosotros</a>
+            </div>
+            <div class="right-buttons">
+                <a href="login.html">Iniciar sesión</a>
+                <a href="registro.html" class="register">Regístrate</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="donation-section">
+            <div class="donation-intro">
+                <h2 class="section-title">Tu Aporte Marca la Diferencia</h2>
+                <p>En **Vértice**, creemos que cada pequeño acto de generosidad puede tener un gran impacto en nuestra comunidad. Las donaciones nos permiten ampliar nuestro alcance, apoyar a más productores locales y reducir el desperdicio de alimentos de manera significativa.</p>
+                <p>Cada peso donado se utiliza para cubrir los costos operativos, mejorar nuestra tecnología y ofrecer acceso a alimentos de calidad a precios justos para todos. Tu apoyo es fundamental para construir un futuro más sostenible y equitativo.</p>
+            </div>
+            
+            <div class="donation-form-container">
+                <div class="donation-card">
+                    <h3 class="card-title">Ayúdanos a Crecer</h3>
+                    <p class="card-subtitle">Puedes donar la cantidad que desees de forma segura y rápida.</p>
+                    <div class="donation-options">
+                        <button class="donation-amount-btn" data-amount="1000">$1.000</button>
+                        <button class="donation-amount-btn" data-amount="5000">$5.000</button>
+                        <button class="donation-amount-btn" data-amount="10000">$10.000</button>
+                    </div>
+                    <div class="custom-amount">
+                        <label for="custom-donation">Otra cantidad:</label>
+                        <input type="number" id="custom-donation" placeholder="Ingresa un monto">
+                    </div>
+                    <a href="#" class="donate-btn">Donar Ahora</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo-section">
+                    <img src="./assets/imgs/v-vertice.png" alt="Vértice Logo" class="footer-logo">
+                    <p>IPF &copy;2025 Vértice.</p>
+                </div>
+                <div class="footer-links-section">
+                    <ul> 
+                        <li><a href="vertice.html">| Inicio</a></li>
+                        <li><a href="productos.html">| Explorar</a></li>
+                        <li><a href="donaciones.html">| Donaciones</a></li>
+                        <li><a href="nosotros.html">| Nosotros |</a></li>
+                    </ul>
+                </div>
+                <div class="footer-socials-section">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
