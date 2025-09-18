@@ -1,4 +1,4 @@
-import { Router } from "express";
+/*import { Router } from "express";
 import { createComercio, getComercioById, updateComercio, deleteComercio } from "../controllers/commerce.controller.js";
 import { validateComercio } from "../middlewares/commerce.validator.js";
 import { validator } from "../middlewares/validator.js";
@@ -19,4 +19,4 @@ router.put("/", validateComercio, validator, updateComercio);
 // Ruta para eliminar un comercio (acceso privado, solo para el dueño del comercio)
 router.delete("/", deleteComercio); //aca suponemos que el id del comercio se obtiene del token
 
-export default router;
+export default router;*/

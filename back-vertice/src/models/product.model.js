@@ -15,10 +15,10 @@ const Product = sequelize.define('Product', {
     type: DataTypes.TEXT,
     allowNull: true
   },
-  // precio_original: {
-  //   type: DataTypes.DECIMAL(10, 2),
-  //   allowNull: false
-  // },
+  precio_original: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false
+  },
   precio_descuento: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false
@@ -34,6 +34,10 @@ const Product = sequelize.define('Product', {
   },
   foto_url: {
     type: DataTypes.STRING,
+    allowNull: true
+  },
+  categoria: {
+    type: DataTypes.STRING, // Almacena el valor de la categoría del select
     allowNull: true
   }
 });

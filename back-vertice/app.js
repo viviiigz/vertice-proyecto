@@ -4,6 +4,7 @@ import cors from 'cors';
 import sequelize from './src/config/database.js';
 import cookieParser from 'cookie-parser';
 import routes from './src/routes/index.routes.js';
+import './src/models/associations.js'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
