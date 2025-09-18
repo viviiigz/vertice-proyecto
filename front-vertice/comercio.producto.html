@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Productos - Vértice</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sulphur+Point:wght@300;400;700&display=swap"
+    />
+    <link rel="stylesheet" href="./assets/css/comercio.productos.css" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../front-vertice/assets/imgs/v-vertice.png"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="logo">
+          <img
+            src="./assets/imgs/vertice-logo-largo (1).png"
+            alt="Logo de Vértice"
+            class="brand-logo"
+          />
+        </div>
+        <nav class="sidebar-nav">
+          <a href="./comercio.estadisticas.html"
+            ><i class="fas fa-chart-line"></i> Estadísticas</a
+          >
+          <h3>Administración</h3>
+          <a href="#" class="active"><i class="fas fa-box"></i> Productos</a>
+          <a href="#"><i class="fas fa-sitemap"></i> Clientes</a>
+          <a href="#"><i class="fas fa-map-marker-alt"></i> Pick Up Points</a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="header">
+          <div class="header-buttons">
+            <button class="btn btn-primary">
+              <i class="fas fa-eye"></i> Visitar mi tienda
+            </button>
+            <button class="btn btn-secondary">
+              <i class="fas fa-user-circle"></i> Mi Cuenta
+            </button>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <h1>Productos</h1>
+          <div class="product-actions">
+            <div class="search-bar">
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Buscar por nombre o código de producto"
+              />
+              <button class="btn-icon" id="search-btn">
+                <i class="fas fa-search"></i> Buscar
+              </button>
+            </div>
+
+            <div class="action-buttons">
+              <a
+                href="./comercio.nuevo-producto.html"
+                class="btn btn-primary"
+                id="btn-nuevo-producto"
+              >
+                <i class="fas fa-plus"></i> Nuevo producto
+              </a>
+            </div>
+          </div>
+          <div class="product-list-container">
+            <div class="filters">
+              <button id="filtro-btn" class="btn btn-secondary">
+                <i class="fas fa-sliders-h"></i> Filtros
+              </button>
+            </div>
+
+            <div class="product-table-container">
+              <table class="product-table">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Stock</th>
+                    <th>Precio Original</th>
+                    <th>Precio en Oferta</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="product-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-filtro-container" id="filtro-modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3>Filtros y orden</h3>
+              <button class="close-modal" id="close-filtro-modal">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="filter-group">
+                <label for="orden-select">Orden</label>
+                <select id="orden-select" class="form-control">
+                  <option value="mas-nuevos">Más nuevos</option>
+                  <option value="mas-viejos">Más viejos</option>
+                  <option value="a-z">A-Z</option>
+                  <option value="z-a">Z-A</option>
+                  <option value="menor-precio">Menor precio</option>
+                  <option value="mayor-precio">Mayor precio</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="categoria-select">Categoría</label>
+                <select id="categoria-select" class="form-control">
+                  <option value="todas">Todas</option>
+                  <option value="comida-por-caducarse">
+                    Comida por caducarse
+                  </option>
+                  <option value="para-donar">Para donar</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label>Disponibilidad</label>
+                <div class="availability-buttons">
+                  <button id="todos-btn" class="btn btn-sm btn-light active">
+                    Todos
+                  </button>
+                  <button id="en-stock-btn" class="btn btn-sm btn-light">
+                    En stock
+                  </button>
+                  <button id="sin-stock-btn" class="btn btn-sm btn-light">
+                    Sin stock
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="quitar-filtros-btn" class="btn btn-secondary">
+                Quitar filtros
+              </button>
+              <button id="aplicar-filtros-btn" class="btn btn-primary">
+                Aplicar filtros
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="./js-vivi/comercio.js"></script>
+  </body>
+</html>
