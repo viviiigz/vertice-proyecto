@@ -14,11 +14,12 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ error: "El email ya está registrado" });
     }
 
-    // Verificar si el username ya existe (agregue nuevamente el unique por razones de coherencia)
+    // Verificar si el username ya existe
     const existingUsername = await UserModel.findOne({ where: { username } });
     if (existingUsername) {
       return res.status(400).json({ error: "El nombre de usuario ya está en uso" });
     }
+    if (!role) return res.status(400).json({ error: "Debes seleccionar un rol" });
 
     // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -31,7 +32,6 @@ export const registerUser = async (req, res) => {
       role
     });
 
-    // Responde  sin contraseña:D
     res.status(201).json({
       message: "Usuario registrado exitosamente",
       user: {
@@ -43,65 +43,52 @@ export const registerUser = async (req, res) => {
       }
     });
   } catch (err) {
-    // Capturamos errores de restricción única de Sequelize por si algo se escapó
     if (err.name === "SequelizeUniqueConstraintError") {
       return res.status(400).json({ error: "El nombre de usuario o email ya está en uso" });
     }
-
     console.error(err);
     res.status(500).json({ error: "Error registrando usuario" });
   }
 };
 
+
 //login de usuariooo
 
 export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const { email, password } = req.body;
+    // Obtener usuario como objeto plano
+    const user = await UserModel.findOne({
+      where: { email },
+      attributes: ['id', 'username', 'email', 'password', 'role', 'created_at', 'updated_at', 'deleted_at'] // <- importante
+    });
 
-    // Buscar usuario por email
-    const user = await UserModel.findOne({ where: { email } });
-    if (!user) {
-      return res.status(400).json({ error: "Email o contraseña incorrectos" });
-    }
+    if (!user) return res.status(400).json({ error: 'Usuario no encontrado' });
 
-    // Verificar contraseña
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: "Email o contraseña incorrectos" });
-    }
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) return res.status(400).json({ error: 'Contraseña incorrecta' });
 
-    // Crear token JWT
+    // Generar token
     const token = jwt.sign(
-      {
-        id: user.id,
-        username: user.username,
-        role: user.role
-      },
+      { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "8h" } // tiempo de expiración
+      { expiresIn: '1h' }
     );
 
-    // Guardar token en cookie (httpOnly para seguridad)
-    res.cookie("token", token, {
+    res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // solo HTTPS en prod
-      maxAge: 8 * 60 * 60 * 1000 // 8 horas
+      secure: false,
+      sameSite: 'lax'
     });
 
-    // Respuesta exitosa
-    res.status(200).json({
-      message: "Login exitoso",
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role
-      }
-    });
+    // Enviar datos al front sin password
+    const { password: _, ...userWithoutPassword } = user.toJSON ? user.toJSON() : user;
+    res.json({ user: userWithoutPassword });
+
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Error en el login" });
+    res.status(500).json({ error: 'Error al iniciar sesión' });
   }
 };

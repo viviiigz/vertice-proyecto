@@ -14,9 +14,10 @@ app.use(express.json());
 //rutas de la API
 app.use('/api', routes);  
 
-sequelize.sync()
+
+sequelize.sync({ force: true }) // sacar cuando termine el proyectooo!!!
   .then(() => {
-    console.log('base de datos conectadas correctamente');
+    console.log('Base de datos recreadas correctamente');
     app.listen(PORT, () => {
       console.log(`Servidor corriendo en el puerto ${PORT}`);
     });
