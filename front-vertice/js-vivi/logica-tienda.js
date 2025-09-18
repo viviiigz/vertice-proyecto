@@ -12,15 +12,34 @@ document.addEventListener('DOMContentLoaded', () => {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     // --- Funciones de utilidad ---
-    function obtenerProductos() {
-        const productosJSON = localStorage.getItem('productos');
-        return productosJSON ? JSON.parse(productosJSON) : [];
+    async function obtenerProductos() {
+        try {
+            const response = await fetch('/api/productos'); // Reemplaza con la URL correcta de tu API
+            if (!response.ok) {
+                throw new Error('Error al obtener los productos');
+            }
+            const data = await response.json();
+            // Mapea los nombres de las propiedades del backend a los del frontend
+            return data.map(p => ({
+                id: p.id,
+                nombre: p.nombre_producto,
+                descripcion: p.descripcion,
+                precioOriginal: p.precio_original,
+                precioOferta: p.precio_descuento,
+                stock: p.cantidad_disponible,
+                imagen: p.foto_url,
+                categoria: p.categoria // Asegúrate de que este campo exista en tu backend
+            }));
+        } catch (error) {
+            console.error('Error:', error);
+            return [];
+        }
     }
 
     function actualizarContadorCarrito() {
         cartCountSpan.textContent = cart.length;
     }
-    
+
     function guardarCarrito() {
         localStorage.setItem('cart', JSON.stringify(cart));
     }
@@ -138,9 +157,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Inicialización y Eventos ---
-    productos = obtenerProductos();
-    aplicarFiltrosYOrden();
-    actualizarContadorCarrito();
+    async function inicializarApp() {
+        productos = await obtenerProductos();
+        aplicarFiltrosYOrden();
+        actualizarContadorCarrito();
+    }
+    // Llamada para iniciar la aplicación
+    inicializarApp();
 
     // Eventos para el buscador, filtros y ordenamiento
     searchInput.addEventListener('input', aplicarFiltrosYOrden);
