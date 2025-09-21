@@ -16,7 +16,7 @@
 <body>
     <header>
         <nav class="navbar">
-            <a href="vertice.html" class="logo">    
+            <a href="vertice.html" class="logo">
                 <img src="assets/imgs/vertice-logo-largo (1).png" alt="Vértice Logo">
             </a>
             <div class="nav-links">
@@ -25,8 +25,8 @@
                 <div class="dropdown">
                     <a href="#" class="dropbtn">Cómo Funciona</a>
                     <div class="dropdown-content">
-                        <a href="#">Para Consumidores</a>
-                        <a href="#">Para Comercios</a>
+                        <a href="consumidorcomofunciona.html">Para Consumidores</a>
+                        <a href="comerciantecomofunciona.html">Para Comercios</a>
                     </div>
                 </div>
                 <a href="donaciones.html" class="active">Donaciones</a>
@@ -40,31 +40,102 @@
     </header>
 
     <main>
-        <section class="donation-section">
-            <div class="donation-intro">
-                <h2 class="section-title">Tu Aporte Marca la Diferencia</h2>
-                <p>En **Vértice**, creemos que cada pequeño acto de generosidad puede tener un gran impacto en nuestra comunidad. Las donaciones nos permiten ampliar nuestro alcance, apoyar a más productores locales y reducir el desperdicio de alimentos de manera significativa.</p>
-                <p>Cada peso donado se utiliza para cubrir los costos operativos, mejorar nuestra tecnología y ofrecer acceso a alimentos de calidad a precios justos para todos. Tu apoyo es fundamental para construir un futuro más sostenible y equitativo.</p>
+        <section class="donations-hero">
+            <div class="container-text-button">
+                <h1>Donar, ayudar, conectar</h1>
+                <p>En Vértice, creemos que la colaboración es la clave para un futuro sostenible. Conecta tus excedentes con bancos de alimentos y organizaciones benéficas, transformando el desperdicio en apoyo para quienes más lo necesitan.</p>
+                <a href="#" class="btn-donar">Contacta a una organización</a>
             </div>
-            
-            <div class="donation-form-container">
-                <div class="donation-card">
-                    <h3 class="card-title">Ayúdanos a Crecer</h3>
-                    <p class="card-subtitle">Puedes donar la cantidad que desees de forma segura y rápida.</p>
-                    <div class="donation-options">
-                        <button class="donation-amount-btn" data-amount="1000">$1.000</button>
-                        <button class="donation-amount-btn" data-amount="5000">$5.000</button>
-                        <button class="donation-amount-btn" data-amount="10000">$10.000</button>
-                    </div>
-                    <div class="custom-amount">
-                        <label for="custom-donation">Otra cantidad:</label>
-                        <input type="number" id="custom-donation" placeholder="Ingresa un monto">
-                    </div>
-                    <a href="#" class="donate-btn">Donar Ahora</a>
-                </div>
+            <div class="container-image">
+                <img src="./assets/imgs/niño comiendo.jpg" alt="Persona donando alimentos a una organización">
             </div>
         </section>
+
+     <section class="donacion-carousel-section">
+    <div class="container-full">
+        <h2 class="section-title-light">¡Donar es simple!</h2>
+
+        <div class="carousel-wrapper">
+            <input type="radio" name="slider" id="slide1" checked>
+            <input type="radio" name="slider" id="slide2">
+            <input type="radio" name="slider" id="slide3">
+
+            <div class="slides">
+                <div class="slide">
+                    <div class="slide-content">
+                        <h3>1. Prepara tus productos</h3>
+                        <p>Selecciona los alimentos que están próximos a caducar y que no se venderán. Asegúrate de que estén en buen estado para el consumo.</p>
+                    </div>
+                    <div class="slide-image">
+                        <img src="./assets/imgs/paso1.jpg" alt="Prepara tus productos">
+                    </div>
+                </div>
+
+                <div class="slide">
+                    <div class="slide-content">
+                        <h3>2. Conecta con organizaciones</h3>
+                        <p>Utiliza nuestra plataforma para encontrar y notificar a los bancos de alimentos y organizaciones benéficas cerca de tu negocio.</p>
+                    </div>
+                    <div class="slide-image">
+                        <img src="./assets/imgs/paso2.jpg" alt="Conecta con organizaciones">
+                    </div>
+                </div>
+
+                <div class="slide">
+                    <div class="slide-content">
+                        <h3>3. Coordina la entrega</h3>
+                        <p>Organiza la recolección o entrega de los alimentos directamente con la organización. ¡Ayudas al planeta y a tu comunidad!</p>
+                    </div>
+                    <div class="slide-image">
+                        <img src="./assets/imgs/paso3.jpg" alt="Coordina la entrega">
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-nav-arrows">
+                <label for="slide1" class="prev-arrow"></label>
+                <label for="slide2" class="prev-arrow"></label>
+                <label for="slide3" class="prev-arrow"></label>
+
+                <label for="slide1" class="next-arrow"></label>
+                <label for="slide2" class="next-arrow"></label>
+                <label for="slide3" class="next-arrow"></label>
+            </div>
+
+            <div class="carousel-dots">
+                <label for="slide1"></label>
+                <label for="slide2"></label>
+                <label for="slide3"></label>
+            </div>
+        </div>
+    </div>
+</section>
     </main>
+
+    
+<section class="importancia-donar-section">
+    <div class="container-full">
+        <h2>La importancia de tu donación</h2>
+        <p class="section-description">Tu aporte en Vértice va más allá de un simple gesto. Descubre cómo tu donación impacta positivamente el mundo y a nuestra comunidad.</p>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <i class="fas fa-hand-holding-heart"></i>                 </div>
+                <h3>Ayuda a personas que sufren hambre</h3>
+                <p>Cada día, miles de personas, incluyendo niños y familias, luchan contra la inseguridad alimentaria. Tu donación proporciona comidas nutritivas y les da una oportunidad de vivir con dignidad.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <i class="fas fa-leaf"></i>                 </div>
+                <h3>Reduce el impacto ambiental</h3>
+                <p>El desperdicio de alimentos es una causa importante de la emisión de gases de efecto invernadero. Al redirigir los excedentes, disminuimos la huella de carbono y conservamos recursos valiosos.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
 
     <footer class="main-footer">
         <div class="container">
@@ -74,7 +145,7 @@
                     <p>IPF &copy;2025 Vértice.</p>
                 </div>
                 <div class="footer-links-section">
-                    <ul> 
+                    <ul>
                         <li><a href="vertice.html">| Inicio</a></li>
                         <li><a href="productos.html">| Explorar</a></li>
                         <li><a href="donaciones.html">| Donaciones</a></li>
