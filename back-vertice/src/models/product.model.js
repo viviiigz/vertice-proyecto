@@ -39,7 +39,11 @@ const Product = sequelize.define('Product', {
   categoria: {
     type: DataTypes.STRING, // Almacena el valor de la categoría del select
     allowNull: true
-  }
+  },
+  user_id: {
+  type: DataTypes.INTEGER,
+  allowNull: false
+}
 });
 
 export default Product;

@@ -2,15 +2,24 @@
 import Product from "../models/product.model.js";
 import { validationResult } from "express-validator";
 
-// Crear producto
+// Crear un nuevo producto
 export const createProduct = async (req, res) => {
   try {
+    // Validaciones de express-validator
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const savedProduct = await Product.create(req.body);
+    // El id del usuario logueado viene del authMiddleware
+    const userId = req.user.id; // req.user lo setea authMiddleware con el JWT
+
+    // Creamos el producto con los datos del body + el user_id
+    const savedProduct = await Product.create({
+      ...req.body,
+      user_id: userId
+    });
+
     res.status(201).json(savedProduct);
   } catch (error) {
     console.error(error);
