@@ -1,4 +1,3 @@
-
 //este es el js para la pagina de estadisticas
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -129,41 +128,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const productTableBody = document.getElementById('product-table-body');
     const formNuevoProducto = document.getElementById('form-nuevo-producto');
+    const token = localStorage.getItem('token'); // tu JWT guardado al loguearse
 
     // Funciones de utilidad para manejar los datos
-    function obtenerProductos() {
-        const productos = localStorage.getItem('productos');
-        return productos ? JSON.parse(productos) : [];
-    }
-
-    // NUEVA FUNCIÓN: Obtener un producto por su ID
-    function obtenerProductoPorId(id) {
-        const productos = obtenerProductos();
-        return productos.find(p => p.id == id);
-    }
-    
-    // FUNCIÓN MODIFICADA: Ahora actualiza si el producto ya tiene un ID, o lo crea si no lo tiene
-    function guardarProducto(producto) {
-        let productos = obtenerProductos();
-        
-        // Si el producto ya tiene un ID, lo actualizamos
-        if (producto.id) {
-            productos = productos.map(p => p.id === producto.id ? producto : p);
-        } else {
-            // Si no tiene un ID, es un producto nuevo
-            producto.id = Date.now();
-            productos.push(producto);
+    async function obtenerProductos() {
+        try {
+            const res = await fetch('/api/products', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Error al obtener productos');
+            return await res.json();
+        } catch (err) {
+            console.error(err);
+            return [];
         }
-        localStorage.setItem('productos', JSON.stringify(productos));
     }
 
-    function eliminarProducto(id) {
-        let productos = obtenerProductos();
-        productos = productos.filter(producto => producto.id != id);
-        localStorage.setItem('productos', JSON.stringify(productos));
-        
-        if (productTableBody) {
-            aplicarFiltros(); 
+    async function eliminarProducto(id) {
+        try {
+            const res = await fetch(`/api/products/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Error al eliminar producto');
+            aplicarFiltros();
+        } catch (err) {
+            console.error(err);
+            alert('Error al eliminar el producto');
         }
     }
 
@@ -204,13 +195,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        function aplicarFiltros() {
-            let productos = obtenerProductos();
+        async function aplicarFiltros() {
+            let productos = await obtenerProductos();
 
             if (disponibilidadActiva === 'en') {
-                productos = productos.filter(p => p.stock > 0);
+                productos = productos.filter(p => p.cantidad_disponible > 0);
             } else if (disponibilidadActiva === 'sin') {
-                productos = productos.filter(p => p.stock <= 0);
+                productos = productos.filter(p => p.cantidad_disponible <= 0);
             }
 
             if (categoriaSelect && categoriaSelect.value !== 'todas') {
@@ -220,16 +211,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const orden = ordenSelect.value;
             switch (orden) {
                 case 'a-z':
-                    productos.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                    productos.sort((a, b) => a.nombre_producto.localeCompare(b.nombre_producto));
                     break;
                 case 'z-a':
-                    productos.sort((a, b) => b.nombre.localeCompare(a.nombre));
+                    productos.sort((a, b) => b.nombre_producto.localeCompare(a.nombre_producto));
                     break;
                 case 'menor-precio':
-                    productos.sort((a, b) => parseFloat(a.precioOriginal) - parseFloat(b.precioOriginal));
+                    productos.sort((a, b) => parseFloat(a.precio_original) - parseFloat(b.precio_original));
                     break;
                 case 'mayor-precio':
-                    productos.sort((a, b) => parseFloat(b.precioOriginal) - parseFloat(a.precioOriginal));
+                    productos.sort((a, b) => parseFloat(b.precio_original) - parseFloat(a.precio_original));
                     break;
                 case 'mas-nuevos':
                     productos.sort((a, b) => b.id - a.id);
@@ -254,11 +245,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function buscarProductos() {
             const searchTerm = searchInput.value.toLowerCase();
-            const productos = obtenerProductos();
-            const productosFiltrados = productos.filter(producto => {
-                return producto.nombre.toLowerCase().includes(searchTerm);
+            obtenerProductos().then(productos => {
+                const productosFiltrados = productos.filter(producto =>
+                    producto.nombre_producto.toLowerCase().includes(searchTerm)
+                );
+                mostrarProductos(productosFiltrados);
             });
-            mostrarProductos(productosFiltrados);
         }
 
         searchBtn.addEventListener('click', buscarProductos);
@@ -278,18 +270,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (productos.length > 0) {
                 productos.forEach(producto => {
                     const fila = document.createElement('tr');
-                    const precioOriginal = producto.precioOriginal ? `$${producto.precioOriginal}` : '-';
-                    const precioOferta = producto.precioOferta ? `$${producto.precioOferta}` : '-';
+                    const precioOriginal = producto.precio_original ? `$${producto.precio_original}` : '-';
+                    const precioOferta = producto.precio_descuento ? `$${producto.precio_descuento}` : '-';
 
-                    // La parte más importante para el botón de editar
- fila.innerHTML = `
+                    fila.innerHTML = `
     <td class="product-info">
-        <img src="${producto.imagen}" alt="${producto.nombre}">
-        <span>${producto.nombre}</span>
+        <img src="${producto.foto_url || 'https://via.placeholder.com/50'}" alt="${producto.nombre_producto}">
+        <span>${producto.nombre_producto}</span>
     </td>
-    <td>${producto.stock}</td>
-    <td>$${producto.precioOriginal}</td>
-    <td>${producto.precioOferta ? `$${producto.precioOferta}` : '-'}</td>
+    <td>${producto.cantidad_disponible}</td>
+    <td>${precioOriginal}</td>
+    <td>${precioOferta}</td>
     <td class="actions-buttons">
         <a href="./comercio.nuevo-producto.html?id=${producto.id}" class="btn-icon-sm">
             <i class="fas fa-edit"></i>
@@ -325,25 +316,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const params = new URLSearchParams(window.location.search);
         const productId = params.get('id');
 
+        // Si quisieras precargar datos del producto para edición, aquí haces un fetch GET /api/products/:id
         if (productId) {
-            const producto = obtenerProductoPorId(productId);
-            if (producto) {
-                formTitle.textContent = 'Editar Producto';
-                saveBtn.textContent = 'Guardar Cambios';
-
-                // Llenamos el formulario con los datos del producto
-                document.getElementById('nombre').value = producto.nombre;
-                document.getElementById('descripcion').value = producto.descripcion;
-                document.getElementById('stock').value = producto.stock;
-                document.getElementById('precio-original').value = producto.precioOriginal;
-                document.getElementById('precio-oferta').value = producto.precioOferta;
-                // Asumiendo que tienes un input de categoría con el id 'categoria-input'
-                document.getElementById('categoria-input').value = producto.categoria;
-                fileNameSpan.textContent = "Imagen cargada"; 
-                
-                // Mantenemos el ID en el formulario para la actualización
-                formNuevoProducto.dataset.productId = producto.id;
-            }
+            // TODO: fetch del producto por ID si necesitas edición real
+            formTitle.textContent = 'Editar Producto';
+            saveBtn.textContent = 'Guardar Cambios';
         }
 
         fileUploadBox.addEventListener('click', () => inputFile.click());
@@ -355,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        formNuevoProducto.addEventListener('submit', (event) => {
+        formNuevoProducto.addEventListener('submit', async (event) => {
             event.preventDefault();
 
             const nombre = document.getElementById('nombre').value;
@@ -365,38 +342,30 @@ document.addEventListener('DOMContentLoaded', () => {
             const precioOferta = document.getElementById('precio-oferta').value;
             const categoria = document.getElementById('categoria-input').value; 
             const imagenFile = inputFile.files[0];
-            const productoId = formNuevoProducto.dataset.productId;
 
-            if (nombre && stock && precioOriginal) {
-                const productoData = {
-                    id: productoId ? parseInt(productoId) : null,
-                    nombre: nombre,
-                    stock: stock,
-                    precioOriginal: precioOriginal,
-                    precioOferta: precioOferta,
-                    descripcion: descripcion,
-                    categoria: categoria,
-                };
+            const formData = new FormData();
+            formData.append('nombre_producto', nombre);
+            formData.append('descripcion', descripcion);
+            formData.append('cantidad_disponible', stock);
+            formData.append('precio_original', precioOriginal);
+            formData.append('precio_descuento', precioOferta);
+            formData.append('categoria', categoria);
+            if (imagenFile) {
+                formData.append('foto_url', imagenFile);
+            }
 
-                if (imagenFile) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        productoData.imagen = e.target.result;
-                        guardarProducto(productoData);
-                        window.location.href = './comercio.producto.html';
-                    };
-                    reader.readAsDataURL(imagenFile);
-                } else {
-                    // Si no se selecciona nueva imagen, mantén la anterior
-                    if (productoId) {
-                        const productoExistente = obtenerProductoPorId(productoId);
-                        productoData.imagen = productoExistente.imagen;
-                    } else {
-                        productoData.imagen = 'https://via.placeholder.com/50';
-                    }
-                    guardarProducto(productoData);
-                    window.location.href = './comercio.producto.html';
-                }
+            try {
+                const res = await fetch('/api/products', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                if (!res.ok) throw new Error('Error al guardar el producto');
+                await res.json();
+                window.location.href = './comercio.producto.html';
+            } catch (err) {
+                console.error(err);
+                alert('Hubo un error al guardar el producto');
             }
         });
     }
