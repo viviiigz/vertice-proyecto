@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nuevo Producto - Vértice</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sulphur+Point:wght@300;400;700&display=swap" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sulphur+Point:wght@300;400;700&display=swap" />
     <link rel="stylesheet" href="./assets/css/comercio.productos.css" />
     <link rel="icon" type="image/x-icon" href="../front-vertice/assets/imgs/v-vertice.png" />
 </head>
+
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
@@ -53,11 +56,13 @@
                     </div>
                     <div class="form-group">
                         <label for="precio-original">Precio Original ($)</label>
-                        <input type="number" id="precio-original" name="precio-original" placeholder="Precio original" step="0.01" required min="0" />
+                        <input type="number" id="precio-original" name="precio-original" placeholder="Precio original"
+                            step="0.01" required min="0" />
                     </div>
                     <div class="form-group">
                         <label for="precio-oferta">Precio en Oferta ($)</label>
-                        <input type="number" id="precio-oferta" name="precio-oferta" placeholder="Precio en oferta (opcional)" step="0.01" min="0" />
+                        <input type="number" id="precio-oferta" name="precio-oferta"
+                            placeholder="Precio en oferta (opcional)" step="0.01" min="0" />
                     </div>
                     <div class="form-group">
                         <label for="categoria-input">Categoría</label>
@@ -73,19 +78,21 @@
                             <i class="fas fa-cloud-upload-alt"></i>
                             <span id="file-name">Ningún archivo seleccionado</span>
                         </div>
-                        <input type="file" id="imagen" name="imagen" accept="image/*" class="d-none" />
+                        <input type="file" id="imagen" name="foto_url" accept="image/*" class="d-none" />
                     </div>
-
-                    <div class="form-actions">
-                        <a href="./comercio.producto.html" class="btn btn-secondary">Cancelar</a>
-                        <button type="submit" class="btn btn-primary" id="guardar-producto-btn">
-                            Guardar Producto
-                        </button>
-                    </div>
-                </form>
             </div>
-        </main>
+
+            <div class="form-actions">
+                <a href="./comercio.producto.html" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary" id="guardar-producto-btn">
+                    Guardar Producto
+                </button>
+            </div>
+            </form>
+    </div>
+    </main>
     </div>
     <script src="./js-vivi/comercio.js"></script>
 </body>
+
 </html>
