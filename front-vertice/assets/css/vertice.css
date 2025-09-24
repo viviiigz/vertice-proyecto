@@ -48,7 +48,7 @@ section {
 
 /* ---- Navbar ---- */
 header {
-    background-color: #f7f5e8;
+    background-color: #ffffff;
     padding: 15px 0;
 }
 
@@ -141,24 +141,19 @@ header {
 
 .right-buttons {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     align-items: center;
 }
 
 .right-buttons a {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    color: #fff;
-    font-size: 1rem;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    padding: 10px 20px; /* Ajuste para dar más espacio horizontal */
+    font-size: 0.95rem;
+    padding: 8px 18px;
     border-radius: 8px;
-    border: 1px solid transparent;
     background-color: #4cd309;
-    transition: all 0.3s ease;
-    white-space: nowrap; /* Evita que el texto salte a la siguiente línea */
+    color: #fff;
+    font-weight: 600;
+    display: flex;
+    align-items: center; /* ✅ centra texto dentro del botón */
 }
 
 .right-buttons a:hover {
@@ -234,6 +229,7 @@ header {
     margin-bottom: 20px;
 }
 
+
 /* Estilos específicos para el título principal del Hero */
 .headline {
     font-size: 4rem;
@@ -265,11 +261,12 @@ header {
     justify-content: center; 
     margin-top: 0;
 }
+
  
 
 /* ---- Sección "¿Qué hacemos?" ---- */
 .what-we-do-text-section {
-    background-color: #f7f5e8; 
+    background-color: #F5FFF5 ; 
     padding: 80px 20px 0; /* padding inferior a 0 para que el borde rasgado se vea bien */
     text-align: center;
 }
@@ -281,7 +278,7 @@ header {
 }
 
 .what-we-do-text-section .section-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;;
     font-size: 2.5rem;
     font-weight: 700;
     color: #4cd309; 
@@ -299,7 +296,7 @@ header {
 
 /* ---- Sección con la imagen y borde rasgado ---- */
 .torn-paper-section {
-    background-color: #f7f5e8;
+    background-color: #F5FFF5;
     position: relative;
 }
 
@@ -320,41 +317,6 @@ header {
 }
 
 
-/* Responsive para pantallas más pequeñas */
-@media (max-width: 768px) {
-    .how-it-works-section .section-title {
-        font-size: 2rem;
-    }
-    .how-it-works-section .section-description {
-        font-size: 1rem;
-    }
-}
-/* ---- Problem & Solution Section 
-.problem-solution-section {
-    text-align: center;
-}
-
-.solution-grid {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-}
-
-.solution-card {
-    flex: 1;
-    max-width: 400px;
-    background-color: #fff;
-    padding: 40px 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.solution-card .icon {
-    font-size: 3rem;
-    color: #4cd309;
-    margin-bottom: 20px;
-} ---- */
 
 
 /* ---- Sección "¿Por qué elegir Vértice?" ---- */
@@ -365,7 +327,7 @@ header {
 }
 
 .why-vertice-section .section-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family:  'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: 2.5rem;
     font-weight: 700;
     color: #4cd309; 
@@ -377,7 +339,7 @@ header {
     font-size: 1.1rem;
     max-width: 800px;
     margin: 0 auto 60px; /* Margen inferior para separar del grid */
-    color: #555;
+    color: #333;
     line-height: 1.6;
 }
 
@@ -436,45 +398,21 @@ header {
 .benefit-description {
     font-family: 'Montserrat', sans-serif;
     font-size: 1rem;
-    color: #666;
+    color: #b6ff5c;
     line-height: 1.6;
 }
  
-/* ---- Donations Section ---- */
-.donations-section {
-    text-align: center;
-    background-color: #4cd309;
-    color: #fff;
-}
 
-.donations-section .section-title, .donations-section p {
-    color: #fff;
-    max-width: 700px;
-    margin: 0 auto 30px;
-}
-
-.donations-cta {
-    background-color: #fff;
-    color: #4cd309;
-    padding: 15px 30px;
-    border-radius: 50px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.donations-cta:hover {
-    background-color: #eee;
-}
 
 /* ---- Sección "Foros" ---- */
 .press-section {
-    background-color: #f7f5e8; 
+    background-color: #F5FFF5; 
     padding: 80px 20px;
     text-align: center;
 }
 
 .press-section .section-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: 2.5rem;
     font-weight: 700;
     color: #4cd309; 
@@ -526,7 +464,7 @@ header {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.3rem;
     font-weight: 600;
-    color: #000;
+    color: #333;
     margin: 0;
     line-height: 1.4;
 }
@@ -537,6 +475,8 @@ header {
 .final-cta-section {
     text-align: center;
     background-color: #ffffff;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-decoration: #333;
 }
 
 .final-cta-buttons {
@@ -550,7 +490,7 @@ header {
 .main-footer {
     padding: 32px 0 16px 0;
     font-family: 'Quicksand', sans-serif;
-    background-color:#f7f5e8; /* Color de fondo similar al de la imagen */
+    background-color:#ffffff; /* Color de fondo similar al de la imagen */
 }
 
 .footer-content {
