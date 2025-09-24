@@ -299,30 +299,19 @@
                 <img src="./assets/imgs/vertice-logo-largo (1).png" alt="Logo de Vértice" class="brand-logo" />
             </div>
             <nav class="sidebar-nav">
-                <a href="./comercio.estadisticas.html"><i class="fas fa-chart-line"></i> Estadísticas</a>
-                <h3>Administración</h3>
-                <a href="comercio.producto.html" class="active"><i class="fas fa-box"></i> Productos</a>
-                <a href="#"><i class="fas fa-sitemap"></i> Clientes</a>
-                <a href="#"><i class="fas fa-map-marker-alt"></i> Pick Up Points</a>
+                <a href="./usuario.tienda.html">Inicio</a>
+                <a href="vista-producto-user.html" class="active"> Productos</a>
+                <a href="#"> Contáctanos </a>
             </nav>
         </aside>
 
         <main class="main-content">
-    <!--      <header class="header">
-                <div class="header-buttons">
-                    <button class="btn btn-primary">
-                        <i class="fas fa-eye"></i> Visitar mi tienda
-                    </button>
-                    <a href="/front-vertice/profile.comercio.html" class="profile-btn"><i class="fas fa-user"></i> Mi
-                        Perfil</a>
-                </div>
-            </header>-->  
 
             <div class="content-area">
                 <div class="card-perfil-edit">
                     <div class="profile-header">
                         <div class="profile-img-container">
-                            <img src="https://via.placeholder.com/150" alt="Foto de perfil del comercio"
+                            <img src="https://via.placeholder.com/150" alt="Agrega tu foto de perfil"
                                 class="profile-img-preview" id="profile-img-preview" />
                             <div class="file-upload-box-perfil">
                                 <i class="fas fa-camera"></i>
@@ -334,15 +323,15 @@
 
                         <div class="profile-info">
                             <div class="editable-field" id="nombre-field">
-                                <h1 class="profile-name-display" id="display-nombre">Agregar nombre de comercio</h1>
+                                <h1 class="profile-name-display" id="display-nombre">Agrega tu nombre</h1>
                                 <input type="text" id="input-nombre" class="form-control editable-input input-hidden"
-                                    placeholder="Escribe el nombre de tu comercio" />
+                                    placeholder="Escribe..." />
                                 <i class="fas fa-pen edit-icon" data-target="nombre"></i>
                             </div>
 
                             <div class="editable-field" id="slogan-field">
-                                <p class="profile-slogan-display" id="display-slogan">Slogan del comercio o una breve
-                                    descripción</p>
+                                <p class="profile-slogan-display" id="display-slogan">Tu Slogan favorito
+                                </p>
                                 <input type="text" id="input-slogan" class="form-control editable-input input-hidden"
                                     placeholder="Agrega un slogan atractivo" />
                                 <i class="fas fa-pen edit-icon" data-target="slogan"></i>
@@ -359,17 +348,17 @@
                         <div class="form-group">
                             <label for="email-comercio">Email</label>
                             <input type="email" id="email-comercio" name="email" class="form-control"
-                                placeholder="Ej. correo@comercio.com" required />
+                                placeholder="Ej. correo@consumidor.com" required />
                         </div>
                         <div class="form-group">
                             <label for="direccion-comercio">Dirección</label>
                             <input type="text" id="direccion-comercio" name="direccion" class="form-control"
-                                placeholder="Ej. Calle Falsa 123, Ciudad" />
+                                placeholder="Ej. Calle 123, Ciudad" />
                         </div>
                         <div class="form-group">
                             <label for="descripcion-comercio">Descripción</label>
                             <textarea id="descripcion-comercio" name="descripcion" class="form-control" rows="4"
-                                placeholder="Describe tu comercio, lo que ofreces, etc."></textarea>
+                                placeholder="Describete como consumidor, que buscas, etc.."></textarea>
                         </div>
                         <div class="form-actions form-actions-hidden" id="form-actions-edit">
                             <button type="button" class="btn btn-secondary" id="cancelar-edicion">Cancelar</button>
