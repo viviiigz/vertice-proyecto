@@ -1,0 +1,300 @@
+/* Estilos Específicos para la página de perfil */
+.profile-card {
+    background-color: #fff;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.profile-header {
+    margin-bottom: 2em;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #4cd309;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1em;
+}
+
+.profile-slogan {
+    color: #888;
+    font-style: italic;
+    margin-top: -1em;
+}
+
+.profile-details {
+    text-align: left;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.detail-icon {
+    color: #4cd309;
+    margin-right: 15px;
+    font-size: 1.5em;
+    width: 25px;
+    text-align: center;
+}
+
+.detail-item p {
+    margin: 0;
+    font-size: 1em;
+    color: #333;
+}
+
+/* Estilos para el Perfil Editable */
+
+.card-perfil-edit {
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    max-width: 800px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.profile-header {
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.profile-img-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #4cd309;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+.file-upload-box-perfil {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1rem;
+    cursor: pointer;
+    color: #4cd309;
+    font-weight: 600;
+}
+
+.file-upload-box-perfil:hover {
+    text-decoration: underline;
+}
+
+.file-upload-box-perfil .fas {
+    font-size: 1.2rem;
+}
+
+.label-img {
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.profile-name {
+    font-family: "Sulphur Point", sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: #333;
+    margin-top: 0.5rem;
+    margin-bottom: 0.2rem;
+}
+
+.profile-slogan {
+    color: #888;
+    font-style: italic;
+    font-size: 1em;
+    margin-top: 0;
+}
+
+.profile-form-body {
+    text-align: left;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #4cd309;
+    box-shadow: 0 0 8px rgba(76, 211, 9, 0.3);
+}
+
+.form-actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Estilos para la imagen de perfil y el botón de carga */
+.profile-img-preview {
+    width: 150px; /* Tamaño base */
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #4cd309; /* Borde verde de Vértice */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+/* Efecto hover para la imagen de perfil */
+.profile-img-preview:hover {
+    transform: scale(1.05);
+}
+
+.file-upload-box-perfil {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1rem;
+    cursor: pointer;
+    color: #4cd309;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+/* Efecto hover para el texto de cambiar foto */
+.file-upload-box-perfil:hover {
+    color: #38a80a;
+}
+
+.file-upload-box-perfil .fas {
+    font-size: 1.2rem;
+}
+
+.label-img {
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+/* Contenedor de los campos editables */
+.editable-field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Espacio entre el texto y el lápiz */
+    margin-bottom: 0.5rem; /* Espacio entre el nombre y el slogan */
+    position: relative; /* Para posicionar el lápiz */
+}
+
+/* Estilo para el input de edición */
+.editable-input {
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 1.5rem;
+    font-family: "Sulphur Point", sans-serif;
+    font-weight: 700;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.editable-input:focus {
+    outline: none;
+    border-color: #4cd309;
+    box-shadow: 0 0 5px rgba(76, 211, 9, 0.4);
+}
+
+/* El lápiz se oculta cuando se edita */
+.editable-field:hover .edit-icon {
+    visibility: visible;
+    opacity: 1;
+}
+
+.edit-icon {
+    font-size: 1.2rem;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 5px;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.editable-field:hover .edit-icon {
+    visibility: visible;
+    opacity: 1;
+}
+
+.edit-icon:hover {
+    color: #4cd309;
+}
+
+/* Clases de utilidad para ocultar/mostrar elementos */
+.input-hidden {
+    display: none;
+}
+
+.form-actions-hidden {
+    display: none;
+}
+
+/*header*/
+/* Nuevo estilo para el header para centrar los elementos */
+.header {
+    background-color: transparent; /* Fondo transparente para que el main-content lo cubra */
+    padding: 20px 30px;
+    display: flex; /* Activa Flexbox */
+    justify-content: flex-end; /* Alinea los elementos al final (derecha) */
+    align-items: center; /* Centra verticalmente los elementos */
+    width: 100%; /* Asegura que ocupe todo el ancho */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Contenedor de botones para Flexbox */
+.header-buttons {
+    display: flex; /* Activa Flexbox para los botones */
+    gap: 15px; /* Espacio entre los botones */
+    align-items: center; /* Centra verticalmente */
+}
+
+/* Estilo para los botones en el header */
+.header-buttons .btn {
+    text-decoration: none; /* Elimina el subrayado por defecto de los enlaces */
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    white-space: nowrap; /* Evita que el texto del botón se rompa en varias líneas */
+}
+
+/* Corrección para los enlaces con clase btn-secondary */
+.btn-secondary {
+    background-color: transparent; /* Elimina el fondo gris */
+    color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #e2e6ea;
+    color: #545b62;
+    border-color: #545b62;
+}

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil de Comercio - Vértice</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sulphur+Point:wght@300;400;700&display=swap" />
+    <link rel="stylesheet" href="./assets/css/comercio.productos.css" />
+    <link rel="icon" type="image/x-icon" href="../front-vertice/assets/imgs/v-vertice.png" />
+    <style>
+        /* Contenedor principal del perfil para centrarlo y darle sombra */
+        .card-perfil-edit {
+            background-color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        /* Contenedor del encabezado del perfil para la disposición flexible */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 1px;
+            margin-bottom: 1px;
+            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+            justify-content: center;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .profile-header {
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                text-align: left;
+            }
+        }
+
+        /* Estilos para la imagen de perfil y el botón de carga */
+        .profile-img-container {
+            flex-shrink: 0;
+            margin-right: 20px;
+            position: relative;
+            text-align: center;
+        }
+
+        @media (max-width: 767px) {
+            .profile-img-container {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .profile-img-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #4cd309;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        /* Efecto hover para la imagen de perfil */
+        .profile-img-preview:hover {
+            transform: scale(1.05);
+        }
+
+        .file-upload-box-perfil {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+            cursor: pointer;
+            color: #4cd309;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        /* Efecto hover para el texto de cambiar foto */
+        .file-upload-box-perfil:hover {
+            color: #38a80a;
+        }
+
+        .file-upload-box-perfil .fas {
+            font-size: 1.2rem;
+        }
+
+        /* Contenedor para el nombre y el slogan */
+        .profile-info {
+            flex-grow: 1;
+        }
+
+        /* Contenedor de los campos editables */
+        .editable-field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.5rem;
+            position: relative;
+            justify-content: center;
+        }
+
+        @media (min-width: 768px) {
+            .editable-field {
+                justify-content: flex-start;
+            }
+        }
+
+        /* Estilo para el texto de visualización */
+        .profile-name-display {
+            font-family: "Sulphur Point", sans-serif;
+            font-weight: 700;
+            font-size: 2rem;
+            color: #333;
+            margin: 0;
+        }
+
+        .profile-slogan-display {
+            color: #888;
+            font-style: italic;
+            font-size: 1em;
+            margin: 0;
+        }
+
+        /* Estilo para el input de edición */
+        .editable-input {
+            width: auto;
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 1.5rem;
+            font-family: "Sulphur Point", sans-serif;
+            font-weight: 700;
+            color: #333;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        #input-slogan.editable-input {
+            font-size: 1em;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            font-style: italic;
+            color: #888;
+        }
+
+        .editable-input:focus {
+            outline: none;
+            border-color: #4cd309;
+            box-shadow: 0 0 5px rgba(76, 211, 9, 0.4);
+        }
+
+        /* El lápiz se oculta cuando se edita */
+        .edit-icon {
+            font-size: 1.2rem;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            padding: 5px;
+            opacity: 0;
+        }
+
+        .editable-field:hover .edit-icon {
+            opacity: 1;
+        }
+
+        .edit-icon:hover {
+            color: #4cd309;
+        }
+
+        /* Clases de utilidad para ocultar/mostrar elementos */
+        .input-hidden {
+            display: none;
+        }
+
+        .form-actions-hidden {
+            display: none;
+        }
+
+        /* Estilos para el resto del formulario */
+        .profile-form-body {
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .form-control {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            border-color: #4cd309;
+            box-shadow: 0 0 8px rgba(76, 211, 9, 0.3);
+        }
+
+        .form-actions {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #4cd309;
+            color: #ffffff;
+            border: 1px solid #4cd309;
+        }
+
+        .btn-primary:hover {
+            background-color: #38a80a;
+            border-color: #38a80a;
+        }
+
+        .btn-secondary {
+            background-color: #ffffff;
+            color: #6c757d;
+            border: 1px solid #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e6ea;
+            color: #545b62;
+            border-color: #545b62;
+        }
+
+        /* Estilos para el nuevo botón de Salir */
+        .btn-logout {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+
+        .btn-logout:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="./assets/imgs/vertice-logo-largo (1).png" alt="Logo de Vértice" class="brand-logo" />
+            </div>
+            <nav class="sidebar-nav">
+                <a href="./comercio.estadisticas.html"><i class="fas fa-chart-line"></i> Estadísticas</a>
+                <h3>Administración</h3>
+                <a href="comercio.producto.html" class="active"><i class="fas fa-box"></i> Productos</a>
+                <a href="#"><i class="fas fa-sitemap"></i> Clientes</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i> Pick Up Points</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div class="header-buttons">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-eye"></i> Visitar mi tienda
+                    </button>
+                    <a href="./profile.comercio.html" class="btn btn-secondary">
+                        <i class="fas fa-user-circle"></i> Mi Cuenta
+                    </a>
+                    <button id="logout-btn" class="btn btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Salir
+                    </button>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <div class="card-perfil-edit">
+                    <div class="profile-header">
+                        <div class="profile-img-container">
+                            <img src="https://via.placeholder.com/150" alt="Foto de perfil del comercio"
+                                class="profile-img-preview" id="profile-img-preview" />
+                            <div class="file-upload-box-perfil">
+                                <i class="fas fa-camera"></i>
+                                <label for="profile-img-input" class="label-img">Cambiar foto de perfil</label>
+                                <input type="file" id="profile-img-input" name="foto_perfil" accept="image/*"
+                                    class="d-none" />
+                            </div>
+                        </div>
+
+                        <div class="profile-info">
+                            <div class="editable-field" id="nombre-field">
+                                <h1 class="profile-name-display" id="display-nombre">Agregar nombre de comercio</h1>
+                                <input type="text" id="input-nombre" class="form-control editable-input input-hidden"
+                                    placeholder="Escribe el nombre de tu comercio" />
+                                <i class="fas fa-pen edit-icon" data-target="nombre"></i>
+                            </div>
+
+                            <div class="editable-field" id="slogan-field">
+                                <p class="profile-slogan-display" id="display-slogan">Slogan del comercio o una breve
+                                    descripción</p>
+                                <input type="text" id="input-slogan" class="form-control editable-input input-hidden"
+                                    placeholder="Agrega un slogan atractivo" />
+                                <i class="fas fa-pen edit-icon" data-target="slogan"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-form-body">
+                        <div class="form-group">
+                            <label for="telefono-comercio">Teléfono</label>
+                            <input type="tel" id="telefono-comercio" name="telefono" class="form-control"
+                                placeholder="Ej. +54 9 11 1234-5678" />
+                        </div>
+                        <div class="form-group">
+                            <label for="email-comercio">Email</label>
+                            <input type="email" id="email-comercio" name="email" class="form-control"
+                                placeholder="Ej. correo@comercio.com" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="direccion-comercio">Dirección</label>
+                            <input type="text" id="direccion-comercio" name="direccion" class="form-control"
+                                placeholder="Ej. Calle Falsa 123, Ciudad" />
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcion-comercio">Descripción</label>
+                            <textarea id="descripcion-comercio" name="descripcion" class="form-control" rows="4"
+                                placeholder="Describe tu comercio, lo que ofreces, etc."></textarea>
+                        </div>
+                        <div class="form-actions form-actions-hidden" id="form-actions-edit">
+                            <button type="button" class="btn btn-secondary" id="cancelar-edicion">Cancelar</button>
+                            <button type="button" class="btn btn-primary" id="guardar-cambios-btn">Guardar
+                                Cambios</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Variables para la foto de perfil y campos editables
+        const inputFoto = document.getElementById('profile-img-input');
+        const previewFoto = document.getElementById('profile-img-preview');
+        const editIcons = document.querySelectorAll('.edit-icon');
+        const formActions = document.getElementById('form-actions-edit');
+        const guardarBtn = document.getElementById('guardar-cambios-btn');
+        const cancelarBtn = document.getElementById('cancelar-edicion');
+        const nombreField = document.getElementById('nombre-field');
+        const sloganField = document.getElementById('slogan-field');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        let isEditing = false;
+
+        // Función para cargar los datos guardados en localStorage al cargar la página
+        function loadProfileData() {
+            const savedName = localStorage.getItem('profileName');
+            const savedSlogan = localStorage.getItem('profileSlogan');
+            const savedPhoto = localStorage.getItem('profilePhoto');
+            const editMode = localStorage.getItem('editMode');
+
+            if (savedName) {
+                document.getElementById('display-nombre').innerText = savedName;
+            }
+            if (savedSlogan) {
+                document.getElementById('display-slogan').innerText = savedSlogan;
+            }
+            if (savedPhoto) {
+                previewFoto.src = savedPhoto;
+            }
+
+            // Si el modo de edición está activo, oculta los lápices
+            if (editMode === 'true') {
+                toggleEditMode(true);
+            } else {
+                toggleEditMode(false);
+            }
+        }
+
+        // Función para alternar el modo de edición
+        function toggleEditMode(enable) {
+            isEditing = enable;
+            const allEditableFields = document.querySelectorAll('.editable-field');
+
+            allEditableFields.forEach(field => {
+                const display = field.querySelector('.profile-name-display, .profile-slogan-display');
+                const input = field.querySelector('.editable-input');
+                const icon = field.querySelector('.edit-icon');
+
+                if (enable) {
+                    display.classList.add('input-hidden');
+                    input.classList.remove('input-hidden');
+                    formActions.classList.remove('form-actions-hidden');
+                    icon.style.display = 'none'; // Oculta el lápiz al editar
+                    guardarBtn.textContent = 'Guardar Cambios';
+                    guardarBtn.classList.remove('btn-edit'); // Elimina la clase btn-edit si existe
+                    cancelarBtn.style.display = 'inline-block';
+                } else {
+                    display.classList.remove('input-hidden');
+                    input.classList.add('input-hidden');
+                    formActions.classList.add('form-actions-hidden');
+                    icon.style.display = 'inline-block'; // Muestra el lápiz en modo visualización
+                    guardarBtn.textContent = 'Editar';
+                    guardarBtn.classList.add('btn-edit'); // Agrega la clase btn-edit para el botón Editar
+                    cancelarBtn.style.display = 'none';
+                }
+            });
+            localStorage.setItem('editMode', enable); // Guarda el estado en localStorage
+        }
+
+        // Evento para previsualizar la imagen seleccionada y guardarla
+        inputFoto.addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const dataURL = e.target.result;
+                    previewFoto.src = dataURL;
+                    localStorage.setItem('profilePhoto', dataURL); // Guarda la foto en localStorage
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        // Evento para el botón Guardar Cambios o Editar
+        guardarBtn.addEventListener('click', () => {
+            if (isEditing) {
+                // Modo de Guardar
+                const newName = document.getElementById('input-nombre').value;
+                const newSlogan = document.getElementById('input-slogan').value;
+
+                document.getElementById('display-nombre').innerText = newName;
+                document.getElementById('display-slogan').innerText = newSlogan;
+
+                localStorage.setItem('profileName', newName); // Guarda el nombre
+                localStorage.setItem('profileSlogan', newSlogan); // Guarda el slogan
+
+                toggleEditMode(false); // Cambia a modo visualización
+                alert('Cambios guardados visualmente.');
+            } else {
+                // Modo de Editar
+                const currentName = document.getElementById('display-nombre').innerText;
+                const currentSlogan = document.getElementById('display-slogan').innerText;
+
+                document.getElementById('input-nombre').value = currentName;
+                document.getElementById('input-slogan').value = currentSlogan;
+
+                toggleEditMode(true); // Cambia a modo edición
+            }
+        });
+
+        // Evento para el botón Cancelar
+        cancelarBtn.addEventListener('click', () => {
+            toggleEditMode(false);
+            // El valor original se mantendrá del localStorage o el valor inicial si no se ha editado
+        });
+
+        // Eventos para mostrar el input al hacer clic en el lápiz
+        nombreField.addEventListener('click', () => {
+            if (!isEditing) toggleEditMode(true);
+        });
+
+        sloganField.addEventListener('click', () => {
+            if (!isEditing) toggleEditMode(true);
+        });
+
+        // Evento para el nuevo botón "Salir de la cuenta"
+        logoutBtn.addEventListener('click', () => {
+            // Limpiar todos los datos del localStorage
+            localStorage.clear();
+            // Opcional: Redirigir al usuario a la página de inicio de sesión
+            alert('Has cerrado sesión. Los datos guardados localmente han sido borrados.');
+            // window.location.href = 'login.html'; // Descomenta esta línea si tienes una página de login
+            // Recargar la página para mostrar el estado por defecto
+            window.location.reload();
+        });
+
+        // Cargar los datos al iniciar la página
+        document.addEventListener('DOMContentLoaded', loadProfileData);
+    </script>
+</body>
+
+</html>
