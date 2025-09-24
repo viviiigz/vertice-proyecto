@@ -1,0 +1,137 @@
+/* ---- Sección "Sobre nosotros" (Hero) ---- */
+.about-us-hero-section {
+    background-color: #F5FFF5; /* Tu color de fondo claro */
+    padding: 80px 20px;
+}
+
+.about-us-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center; /* Alinea los ítems verticalmente al centro */
+    justify-content: center; /* Centra horizontalmente */
+}
+
+.about-us-container .text-content {
+    flex: 1;
+    min-width: 300px; /* Ancho mínimo para el texto */
+    max-width: 55%; /* Similara la proporción de Cheaf */
+    padding: 20px;
+    text-align: left; /* Alineación del texto a la izquierda */
+}
+
+.about-us-container .image-content {
+    flex: 1;
+    min-width: 300px; /* Ancho mínimo para la imagen */
+    max-width: 40%; /* Similara la proporción de Cheaf */
+    text-align: center;
+}
+
+.about-us-hero-section .section-title {
+    font-family: 'Sulphur Point', sans-serif; 
+    font-size: 3.8rem; 
+    font-weight: 700;
+    color: #4cd309; 
+    margin-bottom: 25px;
+    line-height: 1.1;
+    text-align: left; /* Alinea el título a la izquierda */
+}
+
+.about-us-container p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.about-us-container .image-content img {
+    width: 100%;
+    max-width: 500px; /* Para controlar el tamaño máximo en pantallas grandes */
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+/* ---- Estilos para el nuevo botón ---- */
+.btn-join {
+    display: inline-block;
+    padding: 15px 35px;
+    background-color: #4cd309; /* Tu color verde principal */
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 8px; /* Cambiado de 50px a un valor más pequeño para hacerlo cuadrado */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.btn-join:hover {
+    background-color: #3aa507;
+    transform: translateY(-3px);
+}
+
+/* Ajustes para la responsividad del botón */
+@media (max-width: 768px) {
+    .btn-join {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+/* ---- Sección "Nuestro Propósito" ---- */
+.our-purpose-section {
+    background-color: #e0f2f1; 
+    /* Ajusta el padding-bottom para que haya espacio debajo de la imagen */
+    padding: 80px 20px 80px; /* Cambiado: Añadimos un padding inferior */
+    text-align: center;
+}
+
+.our-purpose-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.our-purpose-section .section-subtitle {
+    font-family: 'Sulphur Point', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #4cd309;
+    margin-bottom: 20px;
+}
+
+.our-purpose-section .purpose-description {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: #555;
+    max-width: 800px;
+    margin: 0 auto 50px auto; 
+}
+
+.our-purpose-section .purpose-image {
+  width: 100%;
+  max-width: 800px;
+  overflow: hidden; /* Necesario para que no sobresalga el zoom */
+  margin: 30px auto 0 auto;
+  border-radius: 15px; /* Bordes redondeados al contenedor */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Sombra más marcada */
+  transition: transform 0.4s ease; /* Suavidad al hacer hover */
+}
+
+.our-purpose-section .purpose-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.4s ease-in-out; /* Transición suave para el zoom */
+    cursor: pointer; /* Indica que la imagen es interactiva */
+}
+
+/* Efecto de zoom al pasar el mouse */
+.our-purpose-section .purpose-image img:hover {
+    transform: scale(1.05); /* Agranda la imagen un 5% al pasar el mouse */
+}
