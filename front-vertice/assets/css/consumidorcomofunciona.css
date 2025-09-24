@@ -1,13 +1,14 @@
+
 /* Sección Cómo Funciona: Consumidor */
 .how-it-works-consumer-section {
-  background: linear-gradient(135deg, #ffffff 70%, #f7f5e8 100%); /* degradado suave */
+  background-color:#F5FFF5 ; /* degradado suave */
   padding: 80px 0;
   position: relative;
 }
 
 .container-split {
   display: flex;
-  align-items: center; /* centra verticalmente texto e imagen */
+  align-items: flex-start; /* centra verticalmente texto e imagen */
   justify-content: space-between;
   gap: 60px;
   max-width: 1200px;
@@ -18,19 +19,22 @@
 .container-split .text-content {
   flex: 1;
   max-width: 55%;
-  background-color: #fff; /* caja blanca para texto */
   padding: 30px;
-  border-left: 5px solid #4cd309; /* detalle verde */
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+ 
+  
 }
 
 .section-title-vertice {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 2.4rem;
+  font-family:  'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 4rem;
   font-weight: 700;
   color: #4cd309;
   margin-bottom: 20px;
+}
+
+.destacado {
+    font-weight: bold; /* O usa font-weight: 700; */
+    color: #4cd309; /* Opcional: para que también tenga el color verde */
 }
 
 .text-content p {
@@ -38,6 +42,25 @@
   color: #333;
   line-height: 1.8;
   margin-bottom: 15px;
+}
+
+/* Estilos para el nuevo botón */
+.btn-register {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #4cd309;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 20px; /* Espacio superior para separarlo del texto */
+}
+
+.btn-register:hover {
+    background-color: #3aa507;
+    transform: translateY(-3px);
 }
 
 .container-split .image-content {
@@ -82,8 +105,9 @@
 .how-it-works-vertice-section {
     background-color: #4cd309; 
     padding: 80px 0;
-    color: #fff;
+    color: #F5FFF5;
     text-align: center;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;;
 }
 
 .how-it-works-vertice-section .section-title-white {
@@ -98,7 +122,7 @@
 }
 
 .step-card {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #66e32a; /* Verde más claro para contraste */
     border-radius: 12px;
     padding: 40px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
@@ -143,7 +167,7 @@
 /* ---- Estilos para la sección de Preguntas Frecuentes ---- */
 
 .faq-section {
-  background-color: #f7f5e8;;
+  background-color: #F5FFF5;
   padding: 60px 20px;
   text-align: center;
 }
@@ -152,6 +176,7 @@
   color: #4cd309;
   font-size: 2rem;
   margin-bottom: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .faq-item {

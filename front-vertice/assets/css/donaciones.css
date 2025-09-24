@@ -1,117 +1,350 @@
-/* ---- Estilos específicos para la sección de Donaciones ---- */
-.donation-section {
+/* ---- Estilos para la sección principal de Donaciones (Hero) ---- */
+.donations-hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 80px 20px;
+    background-color: #F5FFF5; /* Corrección: Se agregó el '#' */
+    color: #333;
+    text-align: center;
+}
+
+.donations-hero .container-text-button {
+    flex: 1;
+    max-width: 550px;
+}
+
+.donations-hero .container-image {
+    flex: 1;
+    max-width: 500px;
+    text-align: center;
+}
+
+.donations-hero h1 {
+    font-family: 'Sulphur Point', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #4cd309;
+    margin-bottom: 20px;
+}
+
+.donations-hero p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.donations-hero img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.btn-donar {
+    display: inline-block;
+    padding: 15px 35px;
+    background-color: #4cd309;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-donar:hover {
+    background-color: #3aa507;
+    transform: translateY(-3px);
+}
+
+/* ---- Sección del Carrusel de Donación ---- */
+.donacion-carousel-section {
+    background-color: #4cd309;
+    color: #fff;
+    padding: 80px 0;
+}
+
+.section-title-light {
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 2.5rem;
+    color: #fdfcf8;
+    font-family: 'Sulphur Point', sans-serif;
+}
+
+.carousel-wrapper {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 20px;
+    background-color: #66e32a;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    min-height: 400px;
+    padding: 40px;
+}
+
+.carousel-wrapper input[type="radio"] {
+    display: none;
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+}
+
+.slide {
+    flex: 0 0 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.slide-content {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.slide-content h3 {
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+    /* Corrección: Se asume que la fuente no existe y se usa una de respaldo */
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: #fdfcf8;
+}
+
+.slide-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #e0e0e0;
+}
+
+.slide-image {
+    flex: 0 0 40%;
+    max-width: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.slide-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Navegación del carrusel con lógica simplificada --- */
+.carousel-nav-arrows label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #fff;
+    transition: background-color 0.3s ease;
+    z-index: 10;
+}
+
+.carousel-nav-arrows label:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Oculta todas las flechas por defecto */
+.carousel-nav-arrows label { display: none; }
+
+/* Lógica de navegación mucho más limpia */
+#slide1:checked ~ .slides { transform: translateX(0%); }
+#slide1:checked ~ .carousel-nav-arrows label[for="slide2"] { display: block; right: 10px; }
+
+#slide2:checked ~ .slides { transform: translateX(-100%); }
+#slide2:checked ~ .carousel-nav-arrows label[for="slide1"] { display: block; left: 10px; }
+#slide2:checked ~ .carousel-nav-arrows label[for="slide3"] { display: block; right: 10px; }
+
+#slide3:checked ~ .slides { transform: translateX(-200%); }
+#slide3:checked ~ .carousel-nav-arrows label[for="slide2"] { display: block; left: 10px; }
+
+.carousel-nav-arrows label[for="slide1"]::before { content: '❮'; }
+.carousel-nav-arrows label[for="slide2"]::before { content: '❮'; }
+.carousel-nav-arrows label[for="slide3"]::before { content: '❮'; }
+.carousel-nav-arrows label[for="slide2"]::before { content: '❯'; }
+.carousel-nav-arrows label[for="slide3"]::before { content: '❯'; }
+
+
+/* ---- Navegación por puntos ---- */
+.carousel-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.carousel-dots label {
+    width: 12px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#slide1:checked ~ .carousel-dots label:nth-child(1),
+#slide2:checked ~ .carousel-dots label:nth-child(2),
+#slide3:checked ~ .carousel-dots label:nth-child(3) {
+    background-color: #fff;
+    transform: scale(1.2);
+}
+
+/* ---- Responsividad para el carrusel ---- */
+@media (max-width: 768px) {
+    .donacion-carousel-section {
+        padding: 60px 0;
+    }
+    .carousel-wrapper {
+        padding: 20px;
+        min-height: auto;
+    }
+    .slide {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    .slide-content {
+        padding-right: 0;
+        text-align: center;
+    }
+    .slide-image {
+        order: -1;
+        margin-bottom: 20px;
+        max-width: 80%;
+    }
+    .slide-content h3 {
+        font-size: 1.8rem;
+    }
+    .slide-content p {
+        font-size: 1rem;
+    }
+    .carousel-nav-arrows label {
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+    }
+    .carousel-dots {
+        bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-title-light {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+    .carousel-wrapper {
+        padding: 15px;
+        border-radius: 15px;
+    }
+    .slide-image {
+        max-width: 90%;
+    }
+}
+
+/* ---- Sección La importancia de tu donación (AJUSTE FINAL) ---- */
+.importancia-donar-section {
+    background-color: #F5FFF5;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.importancia-donar-section h2 {
+    font-family: 'Sulphur Point', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: #4cd309;
+    margin-bottom: 20px;
+}
+
+.importancia-donar-section .section-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+    max-width: 800px;
+    margin: 0 auto 50px auto;
+}
+
+.features-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 40px;
-    padding: 40px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex: 1;
+    min-width: 280px;
 }
 
-.section-title {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.8rem;
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+.icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background-color: #e0f2f1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.icon-wrapper i {
+    font-size: 3rem;
+    color: #4cd309;
+}
+
+.feature-card h3 {
+    font-family: 'Sulphur Point', sans-serif;
+    font-size: 1.6rem;
     font-weight: 700;
-    color: #333;
+    color: #3b5a4d;
     margin-bottom: 15px;
 }
 
-.donation-intro p {
-    max-width: 700px;
-    line-height: 1.6;
-    color: #555;
-}
-
-.donation-form-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-.donation-card {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    max-width: 450px;
-    width: 100%;
-}
-
-.card-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #4cd309;
-    margin-bottom: 10px;
-}
-
-.card-subtitle {
+.feature-card p {
     font-size: 1rem;
-    color: #777;
-    margin-bottom: 25px;
-}
-
-.donation-options {
-    display: flex;
-    justify-content: space-around;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.donation-amount-btn {
-    flex-grow: 1;
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    background-color: #f0f0f0;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #555;
-    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
-}
-
-.donation-amount-btn:hover {
-    background-color: #e6f7e3;
-    border-color: #4cd309;
-    color: #4cd309;
-}
-
-.custom-amount {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 25px;
-}
-
-.custom-amount label {
-    font-weight: 600;
-    color: #555;
-    text-align: left;
-}
-
-#custom-donation {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    box-sizing: border-box;
-}
-
-.donate-btn {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    background-color: #4cd309;
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: 700;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
-    text-align: center;
-}
-
-.donate-btn:hover {
-    background-color: #38a508;
+    line-height: 1.7;
+    color: #666;
 }

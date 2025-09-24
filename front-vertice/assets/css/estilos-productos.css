@@ -1,0 +1,359 @@
+:root {
+    --primary-color: #008744;
+    --primary-hover: #00562e;
+    --secondary-color: #55585b;
+}
+/* Estilos para la cuadrícula de productos */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding-top: 20px;
+}
+
+/* Estilos de la tarjeta de producto */
+.product-card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 120px;
+    justify-content: space-between;
+}
+
+.product-name {
+    font-weight: 600;
+    font-size: 1.2em;
+    margin: 0;
+    color: #333;
+}
+
+.product-price-container {
+    display: flex;
+    align-items: baseline;
+    margin: 10px 0;
+}
+
+.product-price-old {
+    color: #999;
+    text-decoration: line-through;
+    font-size: 0.9em;
+    margin-right: 10px;
+}
+
+.product-price-current {
+    color: #27ae60;
+    font-weight: 700;
+    font-size: 1.5em;
+}
+
+.add-to-cart-btn {
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #27ae60;
+}
+
+/* Estilos para la sección de promociones */
+.promotions-section {
+    padding: 40px 20px;
+    background-color: #f0f2f5;
+    text-align: center;
+}
+
+
+
+.promotions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    justify-content: center;
+}
+
+.promotion-card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-align: left;
+}
+
+.promotion-card:hover {
+    transform: translateY(-5px);
+}
+
+.promotion-card img {
+    width: 100%;
+    height: 300px; /* Altura de imagen para las promociones */
+    object-fit: cover;
+}
+
+.promo-info {
+    padding: 15px;
+}
+
+.promo-info h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+}
+
+/* Estilos para la sección de categorías */
+.category-carousel-section {
+    padding: 20px 0;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+}
+
+.carousel-nav {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap; /* Para que las categorías se ajusten en pantallas pequeñas */
+}
+
+.carousel-nav a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    white-space: nowrap; /* Evita que los nombres de categoría se rompan */
+}
+
+.carousel-nav a:hover,
+.carousel-nav a.active {
+    background-color: #2ecc71;
+    color: white;
+}
+
+/* Estilo específico para la tarjeta de Banco de Alimentos */
+.promotion-card.promotion-banco-alimentos img {
+    height: 180px; /* Un poco más de altura para la imagen del banco de alimentos si lo deseas */
+}
+/* Estilos generales para el cuerpo de la página */
+body {
+    display: flex; /* Usamos Flexbox para el layout principal */
+    flex-direction: column; /* Apilamos el header, nav y main verticalmente */
+    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    background-color: #f0f2f5;
+}
+
+/* Encabezado: mantiene el logo, buscador y acciones de usuario arriba */
+.main-header {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    position: sticky !important;
+    top: 0;
+    z-index: 100;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.header-logo {
+    height: 40px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    max-width: 500px;
+    margin: 0 20px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#search-input {
+    border: none;
+    padding: 8px 15px;
+    width: 100%;
+    outline: none;
+}
+
+#search-btn {
+    background-color: transparent;
+    border: none;
+    color: #555;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profile-btn, .cart-btn {
+    color: #555;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+}
+
+.profile-btn:hover, .cart-btn:hover {
+    color: #27ae60;
+}
+
+.cart-btn {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.8em;
+}
+
+/* === Estilos para la barra de navegación lateral === */
+.main-nav-lateral {
+    position: fixed; /* Mantiene la barra en su lugar al hacer scroll */
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh; /* Ocupa toda la altura de la pantalla */
+    background-color: white;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    padding-top: 100px; /* Ajusta este valor para dejar espacio debajo del encabezado */
+    z-index: 99;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-nav-lateral a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    padding: 15px 20px;
+    border-left: 5px solid transparent;
+    transition: all 0.3s ease;
+    display: block; /* Asegura que el enlace ocupe todo el ancho */
+}
+
+.main-nav-lateral a:hover,
+.main-nav-lateral a.active {
+    background-color: #ecf0f1;
+    border-left-color: #27ae60;
+    color: #27ae60;
+}
+
+/* === Ajuste del contenido principal para dejar espacio a la barra lateral === */
+.main-content-shifted {
+    margin-left: 200px; /* Desplaza el contenido principal hacia la derecha */
+    padding: 20px;
+}
+
+
+/* Pie de página */
+.main-footer {
+    background-color: var(--secondary-color);
+    color: var(--bg-medium);
+    text-align: center;
+    padding: 20px;
+    margin-top: 50px;
+}
+/* === Estilos para el banner de ofertas === */
+.banner-oferta {
+    width: 100%; /* Asegura que la imagen ocupe todo el ancho disponible */
+    max-width: 100%; /* Evita que la imagen se desborde del contenedor */
+    height: auto; /* Mantiene la proporción de la imagen */
+    display: block; /* Elimina espacios extra debajo de la imagen */
+    margin-bottom: 20px; /* Opcional: añade un espacio debajo del banner */
+    border-radius: 8px; /* Opcional: bordes ligeramente redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Opcional: sombra suave */
+}
+
+/* === Estilos para la sección de Servicios (dos columnas) === */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas de igual tamaño */
+    gap: 20px; /* Espacio entre las tarjetas */
+    max-width: 1200px; /* Opcional: define un ancho máximo para el contenedor */
+    margin: 0 auto; /* Opcional: centra el grid en la página */
+    padding: 20px; /* Opcional: añade padding alrededor del grid */
+}
+
+/* Puedes reutilizar los estilos existentes para .promotion-card si ya los tienes definidos */
+/* Si no, asegúrate de que se vean bien con estas imágenes */
+.promotion-card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-align: left;
+    display: flex; /* Para organizar el contenido interno */
+    flex-direction: column;
+}
+
+.promotion-card:hover {
+    transform: translateY(-5px);
+}
+
+.promotion-card img {
+    width: 100%;
+    height: 180px; /* Ajusta la altura de las imágenes de las tarjetas de servicio */
+    object-fit: cover;
+}
+/* Si el banner está dentro de un contenedor, podrías necesitar ajustar este contenedor */
+/* Por ejemplo, si tienes un div envolviendo el banner: */
+/*
+.banner-container {
+    max-width: 1200px; /* Ancho máximo para el banner, similar al header */
+/* margin: 20px auto; /* Centra el banner horizontalmente y añade espacio vertical */
+/*}
+*/
