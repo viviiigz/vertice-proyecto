@@ -118,7 +118,6 @@
 .slide-content h3 {
     font-size: 2.2rem;
     margin-bottom: 15px;
-    /* Corrección: Se asume que la fuente no existe y se usa una de respaldo */
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color: #fdfcf8;
 }
@@ -129,22 +128,28 @@
     color: #e0e0e0;
 }
 
+/* Ajuste del contenedor de la imagen */
 .slide-image {
-    flex: 0 0 40%;
-    max-width: 350px;
+    flex: 0 0 50%;
+    max-width: 450px;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    border-radius: 15px;
 }
 
+/* Ajuste de la imagen */
 .slide-image img {
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     border-radius: 15px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
 }
 
-/* --- Navegación del carrusel con lógica simplificada --- */
+/* --- Lógica de navegación del carrusel --- */
 .carousel-nav-arrows label {
     position: absolute;
     top: 50%;
@@ -161,32 +166,43 @@
     color: #fff;
     transition: background-color 0.3s ease;
     z-index: 10;
+    /* Oculta las flechas por defecto */
+    opacity: 0;
+    pointer-events: none;
 }
 
 .carousel-nav-arrows label:hover {
     background-color: rgba(255, 255, 255, 0.4);
 }
 
-/* Oculta todas las flechas por defecto */
-.carousel-nav-arrows label { display: none; }
+/* Muestra y posiciona las flechas según el slide seleccionado */
+#slide1:checked ~ .carousel-nav-arrows label[for="slide2"] {
+    opacity: 1;
+    pointer-events: auto;
+    right: 10px;
+}
 
-/* Lógica de navegación mucho más limpia */
+#slide2:checked ~ .carousel-nav-arrows label[for="slide1"] {
+    opacity: 1;
+    pointer-events: auto;
+    left: 10px;
+}
+#slide2:checked ~ .carousel-nav-arrows label[for="slide3"] {
+    opacity: 1;
+    pointer-events: auto;
+    right: 10px;
+}
+
+#slide3:checked ~ .carousel-nav-arrows label[for="slide2"] {
+    opacity: 1;
+    pointer-events: auto;
+    left: 10px;
+}
+
+/* Lógica de los carruseles */
 #slide1:checked ~ .slides { transform: translateX(0%); }
-#slide1:checked ~ .carousel-nav-arrows label[for="slide2"] { display: block; right: 10px; }
-
 #slide2:checked ~ .slides { transform: translateX(-100%); }
-#slide2:checked ~ .carousel-nav-arrows label[for="slide1"] { display: block; left: 10px; }
-#slide2:checked ~ .carousel-nav-arrows label[for="slide3"] { display: block; right: 10px; }
-
 #slide3:checked ~ .slides { transform: translateX(-200%); }
-#slide3:checked ~ .carousel-nav-arrows label[for="slide2"] { display: block; left: 10px; }
-
-.carousel-nav-arrows label[for="slide1"]::before { content: '❮'; }
-.carousel-nav-arrows label[for="slide2"]::before { content: '❮'; }
-.carousel-nav-arrows label[for="slide3"]::before { content: '❮'; }
-.carousel-nav-arrows label[for="slide2"]::before { content: '❯'; }
-.carousel-nav-arrows label[for="slide3"]::before { content: '❯'; }
-
 
 /* ---- Navegación por puntos ---- */
 .carousel-dots {

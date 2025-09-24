@@ -2,8 +2,20 @@
     --primary-color: #008744;
     --primary-hover: #00562e;
     --secondary-color: #55585b;
+    --secondary-hover: #404245;
+    --accent-color: #4CAF50;
+    --danger-color: #dc3545;
+    --text-color-dark: #333;
+    --text-color-light: #fff;
+    --bg-light: #f7f7f7;
+    --bg-medium: #e9ecef;
+    --bg-dark: #2c3e50;
+    --border-color: #ddd;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --font-primary: 'Montserrat', sans-serif;
+    --font-secondary: 'Sulphur Point', sans-serif;
 }
-/* Estilos para la cuadrícula de productos */
+/* Estilos para la cuadrícula de productos
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -11,8 +23,99 @@
     padding-top: 20px;
 }
 
-/* Estilos de la tarjeta de producto */
+
+/* Cuadrícula de productos */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
 .product-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content h3 {
+    font-size: 1.2rem;
+    margin: 0 0 10px;
+    color: var(--secondary-color);
+}
+
+.card-content .product-description {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 10px;
+    flex-grow: 1;
+}
+
+.card-content .price-info {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.card-content .product-price {
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--primary-color);
+}
+
+.card-content .original-price {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    text-decoration: line-through;
+}
+
+.product-actions {
+    padding: 0 15px 15px;
+}
+
+.add-to-cart-btn {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.add-to-cart-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Estilos de la tarjeta de producto */
+/* .product-card {
     background-color: #fff;
     border-radius: 10px;
     overflow: hidden;
@@ -90,14 +193,14 @@
 
 
 
-.promotions-grid {
+.promotions-grid1 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     justify-content: center;
 }
 
-.promotion-card {
+.promotion-card1 {
     background-color: #fff;
     border-radius: 10px;
     overflow: hidden;
@@ -107,11 +210,11 @@
     text-align: left;
 }
 
-.promotion-card:hover {
+.promotion-card1:hover {
     transform: translateY(-5px);
 }
 
-.promotion-card img {
+.promotion-card1 img {
     width: 100%;
     height: 300px; /* Altura de imagen para las promociones */
     object-fit: cover;
@@ -124,7 +227,7 @@
 .promo-info h3 {
     margin-top: 0;
     font-size: 1.2em;
-}
+} */ */
 
 /* Estilos para la sección de categorías */
 .category-carousel-section {
@@ -158,7 +261,7 @@
 
 /* Estilo específico para la tarjeta de Banco de Alimentos */
 .promotion-card.promotion-banco-alimentos img {
-    height: 180px; /* Un poco más de altura para la imagen del banco de alimentos si lo deseas */
+    height: 200px; /* Un poco más de altura para la imagen del banco de alimentos si lo deseas */
 }
 /* Estilos generales para el cuerpo de la página */
 body {
@@ -229,35 +332,47 @@ body {
     gap: 15px;
 }
 
-.profile-btn, .cart-btn {
-    color: #555;
-    text-decoration: none;
-    font-size: 1.1em;
-    transition: color 0.3s ease;
+
+.profile-btn,
+.cart-btn {
+    background-color: var(--bg-medium);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: var(--secondary-color);
 }
 
-.profile-btn:hover, .cart-btn:hover {
-    color: #27ae60;
+.profile-btn:hover,
+.cart-btn:hover {
+    background-color: var(--border-color);
+}
+
+.user-icon {
+    margin-right: 5px;
 }
 
 .cart-btn {
     position: relative;
-    background: none;
-    border: none;
-    cursor: pointer;
 }
 
 .cart-count {
     position: absolute;
     top: -5px;
-    right: -10px;
-    background-color: #e74c3c;
-    color: white;
+    right: -5px;
+    background-color: var(--danger-color);
+    color: var(--text-color-light);
+    font-size: 0.7rem;
+    padding: 3px 6px;
     border-radius: 50%;
-    padding: 2px 6px;
-    font-size: 0.8em;
 }
 
+.content {
+    padding: 20px 40px;
+    flex-grow: 1;
+}
 /* === Estilos para la barra de navegación lateral === */
 .main-nav-lateral {
     position: fixed; /* Mantiene la barra en su lugar al hacer scroll */
@@ -345,15 +460,39 @@ body {
 }
 
 .promotion-card img {
-    width: 100%;
-    height: 180px; /* Ajusta la altura de las imágenes de las tarjetas de servicio */
+    width: 97%;
+    height: 4000px; /* Ajusta la altura de las imágenes de las tarjetas de servicio */
     object-fit: cover;
 }
-/* Si el banner está dentro de un contenedor, podrías necesitar ajustar este contenedor */
-/* Por ejemplo, si tienes un div envolviendo el banner: */
-/*
-.banner-container {
-    max-width: 1200px; /* Ancho máximo para el banner, similar al header */
-/* margin: 20px auto; /* Centra el banner horizontalmente y añade espacio vertical */
-/*}
-*/
+/* === Estilos para la sección de Servicios (dos columnas) === */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas de igual tamaño */
+    gap: 20px; /* Espacio entre las tarjetas */
+    max-width: 1200px; /* Opcional: define un ancho máximo para el contenedor */
+    margin: 0 auto; /* Opcional: centra el grid en la página */
+    padding: 20px; /* Opcional: añade padding alrededor del grid */
+}
+
+/* Si no, asegúrate de que se vean bien con estas imágenes */
+.promotion-card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-align: left;
+    display: flex; /* Para organizar el contenido interno */
+    flex-direction: column;
+}
+
+.promotion-card:hover {
+    transform: translateY(-5px);
+}
+
+.promotion-card img {
+    width: 100%;
+    height: 300px; /* Ajusta la altura de las imágenes de las tarjetas de servicio */
+    object-fit: cover;
+}
