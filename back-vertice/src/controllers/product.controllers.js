@@ -5,19 +5,23 @@ import { validationResult } from "express-validator";
 // Crear un nuevo producto
 export const createProduct = async (req, res) => {
   try {
-    // Validaciones de express-validator
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    // El id del usuario logueado viene del authMiddleware
-    const userId = req.user.id; // req.user lo setea authMiddleware con el JWT
+    const userId = req.user.id;
 
-    // Creamos el producto con los datos del body + el user_id
+    // Si se subió una imagen, guarda el nombre del archivo en foto_url
+    let foto_url = null;
+    if (req.file) {
+      foto_url = req.file.filename; // o req.file.path si quieres la ruta completa
+    }
+
     const savedProduct = await Product.create({
       ...req.body,
-      user_id: userId
+      user_id: userId,
+      foto_url // agrega el campo de la imagen
     });
 
     res.status(201).json(savedProduct);

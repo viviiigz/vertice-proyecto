@@ -9,6 +9,7 @@ import {
 import { validateProduct } from '../middlewares/validations/product.validator.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { authRole } from '../middlewares/authRole.js';
+import multer from 'multer';
 
 const router = Router();
 
@@ -17,10 +18,13 @@ router.get('/', getProducts);
 router.get('/:id', getProductById);
 
 // Privado (solo comercios pueden crear productos)
+const upload = multer({ dest: 'uploads/' });
+
 router.post(
   '/',
   authMiddleware,
-  authRole(['comercio']), // solo comercios
+  authRole(['comercio']),
+  upload.single('foto_url'), 
   validateProduct,
   createProduct
 );

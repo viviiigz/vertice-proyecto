@@ -84,7 +84,10 @@ export const loginUser = async (req, res) => {
 
     // Enviar datos al front sin password
     const { password: _, ...userWithoutPassword } = user.toJSON ? user.toJSON() : user;
-    res.json({ user: userWithoutPassword });
+    res.json({ 
+      token,
+      user: userWithoutPassword
+    });
 
 
   } catch (err) {

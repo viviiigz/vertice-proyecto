@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json()); 
 //rutas de la API
 app.use('/api', routes);  
 

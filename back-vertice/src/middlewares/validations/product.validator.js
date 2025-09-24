@@ -26,10 +26,6 @@ export const validateProduct = [
     .withMessage("La cantidad disponible es obligatoria")
     .isInt({ min: 0 })
     .withMessage("La cantidad disponible debe ser un número entero no negativo"),
-    body("foto_url")
-    .optional()
-    .isURL()
-    .withMessage("La URL de la foto debe ser una URL válida"),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

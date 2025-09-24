@@ -3,6 +3,8 @@ export const authRole = (rolesPermitidos = []) => {
   return (req, res, next) => {
     // req.user ya viene de authMiddleware
     if (!req.user) return res.status(401).json({ error: "No autenticado" });
+    
+    console.log("Rol recibido:", req.user ? req.user.role : undefined);
 
     if (!rolesPermitidos.includes(req.user.role)) {
       return res.status(403).json({ error: "No tienes permisos para esta acción" });
