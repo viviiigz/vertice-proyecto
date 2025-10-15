@@ -581,7 +581,7 @@ body {
 }
 /* Variables de color y tipografía */
 :root {
-    --primary-color: #008744;
+    --primary-color: #4CAF50;
     --primary-hover: #00562e;
     --secondary-color: #55585b;
     --secondary-hover: #404245;
