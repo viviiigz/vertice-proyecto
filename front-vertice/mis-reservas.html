@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vértice - Mis Reservas</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Sulphur+Point:wght@700&display=swap"
+    />
+    <link rel="stylesheet" href="./assets/css/dashboard-consumidor.css" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="./assets/imgs/v-vertice.png"
+    />
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="header-top">
+        <div class="logo-container">
+          <img
+            src="./assets/imgs/vertice-logo-largo (1).png"
+            alt="Logo de Vértice"
+            class="header-logo"
+          />
+        </div>
+        <div class="search-bar">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Buscar productos..."
+          />
+          <button id="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="header-actions">
+          <a href="./profile.consumidor.html" class="profile-btn"
+            ><i class="fas fa-user"></i> Mi Perfil</a
+          >
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count">3</span>
+          </button>
+          <button class="cart-btn">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">2</span>
+          </button>
+          <a href="./favoritos.html" class="favorite-btn">
+            <i class="fas fa-heart"></i>
+          </a>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="./usuario.consumidor.html">Inicio</a>
+        <a href="./vista-producto-user.html">Productos</a>
+        <a href="./mis-reservas.html" class="active">Mis Reservas</a>
+        <a href="./puntos-recogida.html">Puntos de Recogida</a>
+        <a href="./donaciones.html">Donaciones</a>
+        <a href="./favoritos.html">Mis Favoritos</a>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <!-- Mis Reservas Section -->
+      <section id="mis-reservas" class="reservas-section">
+        <div class="section-header">
+          <h2>Mis Reservas</h2>
+        </div>
+        
+        <div class="tabs-container">
+          <div class="tabs-header">
+            <button class="tab-btn active" data-tab="tab-activas">Reservas Activas</button>
+            <button class="tab-btn" data-tab="tab-historial">Historial</button>
+          </div>
+          
+          <div id="tab-activas" class="tab-content active">
+            <div class="reservas-list">
+              <!-- Reservas activas -->
+              <div class="reserva-card">
+                <div class="reserva-header">
+                  <h3>Reserva #R2025-001</h3>
+                  <span class="reserva-status pending">Pendiente de Retiro</span>
+                </div>
+                <div class="reserva-content">
+                  <div class="reserva-info">
+                    <p><strong>Fecha de Reserva:</strong> 15/05/2025</p>
+                    <p><strong>Fecha de Retiro:</strong> 17/05/2025</p>
+                    <p><strong>Punto de Recogida:</strong> Mercado Central, Local 23</p>
+                    <p><strong>Total:</strong> $580</p>
+                  </div>
+                  <div class="reserva-products">
+                    <h4>Productos (3)</h4>
+                    <ul class="product-list">
+                      <li>
+                        <img src="assets/imgs/pan.jpg" alt="Pan Artesanal" class="product-thumbnail">
+                        <div class="product-details">
+                          <span class="product-name">Pan Artesanal</span>
+                          <span class="product-price">$120</span>
+                        </div>
+                      </li>
+                      <li>
+                        <img src="assets/imgs/frutas.jpg" alt="Frutas Variadas" class="product-thumbnail">
+                        <div class="product-details">
+                          <span class="product-name">Frutas Variadas</span>
+                          <span class="product-price">$260</span>
+                        </div>
+                      </li>
+                      <li>
+                        <img src="assets/imgs/queso.jpg" alt="Queso Artesanal" class="product-thumbnail">
+                        <div class="product-details">
+                          <span class="product-name">Queso Artesanal</span>
+                          <span class="product-price">$200</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="reserva-actions">
+                  <button class="btn-vertice-sm"><i class="fas fa-map-marker-alt"></i> Ver Ubicación</button>
+                  <button class="btn-vertice-outline-sm"><i class="fas fa-times"></i> Cancelar Reserva</button>
+                </div>
+              </div>
+              
+              <div class="reserva-card">
+                <div class="reserva-header">
+                  <h3>Reserva #R2025-002</h3>
+                  <span class="reserva-status ready">Lista para Retirar</span>
+                </div>
+                <div class="reserva-content">
+                  <div class="reserva-info">
+                    <p><strong>Fecha de Reserva:</strong> 14/05/2025</p>
+                    <p><strong>Fecha de Retiro:</strong> 16/05/2025</p>
+                    <p><strong>Punto de Recogida:</strong> Verdulería Orgánica, Av. Santa Fe 3500</p>
+                    <p><strong>Total:</strong> $420</p>
+                  </div>
+                  <div class="reserva-products">
+                    <h4>Productos (2)</h4>
+                    <ul class="product-list">
+                      <li>
+                        <img src="assets/imgs/verduras.jpg" alt="Mix de Verduras" class="product-thumbnail">
+                        <div class="product-details">
+                          <span class="product-name">Mix de Verduras</span>
+                          <span class="product-price">$200</span>
+                        </div>
+                      </li>
+                      <li>
+                        <img src="assets/imgs/yogurt.jpg" alt="Yogur Natural" class="product-thumbnail">
+                        <div class="product-details">
+                          <span class="product-name">Yogur Natural</span>
+                          <span class="product-price">$220</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="reserva-actions">
+                  <button class="btn-vertice-sm"><i class="fas fa-map-marker-alt"></i> Ver Ubicación</button>
+                  <button class="btn-vertice-outline-sm"><i class="fas fa-times"></i> Cancelar Reserva</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div id="tab-historial" class="tab-content">
+            <div class="reservas-list">
+              <!-- Historial de reservas -->
+              <div class="reserva-card completed">
+                <div class="reserva-header">
+                  <h3>Reserva #R2025-000</h3>
+                  <span class="reserva-status completed">Completada</span>
+                </div>
+                <div class="reserva-content">
+                  <div class="reserva-info">
+                    <p><strong>Fecha de Reserva:</strong> 10/05/2025</p>
+                    <p><strong>Fecha de Retiro:</strong> 12/05/2025</p>
+                    <p><strong>Punto de Recogida:</strong> Panadería El Molino, Av. Corrientes 1234</p>
+                    <p><strong>Total:</strong> $350</p>
+                  </div>
+                  <div class="reserva-products">
+                    <h4>Productos (2)</h4>
+                    <ul class="product-list">
+                      <li>
+                        <img src="assets/imgs/pan.jpg" alt="Pan Artesanal" class="product-thumbnail">
+                        <div class="product-details">
+                          <span class="product-name">Pan Artesanal</span>
+                          <span class="product-price">$120</span>
+                        </div>
+                      </li>
+                      <li>
+                        <img src="assets/imgs/pasta.jpg" alt="Pasta Fresca" class="product-thumbnail">
+                        <div class="product-details">
+                          <span class="product-name">Pasta Fresca</span>
+                          <span class="product-price">$230</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="reserva-actions">
+                  <button class="btn-vertice-sm"><i class="fas fa-receipt"></i> Ver Detalle</button>
+                  <button class="btn-vertice-outline-sm"><i class="fas fa-redo"></i> Repetir Pedido</button>
+                </div>
+              </div>
+              
+              <div class="reserva-card completed">
+                <div class="reserva-header">
+                  <h3>Reserva #R2025-0012</h3>
+                  <span class="reserva-status completed">Completada</span>
+                </div>
+                <div class="reserva-content">
+                  <div class="reserva-info">
+                    <p><strong>Fecha de Reserva:</strong> 05/05/2025</p>
+                    <p><strong>Fecha de Retiro:</strong> 07/05/2025</p>
+                    <p><strong>Punto de Recogida:</strong> Lácteos del Sur, Av. Rivadavia 8500</p>
+                    <p><strong>Total:</strong> $480</p>
+                  </div>
+                  <div class="reserva-products">
+                    <h4>Productos (3)</h4>
+                    <ul class="product-list">
+                      <li>
+                        <img src="assets/imgs/queso.jpg" alt="Queso Artesanal" class="product-thumbnail">
+                        <div class="product-details">
+                          <span class="product-name">Queso Artesanal</span>
+                          <span class="product-price">$200</span>
+                        </div>
+                      </li>
+                      <li>
+                        <img src="assets/imgs/yogurt.jpg" alt="Yogur Natural" class="product-thumbnail">
+                        <div class="product-details">
+                          <span class="product-name">Yogur Natural</span>
+                          <span class="product-price">$130</span>
+                        </div>
+                      </li>
+                      <li>
+                        <img src="assets/imgs/frutas.jpg" alt="Frutas Variadas" class="product-thumbnail">
+                        <div class="product-details">
+                          <span class="product-name">Frutas Variadas</span>
+                          <span class="product-price">$150</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="reserva-actions">
+                  <button class="btn-vertice-sm"><i class="fas fa-receipt"></i> Ver Detalle</button>
+                  <button class="btn-vertice-outline-sm"><i class="fas fa-redo"></i> Repetir Pedido</button>
+                </div>
+              </div>
+              
+              <div class="reserva-card cancelled">
+                <div class="reserva-header">
+                  <h3>Reserva #R2025-0010</h3>
+                  <span class="reserva-status cancelled">Cancelada</span>
+                </div>
+                <div class="reserva-content">
+                  <div class="reserva-info">
+                    <p><strong>Fecha de Reserva:</strong> 01/05/2025</p>
+                    <p><strong>Fecha de Cancelación:</strong> 02/05/2025</p>
+                    <p><strong>Punto de Recogida:</strong> Mercado Central, Local 23</p>
+                    <p><strong>Total:</strong> $320</p>
+                  </div>
+                  <div class="reserva-products">
+                    <h4>Productos (2)</h4>
+                    <ul class="product-list">
+                      <li>
+                        <img src="assets/imgs/verduras.jpg" alt="Mix de Verduras" class="product-thumbnail">
+                        <div class="product-details">
+                          <span class="product-name">Mix de Verduras</span>
+                          <span class="product-price">$200</span>
+                        </div>
+                      </li>
+                      <li>
+                        <img src="assets/imgs/pan.jpg" alt="Pan Artesanal" class="product-thumbnail">
+                        <div class="product-details">
+                          <span class="product-name">Pan Artesanal</span>
+                          <span class="product-price">$120</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="reserva-actions">
+                  <button class="btn-vertice-sm"><i class="fas fa-receipt"></i> Ver Detalle</button>
+                  <button class="btn-vertice-outline-sm"><i class="fas fa-redo"></i> Repetir Pedido</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="main-footer">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <img src="./assets/imgs/vertice-logo-largo (1).png" alt="Logo de Vértice" class="footer-logo-img">
+          <p>Tu mercado sostenible</p>
+        </div>
+        
+        <div class="footer-links">
+          <div class="footer-column">
+            <h3>Navegación</h3>
+            <ul>
+              <li><a href="./usuario.consumidor.html">Inicio</a></li>
+              <li><a href="./vista-producto-user.html">Productos</a></li>
+              <li><a href="./puntos-recogida.html">Puntos de Recogida</a></li>
+              <li><a href="./donaciones.html">Donaciones</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Mi Cuenta</h3>
+            <ul>
+              <li><a href="./profile.consumidor.html">Mi Perfil</a></li>
+              <li><a href="./favoritos.html">Mis Favoritos</a></li>
+              <li><a href="./mis-reservas.html">Mis Reservas</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Contacto</h3>
+            <ul>
+              <li><i class="fas fa-envelope"></i> info@vertice.com</li>
+              <li><i class="fas fa-phone"></i> +54 9 11 5555-5555</li>
+              <li><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Ciudad</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="footer-social">
+          <h3>Síguenos</h3>
+          <div class="social-icons">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>© 2025 Vértice. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <!-- Notification Panel -->
+    <div class="notification-panel" id="notification-panel">
+      <div class="notification-header">
+        <h3>Notificaciones</h3>
+        <button class="close-notifications"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="notification-list">
+        <div class="notification-item unread">
+          <div class="notification-icon"><i class="fas fa-shopping-bag"></i></div>
+          <div class="notification-content">
+            <p>Tu reserva de "Canasta de Verduras" está lista para retirar.</p>
+            <span class="notification-time">Hace 1 hora</span>
+          </div>
+        </div>
+        <div class="notification-item unread">
+          <div class="notification-icon"><i class="fas fa-hand-holding-heart"></i></div>
+          <div class="notification-content">
+            <p>Panadería El Molino ha donado 15kg de pan al Banco de Alimentos.</p>
+            <span class="notification-time">Hace 2 días</span>
+          </div>
+        </div>
+        <div class="notification-item">
+          <div class="notification-icon"><i class="fas fa-tag"></i></div>
+          <div class="notification-content">
+            <p>¡Nuevas ofertas disponibles en tu zona!</p>
+            <span class="notification-time">Hace 3 días</span>
+          </div>
+        </div>
+      </div>
+      <div class="notification-footer">
+        <button class="btn-vertice-sm">Marcar todas como leídas</button>
+      </div>
+    </div>
+
+    <!-- Shopping Cart Panel -->
+    <div class="cart-panel" id="cart-panel">
+      <div class="cart-header">
+        <h3>Mi Carrito</h3>
+        <button class="close-cart"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="cart-items">
+        <div class="cart-item">
+          <img src="assets/imgs/pan.jpg" alt="Producto" class="cart-item-image">
+          <div class="cart-item-details">
+            <h4>Pan Artesanal</h4>
+            <p class="cart-item-price">$120</p>
+          </div>
+          <div class="cart-item-quantity">
+            <button class="quantity-btn decrease"><i class="fas fa-minus"></i></button>
+            <span class="quantity">1</span>
+            <button class="quantity-btn increase"><i class="fas fa-plus"></i></button>
+          </div>
+          <button class="remove-item"><i class="fas fa-trash"></i></button>
+        </div>
+        <div class="cart-item">
+          <img src="assets/imgs/frutas.jpg" alt="Producto" class="cart-item-image">
+          <div class="cart-item-details">
+            <h4>Frutas Variadas</h4>
+            <p class="cart-item-price">$262</p>
+          </div>
+          <div class="cart-item-quantity">
+            <button class="quantity-btn decrease"><i class="fas fa-minus"></i></button>
+            <span class="quantity">1</span>
+            <button class="quantity-btn increase"><i class="fas fa-plus"></i></button>
+          </div>
+          <button class="remove-item"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total:</span>
+          <span class="total-amount">$382</span>
+        </div>
+        <button class="btn-vertice">Reservar Productos</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <script src="./assets/js/dashboard-consumidor.js"></script>
+  </body>
+</html>
