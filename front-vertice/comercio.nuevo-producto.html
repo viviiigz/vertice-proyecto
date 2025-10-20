@@ -151,6 +151,110 @@
                 alert('Error al guardar el producto');
             }
         });*/
+        // solo subir foto de producto y que se guarde visualmente
+        
+        // Script para seleccionar imagen de la galería
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileUploadBox = document.getElementById('file-upload-box');
+            const fileInput = document.getElementById('imagen');
+            const fileNameSpan = document.getElementById('file-name');
+
+            // Abrir selector de archivos al hacer clic en el área de carga
+            fileUploadBox.addEventListener('click', function () {
+                fileInput.click();
+            });
+
+            // Mostrar el nombre del archivo seleccionado y preview de la imagen
+            fileInput.addEventListener('change', function () {
+                if (this.files.length > 0) {
+                    const file = this.files[0];
+                    
+                    // Verificar que sea una imagen
+                    if (file.type.startsWith('image/')) {
+                        fileNameSpan.textContent = file.name;
+                        
+                        // Crear preview de la imagen
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            // Cambiar el contenido del upload box para mostrar la imagen
+                            fileUploadBox.innerHTML = `
+                                <img src="${e.target.result}" alt="Preview" style="max-width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px;">
+                                <span style="display: block; margin-top: 10px; font-size: 14px; color: #666;">${file.name}</span>
+                            `;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        alert('Por favor selecciona un archivo de imagen válido');
+                        this.value = '';
+                        fileNameSpan.textContent = 'Ningún archivo seleccionado';
+                    }
+                } else {
+                    fileNameSpan.textContent = 'Ningún archivo seleccionado';
+                    // Restaurar el contenido original del upload box
+                    fileUploadBox.innerHTML = `
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span id="file-name">Ningún archivo seleccionado</span>
+                    `;
+                }
+            });
+
+            // Guardar producto en localStorage y redireccionar
+            document.getElementById('form-nuevo-producto').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Obtener datos del formulario
+                const nombre = document.getElementById('nombre').value;
+                const descripcion = document.getElementById('descripcion').value;
+                const stock = document.getElementById('stock').value;
+                const precioOriginal = document.getElementById('precio-original').value;
+                const precioOferta = document.getElementById('precio_descuento').value;
+                const categoria = document.getElementById('categoria-input').value;
+                const imagenFile = document.getElementById('imagen').files[0];
+                
+                // Validar campos obligatorios
+                if (!nombre || !stock || !precioOriginal) {
+                    alert('Por favor completa todos los campos obligatorios');
+                    return;
+                }
+                
+                // Función para guardar el producto
+                function guardarProducto(imagenBase64 = null) {
+                    const nuevoProducto = {
+                        id: Date.now(), // ID único basado en timestamp
+                        nombre: nombre,
+                        descripcion: descripcion,
+                        stock: parseInt(stock),
+                        precioOriginal: parseFloat(precioOriginal),
+                        precioOferta: precioOferta ? parseFloat(precioOferta) : null,
+                        categoria: categoria,
+                        imagen: imagenBase64 || './assets/imgs/default-product.jpg'
+                    };
+                    
+                    // Obtener productos existentes del localStorage
+                    let productos = JSON.parse(localStorage.getItem('productos')) || [];
+                    
+                    // Agregar el nuevo producto
+                    productos.push(nuevoProducto);
+                    
+                    // Guardar en localStorage
+                    localStorage.setItem('productos', JSON.stringify(productos));
+                    
+                    // Redireccionar a la página de productos
+                    window.location.href = './comercio.producto.html';
+                }
+                
+                // Si hay una imagen, convertirla a Base64
+                if (imagenFile) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        guardarProducto(e.target.result);
+                    };
+                    reader.readAsDataURL(imagenFile);
+                } else {
+                    guardarProducto();
+                }
+            });
+        });
     </script>
 </body>
 
