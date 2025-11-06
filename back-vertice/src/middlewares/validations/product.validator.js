@@ -31,6 +31,14 @@ export const validateProduct = [
     .withMessage("La cantidad disponible es obligatoria")
     .isInt({ min: 0 })
     .withMessage("La cantidad disponible debe ser un número entero no negativo"),
+  body("categoria")
+    .optional()
+    .isIn(['comida-por-caducarse', 'para-donar'])
+    .withMessage("La categoría debe ser 'comida-por-caducarse' o 'para-donar'"),
+  body("tipo_producto")
+    .optional()
+    .isIn(['lacteos', 'frescos', 'bebidas'])
+    .withMessage("El tipo de producto debe ser 'lacteos', 'frescos' o 'bebidas'"),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

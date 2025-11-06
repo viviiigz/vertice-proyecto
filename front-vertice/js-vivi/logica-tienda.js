@@ -22,6 +22,105 @@ document.addEventListener('DOMContentLoaded', () => {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     // ========================================
+    // FUNCIONES DE NOTIFICACIONES
+    // ========================================
+    function mostrarMensajeExito(mensaje) {
+        const mensajeDiv = document.createElement('div');
+        mensajeDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4cd309;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+        `;
+        mensajeDiv.textContent = '✓ ' + mensaje;
+        document.body.appendChild(mensajeDiv);
+        
+        setTimeout(() => {
+            mensajeDiv.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => mensajeDiv.remove(), 300);
+        }, 3000);
+    }
+
+    function mostrarMensajeError(mensaje) {
+        const mensajeDiv = document.createElement('div');
+        mensajeDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #dc3545;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+        `;
+        mensajeDiv.textContent = '✗ ' + mensaje;
+        document.body.appendChild(mensajeDiv);
+        
+        setTimeout(() => {
+            mensajeDiv.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => mensajeDiv.remove(), 300);
+        }, 4000);
+    }
+
+    function mostrarMensajeInfo(mensaje) {
+        const mensajeDiv = document.createElement('div');
+        mensajeDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #17a2b8;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+        `;
+        mensajeDiv.textContent = 'ℹ ' + mensaje;
+        document.body.appendChild(mensajeDiv);
+        
+        setTimeout(() => {
+            mensajeDiv.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => mensajeDiv.remove(), 300);
+        }, 3000);
+    }
+
+    function mostrarMensajeAdvertencia(mensaje) {
+        const mensajeDiv = document.createElement('div');
+        mensajeDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ffc107;
+            color: #333;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+        `;
+        mensajeDiv.textContent = '⚠ ' + mensaje;
+        document.body.appendChild(mensajeDiv);
+        
+        setTimeout(() => {
+            mensajeDiv.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => mensajeDiv.remove(), 300);
+        }, 3500);
+    }
+
+    // ========================================
     // FUNCIONES DE API - PRODUCTOS
     // ========================================
     async function obtenerProductos() {
@@ -183,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cart.push(producto);
             guardarCarrito();
             actualizarContadorCarrito();
-            alert(`"${producto.nombre}" ha sido agregado al carrito.`);
+            mostrarMensajeExito(`"${producto.nombre}" ha sido agregado al carrito`);
         }
     }
 
@@ -251,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         };
                         reader.readAsDataURL(file);
                     } else {
-                        alert('Por favor selecciona un archivo de imagen válido');
+                        mostrarMensajeAdvertencia('Por favor selecciona un archivo de imagen válido');
                         this.value = '';
                     }
                 } else {
@@ -274,17 +373,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const precioOriginal = document.getElementById('precio-original')?.value;
             const precioOferta = document.getElementById('precio_descuento')?.value;
             const categoria = document.getElementById('categoria-input')?.value;
+            const tipoProducto = document.getElementById('tipo-producto')?.value;
             const imagenFile = fileInput?.files[0];
 
             console.log('Datos del formulario:', {
-                nombre, descripcion, stock, precioOriginal, precioOferta, categoria,
+                nombre, descripcion, stock, precioOriginal, precioOferta, categoria, tipoProducto,
                 imagen: imagenFile ? imagenFile.name : 'Sin imagen'
             });
 
             // Validar campos obligatorios
             if (!nombre || !stock || !precioOriginal || !precioOferta) {
                 console.log('Validación fallida - Campos faltantes');
-                alert('Por favor completa todos los campos obligatorios (Nombre, Stock, Precio Original y Precio con Descuento)');
+                mostrarMensajeAdvertencia('Por favor completa todos los campos obligatorios (Nombre, Stock, Precio Original y Precio con Descuento)');
                 return;
             }
 
@@ -298,6 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('precio_original', precioOriginal);
             formData.append('precio_descuento', precioOferta);
             formData.append('categoria', categoria || '');
+            formData.append('tipo_producto', tipoProducto || '');
             if (imagenFile) formData.append('foto_url', imagenFile);
 
             console.log('FormData creado');
@@ -305,19 +406,29 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 console.log('Enviando producto al backend...');
                 const resultado = await crearProducto(formData);
-                console.log('Producto creado:', resultado);
-                alert('¡Producto guardado correctamente!');
+                console.log('Producto creado exitosamente:', resultado);
                 
-                console.log('Redirigiendo a usuario.tienda.html...');
-                // Redireccionar a la página de todos los productos
-                window.location.href = './usuario.tienda.html';
+                // Mostrar mensaje de éxito
+                mostrarMensajeExito('¡Producto guardado correctamente! Redirigiendo...');
+                
+                console.log(' Iniciando timeout para redirigir en 2 segundos...');
+                console.log(' URL de redirección: ./comercio.producto.html');
+                
+                // Redireccionar a la página de productos del comercio después de 2 segundos
+                setTimeout(() => {
+                    console.log(' Ejecutando redirección ahora...');
+                    window.location.href = '/comercio.producto.html';
+                }, 5000);
+                
             } catch (error) {
-                console.error('Error completo:', error);
+                console.error(' Error completo:', error);
                 if (error.message.includes('autenticado')) {
-                    alert('No estás autenticado. Redirigiendo al login...');
-                    window.location.href = 'login.html';
+                    mostrarMensajeError('No estás autenticado. Redirigiendo al login...');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
                 } else {
-                    alert(`Error al guardar el producto: ${error.message}`);
+                    mostrarMensajeError(`Error al guardar el producto: ${error.message}`);
                 }
             }
         });

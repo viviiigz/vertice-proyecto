@@ -22,8 +22,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['consumidor', 'comercio', 'banco', 'admin'],
     required: true
-  }
-  ,
+  },
   estadoVerificacion: {
     type: String,
     enum: ['pendiente', 'aprobado', 'rechazado'],
@@ -32,6 +31,31 @@ const userSchema = new mongoose.Schema({
   documentoVerificacion: {
     type: String,
     default: null
+  },
+  // Campos de perfil (editables por el usuario)
+  descripcion: {
+    type: String,
+    default: '',
+    maxlength: 500
+  },
+  telefono: {
+    type: String,
+    default: '',
+    maxlength: 20
+  },
+  direccion: {
+    type: String,
+    default: '',
+    maxlength: 200
+  },
+  horarios: {
+    type: String,
+    default: '',
+    maxlength: 200
+  },
+  fotoPerfil: {
+    type: String,
+    default: null // Puede ser una URL o el nombre del archivo guardado
   }
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

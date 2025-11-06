@@ -158,6 +158,32 @@
             </div>
           </div>
         </div>
+
+        <!-- Modal de confirmación de eliminación -->
+        <div class="modal-filtro-container" id="eliminar-modal">
+          <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+              <h3>Confirmar eliminación</h3>
+              <button class="close-modal" id="close-eliminar-modal">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <p style="margin-bottom: 15px; color: #666;">¿Estás seguro de que deseas eliminar este producto?</p>
+              <div id="producto-info-eliminar" style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                <!-- Aquí se mostrará la info del producto -->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="cancelar-eliminar-btn" class="btn btn-secondary">
+                Cancelar
+              </button>
+              <button id="confirmar-eliminar-btn" class="btn btn-danger">
+                Eliminar producto
+              </button>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
     <script src="./js-vivi/comercio.js"></script>

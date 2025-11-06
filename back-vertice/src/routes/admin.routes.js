@@ -4,8 +4,6 @@ import mongoose from 'mongoose';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { authRole } from '../middlewares/authRole.js';
 
-console.log('Cargando rutas de admin (admin.routes.js)');
-
 const router = Router();
 
 // Ruta de depuración NO protegida (solo para desarrollo local): devuelve solicitudes pendientes
@@ -13,11 +11,9 @@ const router = Router();
 router.get('/solicitudes/debug', async (req, res) => {
   try {
     if (mongoose.connection.readyState !== 1) {
-      console.warn('DEBUG /solicitudes/debug - MongoDB no conectado (readyState=' + mongoose.connection.readyState + ')');
       return res.status(503).json({ success: false, error: 'DB_NOT_CONNECTED' });
     }
     const solicitudes = await UserModel.find({ estadoVerificacion: 'pendiente', role: 'banco' }).select('username email documentoVerificacion created_at');
-    console.log('DEBUG /solicitudes/debug - encontradas:', solicitudes.length);
     return res.json({ success: true, solicitudes });
   } catch (error) {
     console.error('Error en debug solicitudes:', error);
@@ -33,7 +29,6 @@ router.get('/solicitudes/mock', async (req, res) => {
       { _id: 'mock-1', username: 'Banco Alimentario Central', email: 'central@banco.test', documentoVerificacion: 'mock-central.pdf', created_at: now },
       { _id: 'mock-2', username: 'Banco Solidario Norte', email: 'norte@banco.test', documentoVerificacion: 'mock-norte.pdf', created_at: now }
     ];
-    console.log('MOCK /solicitudes/mock - sirviendo datos de ejemplo:', mock.length);
     return res.json({ success: true, solicitudes: mock });
   } catch (error) {
     console.error('Error en mock solicitudes:', error);
@@ -51,14 +46,11 @@ router.use(authMiddleware, authRole(['admin']));
 
 // GET /admin/solicitudes - mostrar solicitudes de bancos pendientes
 router.get('/solicitudes', async (req, res) => {
-  console.log('Petición GET /api/admin/solicitudes - headers:', req.headers && req.headers.authorization ? 'Authorization present' : 'no Authorization');
   try {
     if (mongoose.connection.readyState !== 1) {
-      console.warn('/solicitudes - MongoDB no conectado (readyState=' + mongoose.connection.readyState + ')');
       return res.status(503).send('Servicio temporalmente no disponible (DB desconectada)');
     }
     const solicitudes = await UserModel.find({ estadoVerificacion: 'pendiente', role: 'banco' });
-    // Renderizar la vista EJS y pasar las solicitudes
     return res.render('admin-solicitudes', { solicitudes });
   } catch (error) {
     console.error('Error al obtener solicitudes de bancos:', error);
@@ -69,13 +61,10 @@ router.get('/solicitudes', async (req, res) => {
 // GET /admin/solicitudes/data - devolver JSON con solicitudes pendientes (para frontend SPA)
 router.get('/solicitudes/data', async (req, res) => {
   try {
-    console.log('GET /solicitudes/data - req.user:', req.user ? req.user.email : 'no-user');
     if (mongoose.connection.readyState !== 1) {
-      console.warn('GET /solicitudes/data - MongoDB no conectado (readyState=' + mongoose.connection.readyState + ')');
       return res.status(503).json({ success: false, error: 'DB_NOT_CONNECTED' });
     }
     const solicitudes = await UserModel.find({ estadoVerificacion: 'pendiente', role: 'banco' }).select('username email documentoVerificacion created_at');
-    console.log('GET /solicitudes/data - encontradas:', solicitudes.length);
     return res.json({ success: true, solicitudes });
   } catch (error) {
     console.error('Error al obtener solicitudes (data):', error);

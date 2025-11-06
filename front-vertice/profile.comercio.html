@@ -115,22 +115,6 @@
             flex-grow: 1;
         }
 
-        /* Contenedor de los campos editables */
-        .editable-field {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 0.5rem;
-            position: relative;
-            justify-content: center;
-        }
-
-        @media (min-width: 768px) {
-            .editable-field {
-                justify-content: flex-start;
-            }
-        }
-
         /* Estilo para el texto de visualización */
         .profile-name-display {
             font-family: "Sulphur Point", sans-serif;
@@ -174,24 +158,6 @@
             outline: none;
             border-color: #4cd309;
             box-shadow: 0 0 5px rgba(76, 211, 9, 0.4);
-        }
-
-        /* El lápiz se oculta cuando se edita */
-        .edit-icon {
-            font-size: 1.2rem;
-            color: #999;
-            cursor: pointer;
-            transition: color 0.2s ease;
-            padding: 5px;
-            opacity: 0;
-        }
-
-        .editable-field:hover .edit-icon {
-            opacity: 1;
-        }
-
-        .edit-icon:hover {
-            color: #4cd309;
         }
 
         /* Clases de utilidad para ocultar/mostrar elementos */
@@ -333,20 +299,12 @@
                         </div>
 
                         <div class="profile-info">
-                            <div class="editable-field" id="nombre-field">
-                                <h1 class="profile-name-display" id="display-nombre">Agregar nombre de comercio</h1>
-                                <input type="text" id="input-nombre" class="form-control editable-input input-hidden"
-                                    placeholder="Escribe el nombre de tu comercio" />
-                                <i class="fas fa-pen edit-icon" data-target="nombre"></i>
+                            <!-- Nombre de usuario (solo lectura) -->
+                            <div id="nombre-field">
+                                <h1 class="profile-name-display" id="display-nombre">Nombre de Usuario</h1>
                             </div>
 
-                            <div class="editable-field" id="slogan-field">
-                                <p class="profile-slogan-display" id="display-slogan">Slogan del comercio o una breve
-                                    descripción</p>
-                                <input type="text" id="input-slogan" class="form-control editable-input input-hidden"
-                                    placeholder="Agrega un slogan atractivo" />
-                                <i class="fas fa-pen edit-icon" data-target="slogan"></i>
-                            </div>
+                            <!-- Email (solo lectura - se muestra en el formulario más abajo) -->
                         </div>
                     </div>
 
@@ -359,7 +317,7 @@
                         <div class="form-group">
                             <label for="email-comercio">Email</label>
                             <input type="email" id="email-comercio" name="email" class="form-control"
-                                placeholder="Ej. correo@comercio.com" required />
+                                placeholder="Ej. correo@comercio.com" readonly />
                         </div>
                         <div class="form-group">
                             <label for="direccion-comercio">Dirección</label>
@@ -385,148 +343,30 @@
         </main>
     </div>
 
+    <!-- Script centralizado de perfil -->
+    <script src="./js-vivi/perfil.js"></script>
     <script>
-        // Variables para la foto de perfil y campos editables
+        // Variables para la foto de perfil
         const inputFoto = document.getElementById('profile-img-input');
         const previewFoto = document.getElementById('profile-img-preview');
-        const editIcons = document.querySelectorAll('.edit-icon');
-        const formActions = document.getElementById('form-actions-edit');
-        const guardarBtn = document.getElementById('guardar-cambios-btn');
-        const cancelarBtn = document.getElementById('cancelar-edicion');
-        const nombreField = document.getElementById('nombre-field');
-        const sloganField = document.getElementById('slogan-field');
-        // Se cambió el ID del botón a 'cerrar-sesion-btn' para evitar duplicados
-        const cerrarSesionBtn = document.getElementById('cerrar-sesion-btn');
 
-        let isEditing = false;
-
-        // Función para cargar los datos guardados en localStorage al cargar la página
-        function loadProfileData() {
-            const savedName = localStorage.getItem('profileName');
-            const savedSlogan = localStorage.getItem('profileSlogan');
-            const savedPhoto = localStorage.getItem('profilePhoto');
-            const editMode = localStorage.getItem('editMode');
-
-            if (savedName) {
-                document.getElementById('display-nombre').innerText = savedName;
-            }
-            if (savedSlogan) {
-                document.getElementById('display-slogan').innerText = savedSlogan;
-            }
-            if (savedPhoto) {
-                previewFoto.src = savedPhoto;
-            }
-
-            // Si el modo de edición está activo, oculta los lápices
-            if (editMode === 'true') {
-                toggleEditMode(true);
-            } else {
-                toggleEditMode(false);
-            }
-        }
-
-        // Función para alternar el modo de edición
-        function toggleEditMode(enable) {
-            isEditing = enable;
-            const allEditableFields = document.querySelectorAll('.editable-field');
-
-            allEditableFields.forEach(field => {
-                const display = field.querySelector('.profile-name-display, .profile-slogan-display');
-                const input = field.querySelector('.editable-input');
-                const icon = field.querySelector('.edit-icon');
-
-                if (enable) {
-                    display.classList.add('input-hidden');
-                    input.classList.remove('input-hidden');
-                    formActions.classList.remove('form-actions-hidden');
-                    icon.style.display = 'none'; // Oculta el lápiz al editar
-                    guardarBtn.textContent = 'Guardar Cambios';
-                    guardarBtn.classList.remove('btn-edit'); // Elimina la clase btn-edit si existe
-                    cancelarBtn.style.display = 'inline-block';
-                } else {
-                    display.classList.remove('input-hidden');
-                    input.classList.add('input-hidden');
-                    formActions.classList.add('form-actions-hidden');
-                    icon.style.display = 'inline-block'; // Muestra el lápiz en modo visualización
-                    guardarBtn.textContent = 'Editar';
-                    guardarBtn.classList.add('btn-edit'); // Agrega la clase btn-edit para el botón Editar
-                    cancelarBtn.style.display = 'none';
-                }
-            });
-            localStorage.setItem('editMode', enable); // Guarda el estado en localStorage
-        }
-
-        // Evento para previsualizar la imagen seleccionada y guardarla
+        // Evento para previsualizar la imagen seleccionada (solo preview, se guarda al hacer clic en Guardar Cambios)
         inputFoto.addEventListener('change', function () {
             if (this.files && this.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const dataURL = e.target.result;
                     previewFoto.src = dataURL;
-                    localStorage.setItem('profilePhoto', dataURL); // Guarda la foto en localStorage
+                    // Ya NO guardamos en localStorage, se guardará en la BD al hacer clic en "Guardar Cambios"
                 };
                 reader.readAsDataURL(this.files[0]);
             }
         });
 
-        // Evento para el botón Guardar Cambios o Editar
-        guardarBtn.addEventListener('click', () => {
-            if (isEditing) {
-                // Modo de Guardar
-                const newName = document.getElementById('input-nombre').value;
-                const newSlogan = document.getElementById('input-slogan').value;
-
-                document.getElementById('display-nombre').innerText = newName;
-                document.getElementById('display-slogan').innerText = newSlogan;
-
-                localStorage.setItem('profileName', newName); // Guarda el nombre
-                localStorage.setItem('profileSlogan', newSlogan); // Guarda el slogan
-
-                toggleEditMode(false); // Cambia a modo visualización
-                alert('Cambios guardados visualmente.');
-            } else {
-                // Modo de Editar
-                const currentName = document.getElementById('display-nombre').innerText;
-                const currentSlogan = document.getElementById('display-slogan').innerText;
-
-                document.getElementById('input-nombre').value = currentName;
-                document.getElementById('input-slogan').value = currentSlogan;
-
-                toggleEditMode(true); // Cambia a modo edición
-            }
-        });
-
-        // Evento para el botón Cancelar
-        cancelarBtn.addEventListener('click', () => {
-            toggleEditMode(false);
-        });
-
-        // Eventos para mostrar el input al hacer clic en el lápiz
-        nombreField.addEventListener('click', () => {
-            if (!isEditing) toggleEditMode(true);
-        });
-
-        sloganField.addEventListener('click', () => {
-            if (!isEditing) toggleEditMode(true);
-        });
-
-        // Evento para el nuevo botón "Cerrar sesión"
-        cerrarSesionBtn.addEventListener('click', () => {
-            // Se borra el token de autenticación (suponiendo que se llama 'authToken')
-            localStorage.removeItem('authToken');
-
-            // Opcional: limpiar otros datos de usuario si los hay
-            localStorage.removeItem('profileName');
-            localStorage.removeItem('profileSlogan');
-            localStorage.removeItem('profilePhoto');
-            localStorage.removeItem('editMode');
-
-            // Redirigir al usuario a la página de inicio de sesión
-            window.location.href = 'login.html'; // Asegúrate de que esta URL sea correcta.
-        });
-
-        // Cargar los datos al iniciar la página
-        document.addEventListener('DOMContentLoaded', loadProfileData);
+        // La foto se carga desde la BD mediante perfil.js (función cargarPerfil)
+        
+        // Evento para el botón "Cerrar sesión" (ya manejado por perfil.js)
+        // La función setupCerrarSesion() en perfil.js maneja el logout
     </script>
 </body>
 

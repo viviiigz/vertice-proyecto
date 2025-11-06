@@ -113,3 +113,26 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ error: 'Error al iniciar sesión' });
   }
 };
+
+// Logout de usuario
+export const logoutUser = async (req, res) => {
+  try {
+    // Limpiar la cookie del token
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax'
+    });
+
+    res.json({ 
+      success: true,
+      message: 'Sesión cerrada correctamente' 
+    });
+  } catch (err) {
+    console.error('Error en logout:', err);
+    res.status(500).json({ 
+      success: false,
+      error: 'Error al cerrar sesión' 
+    });
+  }
+};

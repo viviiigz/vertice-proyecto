@@ -5,7 +5,8 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-  getProductsByUser
+  getProductsByUser,
+  getMyProducts
 } from '../controllers/product.controllers.js';
 import { validateProduct } from '../middlewares/validations/product.validator.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
@@ -17,6 +18,10 @@ const router = Router();
 // Público
 router.get('/', getProducts);
 router.get('/user/:userId', getProductsByUser); // IMPORTANTE: Esta ruta debe ir ANTES de /:id
+
+// Obtener mis productos (usuario autenticado) - DEBE ir antes de /:id
+router.get('/my/productos', authMiddleware, getMyProducts);
+
 router.get('/:id', getProductById);
 
 // Privado (solo comercios pueden crear productos)
