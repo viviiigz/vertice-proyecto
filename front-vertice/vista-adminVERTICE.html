@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitudes Pendientes - Admin</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- Estilos personalizados con la paleta de colores -->
+    <style>
+        /* Paleta de colores extraída de la imagen */
+        :root {
+            --color-fondo: #f8fdfa; /* Verde muy claro del fondo */
+            --color-primario: #6fbf23; /* Verde intenso del botón */
+            --color-texto-oscuro: #1e392a; /* Verde oscuro del logo "Vértice" */
+            --color-borde-hover: #5da01b;
+        }
+
+        body {
+            background-color: var(--color-fondo);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        /* Estilo para el logo */
+        .navbar-brand {
+            color: var(--color-texto-oscuro) !important;
+            font-weight: 700;
+            font-size: 1.75rem;
+        }
+
+        /* Contenedor principal estilo tarjeta, como en el login */
+        .main-container {
+            max-width: 900px;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.07);
+            overflow: hidden; /* Para que la tabla respete los bordes redondeados */
+        }
+
+        .card-title-custom {
+            color: var(--color-texto-oscuro);
+            font-weight: 600;
+        }
+
+        /* Estilos de la tabla */
+        .table {
+            border-color: #dee2e6;
+        }
+
+        .table thead th {
+            color: var(--color-texto-oscuro);
+            background-color: #f9f9f9;
+            border-bottom-width: 2px;
+            font-weight: 600;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+        /* --- INICIO DE MODIFICACIÓN --- */
+        .navbar-brand img {
+            max-height: 50px; /* Controla la altura máxima del logo */
+            width: auto;      /* Mantiene la proporción */
+        }
+        /* --- FIN DE MODIFICACIÓN --- */
+
+        /* Botón personalizado */
+        .btn-primary {
+            background-color: var(--color-primario);
+            border-color: var(--color-primario);
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-borde-hover);
+            border-color: var(--color-borde-hover);
+        }
+
+        .btn-primary:focus {
+            box-shadow: 0 0 0 0.25rem rgba(111, 191, 35, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar sencilla solo con el logo -->
+    <nav class="navbar navbar-light bg-white py-3 shadow-sm">
+        <div class="container">
+            <!-- --- INICIO DE MODIFICACIÓN --- -->
+            <a class="navbar-brand" href="#">
+                <!-- Reemplazamos el texto "Vértice." por la imagen -->
+                <img src="/front-vertice/assets/imgs/vertice-logo-largo (1).png" alt="Vértice Logo">
+            </a>
+            <!-- --- FIN DE MODIFICACIÓN --- -->
+        </div>
+    </nav>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <div class="main-container mx-auto p-4 p-md-5">
+            
+            <h2 class="mb-4 card-title-custom">Solicitudes Pendientes</h2>
+            <p class="text-muted mb-4">Lista de bancos de alimentos que requieren aprobación.</p>
+            <!-- Banner de alertas administrativas -->
+            <div id="adminAlert"></div>
+
+                        <!-- Tabla responsiva -->
+                        <div class="table-responsive">
+                                <table class="table table-hover align-middle" id="solicitudesTable">
+                                        <thead>
+                                                <tr>
+                                                        <th scope="col">Nombre del Banco</th>
+                                                        <th scope="col">Email</th>
+                                                        <th scope="col">Documento</th>
+                                                        <th scope="col">Acciones</th>
+                                                </tr>
+                                        </thead>
+                                        <tbody id="solicitudesBody">
+                                                <tr id="noDataRow" style="display:none;">
+                                                        <td colspan="4" class="text-center text-muted p-4">No hay solicitudes pendientes por el momento.</td>
+                                                </tr>
+                                        </tbody>
+                                </table>
+                        </div> <!-- .table-responsive -->
+        </div> <!-- .main-container -->
+    </div> <!-- .container -->
+
+        <!-- Modal para previsualizar PDF -->
+        <div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Previsualizar documento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="height:80vh;">
+                        <iframe id="previewFrame" src="" style="width:100%; height:100%; border:0;" title="Documento"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- El script se carga después del bundle de Bootstrap para evitar errores si bootstrap no está cargado aún. -->
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+    // Use full backend URL so page works when served by Live Server (5500) or file://
+    // Recommended: serve the front from the backend (http://localhost:3000/) so cookies work.
+    const API_BASE = 'http://localhost:3000/api/admin';
+        const solicitudesBody = document.getElementById('solicitudesBody');
+        const noDataRow = document.getElementById('noDataRow');
+        const previewModalEl = document.getElementById('previewModal');
+        const previewFrame = document.getElementById('previewFrame');
+        // Crear el modal sólo después de que Bootstrap esté disponible
+        const previewModal = (typeof bootstrap !== 'undefined' && previewModalEl) ? new bootstrap.Modal(previewModalEl) : null;
+
+            function getAuthHeaders() {
+                const token = localStorage.getItem('token');
+                const headers = {};
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+                return headers;
+            }
+
+            function showAdminAlert(message, type = 'warning') {
+                const adminAlert = document.getElementById('adminAlert');
+                adminAlert.innerHTML = `<div class="alert alert-${type} w-100" role="alert">${message}</div>`;
+            }
+
+            async function loadSolicitudes() {
+            try {
+                const headers = getAuthHeaders();
+                const res = await fetch(`${API_BASE}/solicitudes/data`, { credentials: 'include', headers });
+
+                if (!res.ok) {
+                    // Si la DB no está conectada, el backend responde 503 con DB_NOT_CONNECTED
+                    if (res.status === 503) {
+                        try {
+                            const body = await res.json();
+                            if (body && body.error === 'DB_NOT_CONNECTED') {
+                                showAdminAlert('La base de datos no está disponible en este momento. Cargando datos de ejemplo para pruebas.', 'info');
+                                // Intentar cargar datos mock para UI (no requiere auth)
+                                const mockRes = await fetch(`${API_BASE}/solicitudes/mock`);
+                                if (mockRes.ok) {
+                                    const mockData = await mockRes.json();
+                                    if (mockData.success && Array.isArray(mockData.solicitudes) && mockData.solicitudes.length > 0) {
+                                        noDataRow.style.display = 'none';
+                                        mockData.solicitudes.forEach(s => appendRow(s));
+                                        return;
+                                    }
+                                }
+                                showAdminAlert('No se pudieron cargar datos de ejemplo.', 'danger');
+                                return;
+                            }
+                        } catch (e) {
+                            console.error('Error parseando 503:', e);
+                        }
+                    }
+
+                    if (res.status === 401 || res.status === 403) {
+                        showAdminAlert('No estás autorizado. Por favor inicia sesión como admin.', 'warning');
+                    } else {
+                        showAdminAlert('Error al obtener solicitudes. Revisa la consola para más detalles.', 'danger');
+                    }
+                    return;
+                }
+
+                const data = await res.json();
+                if (!data.success || !Array.isArray(data.solicitudes) || data.solicitudes.length === 0) {
+                    noDataRow.style.display = '';
+                    return;
+                }
+                noDataRow.style.display = 'none';
+                data.solicitudes.forEach(s => appendRow(s));
+            } catch (err) {
+                console.error(err);
+                showAdminAlert('Error conectando al servidor', 'danger');
+            }
+        }
+
+        function appendRow(solicitud) {
+            const tr = document.createElement('tr');
+            tr.dataset.id = solicitud._id || solicitud.id || '';
+
+            const tdName = document.createElement('td');
+            tdName.textContent = solicitud.username || solicitud.nombre || '';
+
+            const tdEmail = document.createElement('td');
+            tdEmail.textContent = solicitud.email || '';
+
+            const tdDoc = document.createElement('td');
+            if (solicitud.documentoVerificacion) {
+                const a = document.createElement('a');
+                a.href = `/uploads/${solicitud.documentoVerificacion}`;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.className = 'btn btn-sm btn-primary';
+                a.textContent = 'Ver Documento';
+                // Use modal preview instead of direct open
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    previewFrame.src = a.href;
+                    if (previewModal) previewModal.show();
+                });
+                tdDoc.appendChild(a);
+            } else {
+                tdDoc.textContent = 'Sin documento';
+            }
+
+            const tdActions = document.createElement('td');
+            const acceptBtn = document.createElement('button');
+            acceptBtn.className = 'btn btn-sm btn-success me-2';
+            acceptBtn.textContent = 'Aceptar';
+            acceptBtn.addEventListener('click', () => handleAction(solicitud, 'aceptar', tr));
+
+            const rejectBtn = document.createElement('button');
+            rejectBtn.className = 'btn btn-sm btn-outline-danger';
+            rejectBtn.textContent = 'Rechazar';
+            rejectBtn.addEventListener('click', () => handleAction(solicitud, 'rechazar', tr));
+
+            tdActions.appendChild(acceptBtn);
+            tdActions.appendChild(rejectBtn);
+
+            tr.appendChild(tdName);
+            tr.appendChild(tdEmail);
+            tr.appendChild(tdDoc);
+            tr.appendChild(tdActions);
+
+            solicitudesBody.appendChild(tr);
+        }
+
+        async function handleAction(solicitud, accion, rowEl) {
+            if (!confirm(`¿Deseas ${accion} la solicitud de ${solicitud.username || solicitud.email}?`)) return;
+            try {
+                const headers = { 'X-Requested-With': 'XMLHttpRequest', ...getAuthHeaders() };
+                const res = await fetch(`${API_BASE}/solicitudes/${solicitud._id || solicitud.id}/${accion}`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers
+                });
+                const json = await res.json();
+                if (res.ok && json.success) {
+                    // remover fila
+                    rowEl.remove();
+                    // si no quedan filas, mostrar mensaje
+                    if (solicitudesBody.querySelectorAll('tr').length === 1) { // only noDataRow
+                        noDataRow.style.display = '';
+                    }
+                } else {
+                    alert('Error procesando la solicitud');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error conectando al servidor');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSolicitudes();
+        });
+    </script>
+</body>
+</html>

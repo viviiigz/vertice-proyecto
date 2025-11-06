@@ -53,7 +53,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo-section">
-                    <img src="assets/imgs/v-vertice.png" alt="Vértice Logo" class="footer-logo">
+                    <img src="/front-vertice/assets/imgs/vertice-logo-largo (1).png" alt="Vértice Logo" class="footer-logo">
                     <p>IPF &copy;2025 Vértice.</p>
                 </div>
                 <div class="footer-links-section">
@@ -94,7 +94,8 @@
                 const res = await fetch("http://localhost:3000/api/user/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(data),
+                    credentials: 'include' // incluir cookies para que el backend pueda setear/leer el token httpOnly
                 });
 
                 const result = await res.json();
@@ -116,6 +117,10 @@
                             break;
                         case "banco":
                             window.location.href = "usuario.tienda.html";
+                            break;
+                        case "admin":
+                            // Redirigir al panel de administración (vista estática que consume la API)
+                            window.location.href = "vista-adminVERTICE.html";
                             break;
                         default:
                             window.location.href = "vertice.html";

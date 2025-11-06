@@ -29,7 +29,7 @@
                 <h2 class="title">Crea una cuenta</h2>
             </div>
 
-            <form id="registerForm">
+            <form id="registerForm" enctype="multipart/form-data">
                 <div class="input-group">
                     <input type="text" id="username" name="username" placeholder="Nombre completo" required>
                     <small class="error-message" id="usernameError"></small>
@@ -53,6 +53,14 @@
                     <small class="error-message" id="roleError"></small>
                 </div>
 
+                <!-- Campo para que el banco adjunte su documento (solo visible si role === 'banco') -->
+                <div class="input-group" id="documentoGroup" style="display:none;">
+                    <label for="documento" class="select-label">Documento de verificación (PDF)</label>
+                    <input type="file" id="documento" name="documento" accept="application/pdf">
+                    <small class="text-muted">Adjunta un PDF con la documentación del banco.</small>
+                    <small class="error-message" id="documentoError"></small>
+                </div>
+
                 <!-- Contenedor para errores -->
                 <div id="messagesBox" style="color:red; margin-bottom: 10px;"></div>
 
@@ -62,33 +70,254 @@
     </main>
 
     <script>
+        // Mostrar/ocultar campo de documento según el rol seleccionado
+        const roleSelect = document.getElementById('role');
+        const documentoGroup = document.getElementById('documentoGroup');
+        const documentoInput = document.getElementById('documento');
+
+        roleSelect.addEventListener('change', () => {
+            if (roleSelect.value === 'banco') {
+                documentoGroup.style.display = 'block';
+            } else {
+                documentoGroup.style.display = 'none';
+                documentoInput.value = null;
+                document.getElementById('documentoError').textContent = '';
+            }
+        });
+
+        // Mostrar UI pendiente si existe un deadline guardado en sessionStorage (permanece tras reload)
+        function showPendingUI(initialSeconds = 60) {
+            const messagesBox = document.getElementById("messagesBox");
+            messagesBox.innerHTML = '';
+            const container = document.createElement('div');
+            container.style.color = '#0b6b2d';
+            container.style.fontWeight = '600';
+            container.style.padding = '1rem';
+            container.style.borderRadius = '8px';
+            container.style.background = '#e6f7ea';
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
+            container.style.gap = '0.75rem';
+
+            const message = document.createElement('div');
+            message.innerHTML = '<strong>PENDIENTE APROBACIÓN.</strong> En el caso de banco de alimentos debemos seguir un protocolo de verificación. El admin verificará su veracidad y aceptará o rechazará su solicitud de registro como <strong>BANCO DE ALIMENTOS</strong>. Espere pacientemente entre 6 a 12hs. Desde ya gracias.';
+
+            const countdownRow = document.createElement('div');
+            countdownRow.style.fontWeight = '500';
+            countdownRow.style.color = '#04531a';
+            countdownRow.innerHTML = `Redirigiendo a login en <span id="pendingCountdown">${initialSeconds}</span> segundos...`;
+
+            container.appendChild(message);
+            container.appendChild(countdownRow);
+
+            const card = document.querySelector('.login-form-card');
+            if (card) {
+                card.innerHTML = '';
+                card.appendChild(container);
+            } else {
+                messagesBox.appendChild(container);
+            }
+
+            // Persist pending state in sessionStorage with deadline timestamp
+            const deadline = Date.now() + initialSeconds * 1000;
+            try { sessionStorage.setItem('pending_banco_deadline', String(deadline)); } catch (e) { console.warn('sessionStorage not available', e); }
+
+            // Start countdown (only once)
+            if (!window.__pendingCountdownStarted) {
+                window.__pendingCountdownStarted = true;
+                const el = document.getElementById('pendingCountdown');
+                const tick = () => {
+                    const now = Date.now();
+                    const remainingMs = Math.max(0, deadline - now);
+                    const remaining = Math.ceil(remainingMs / 1000);
+                    if (el) el.textContent = String(remaining);
+                    if (remaining <= 0) {
+                        try { sessionStorage.removeItem('pending_banco_deadline'); } catch (e) {}
+                        // Redirect to login when countdown finishes
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    setTimeout(tick, 1000);
+                };
+                tick();
+            }
+        }
+
+        // On load, if there's a pending deadline, restore the pending UI with remaining seconds
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const stored = sessionStorage.getItem('pending_banco_deadline');
+                if (stored) {
+                    const remainingMs = Number(stored) - Date.now();
+                    if (remainingMs > 0) {
+                        const remaining = Math.ceil(remainingMs / 1000);
+                        showPendingUI(remaining);
+                        // ensure the countdown flag is set so submit handler doesn't re-start it
+                        window.__pendingCountdownStarted = true;
+                    } else {
+                        // expired - clean up
+                        sessionStorage.removeItem('pending_banco_deadline');
+                    }
+                }
+            } catch (e) {
+                console.warn('Error reading pending deadline', e);
+            }
+        });
+
         document.getElementById("registerForm").addEventListener("submit", async (e) => {
             e.preventDefault();
-
-            const data = {
-                username: document.getElementById("username").value,
-                email: document.getElementById("email").value,
-                password: document.getElementById("password").value,
-                role: document.getElementById("role").value
-            };
 
             const messagesBox = document.getElementById("messagesBox");
             messagesBox.innerHTML = ""; // Limpiar mensajes anteriores
 
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const role = roleSelect.value;
+
+            // Validaciones básicas
+                let initialSeconds = 60;
+            if (!username || !email || !password || !role) {
+                messagesBox.textContent = 'Por favor completa todos los campos obligatorios.';
+                return;
+            }
+
+            // Si es banco, validar que haya un PDF (opcional, pero recomendado)
+            if (role === 'banco' && documentoInput.files.length === 0) {
+                document.getElementById('documentoError').textContent = 'El documento es obligatorio para bancos.';
+                return;
+            }
+
+            // Preparar FormData (maneja tanto texto como archivo)
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('role', role);
+            if (role === 'banco' && documentoInput.files.length > 0) {
+                const file = documentoInput.files[0];
+                // Validar tipo mime PDF
+                if (file.type !== 'application/pdf') {
+                    document.getElementById('documentoError').textContent = 'El archivo debe ser un PDF.';
+                    return;
+                }
+                formData.append('documento', file);
+            }
+
             try {
+                console.log('Submit register:', { username, email, role });
+                //si el role es banco, entonces:
+                function showPendingUI(initialSeconds = 60) {
+                    const messagesBox = document.getElementById("messagesBox");
+                    messagesBox.innerHTML = '';
+                    const container = document.createElement('div');
+                    container.style.color = '#0b6b2d';
+                    container.style.fontWeight = '600';
+                    container.style.padding = '1rem';
+                    container.style.borderRadius = '8px';
+                    container.style.background = '#e6f7ea';
+                    container.style.display = 'flex';
+                    container.style.flexDirection = 'column';
+                    container.style.gap = '0.75rem';
+
+                    const message = document.createElement('div');
+                    message.innerHTML = '<strong>PENDIENTE APROBACIÓN.</strong> En el caso de banco de alimentos debemos seguir un protocolo de verificación. El admin verificará su veracidad y aceptará o rechazará su solicitud de registro como <strong>BANCO DE ALIMENTOS</strong>. Espere pacientemente entre 6 a 12hs. Desde ya gracias.';
+
+                    const countdownRow = document.createElement('div');
+                    countdownRow.style.fontWeight = '500';
+                    countdownRow.style.color = '#04531a';
+                    countdownRow.innerHTML = `Redirigiendo a login en <span id="pendingCountdown">${initialSeconds}</span> segundos...`;
+
+                    container.appendChild(message);
+                    container.appendChild(countdownRow);
+
+                    const card = document.querySelector('.login-form-card');
+                    if (card) {
+                        card.innerHTML = '';
+                        card.appendChild(container);
+                    } else {
+                        messagesBox.appendChild(container);
+                    }
+
+                    // Persist pending state in sessionStorage with deadline timestamp
+                    const deadline = Date.now() + initialSeconds * 1000;
+                    try { sessionStorage.setItem('pending_banco_deadline', String(deadline)); } catch (e) { console.warn('sessionStorage not available', e); }
+
+                    // Start countdown (only once)
+                    if (!window.__pendingCountdownStarted) {
+                        window.__pendingCountdownStarted = true;
+                        const el = document.getElementById('pendingCountdown');
+                        const tick = () => {
+                            const now = Date.now();
+                            const remainingMs = Math.max(0, deadline - now);
+                            const remaining = Math.ceil(remainingMs / 1000);
+                            if (el) el.textContent = String(remaining);
+                            if (remaining <= 0) {
+                                try { sessionStorage.removeItem('pending_banco_deadline'); } catch (e) {}
+                                // Redirect to login when countdown finishes
+                                window.location.href = 'login.html';
+                                return;
+                            }
+                            setTimeout(tick, 1000);
+                        };
+                        tick();
+                    }
+                }
+
+                let isBancoSubmitting = false;
+                if (role === 'banco') {
+                    // If there's already a deadline stored, calculate remaining seconds
+                    try {
+                        const stored = sessionStorage.getItem('pending_banco_deadline');
+                        if (stored) {
+                            const remainingMs = Number(stored) - Date.now();
+                            if (remainingMs > 0) initialSeconds = Math.ceil(remainingMs / 1000);
+                        }
+                    } catch (e) {}
+                    showPendingUI(initialSeconds);
+                    isBancoSubmitting = true;
+                }
+
                 const res = await fetch("http://localhost:3000/api/user/register", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data)
+                    // No establecer Content-Type: fetch lo maneja para FormData
+                    body: formData,
+                    credentials: 'include'
                 });
 
                 const result = await res.json();
+                console.log('Register response status:', res.status, result);
+                // Show raw response for debugging
+                const debugPre = document.createElement('pre');
+                debugPre.style.whiteSpace = 'pre-wrap';
+                debugPre.style.color = '#333';
+                debugPre.style.fontSize = '12px';
+                debugPre.textContent = `status: ${res.status}\n` + JSON.stringify(result, null, 2);
+                // append debug output (keep it unobtrusive)
+                // If banco submitted, don't append debugPre inside the removed form; log instead
+                if (!isBancoSubmitting) {
+                    messagesBox.appendChild(debugPre);
+                } else {
+                    console.log('Banco submit debug:', debugPre.textContent);
+                }
 
                 if (res.ok) {
-                    // Registro exitoso → redirige al login automáticamente
+                    // Registro exitoso
+                    // Determine role from client or server response to be robust
+                    const serverRole = result && result.user && result.user.role ? result.user.role : null;
+                    const isBanco = role === 'banco' || serverRole === 'banco';
+                    const estado = result && result.user && result.user.estadoVerificacion ? result.user.estadoVerificacion : null;
+
+                    if (isBanco) {
+                        // If banco, we've already shown the pending UI and started countdown.
+                        // Do not modify the UI further here; keep the pending message visible.
+                        console.log('Registro banco confirmado by server; keeping pending UI visible.');
+                        return; // aseguramos que no se redirija
+                    }
+                    // Otros roles → redirige al login automáticamente
                     window.location.href = "login.html";
                 } else {
-                    // Mostrar errores en rojo
+                    // Mostrar errores
                     const errores = Array.isArray(result.errors) ? result.errors : [{ msg: result.error || "Error desconocido" }];
                     errores.forEach(err => {
                         const p = document.createElement("p");
