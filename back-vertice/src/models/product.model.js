@@ -1,49 +1,73 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../config/database.js';
+import mongoose from 'mongoose';
 
-const Product = sequelize.define('Product', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
+const productSchema = new mongoose.Schema({
   nombre_producto: {
-    type: DataTypes.STRING(50),
-    allowNull: false
+    type: String,
+    required: true,
+    maxlength: 50
   },
   descripcion: {
-    type: DataTypes.TEXT,
-    allowNull: true
+    type: String,
+    required: false
   },
   precio_original: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: false
+    type: Number,
+    required: true
   },
   precio_descuento: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: false
+    type: Number,
+    required: true
   },
   fecha_caducidad_cercana: {
-    type: DataTypes.DATE,
-    allowNull: true
+    type: Date,
+    required: false
   },
   cantidad_disponible: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0
+    type: Number,
+    required: true,
+    default: 0
   },
   foto_url: {
-    type: DataTypes.STRING,
-    allowNull: true
+    type: String,
+    required: false
   },
   categoria: {
-    type: DataTypes.STRING, // Almacena el valor de la categoría del select
-    allowNull: true
+    type: String,
+    required: false
   },
   user_id: {
-  type: DataTypes.INTEGER,
-  allowNull: false
-}
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
+}, {
+  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+  versionKey: false
 });
+
+// Normalizar salida JSON/Objeto: exponer id en lugar de _id
+productSchema.set('toJSON', {
+  virtuals: true,
+  transform: (_doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+    return ret;
+  }
+});
+
+productSchema.set('toObject', {
+  virtuals: true,
+  transform: (_doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+    return ret;
+  }
+});
+
+// Crear índices para búsquedas más eficientes
+productSchema.index({ user_id: 1 });
+productSchema.index({ categoria: 1 });
+
+const Product = mongoose.model('Product', productSchema);
 
 export default Product;

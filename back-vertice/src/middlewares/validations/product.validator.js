@@ -12,7 +12,12 @@ export const validateProduct = [
     .optional()
     .isString()
     .withMessage("La descripción debe ser una cadena de texto"),
-    body("precio_descuento")
+  body("precio_original")
+    .notEmpty()
+    .withMessage("El precio original es obligatorio")
+    .isFloat({ gt: 0 })
+    .withMessage("El precio original debe ser un número mayor que 0"),
+  body("precio_descuento")
     .notEmpty()
     .withMessage("El precio con descuento es obligatorio")
     .isFloat({ gt: 0 })

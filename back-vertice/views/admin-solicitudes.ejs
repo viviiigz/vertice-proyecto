@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Solicitudes Pendientes - Panel Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      /* Colores principales adaptados (ajusta según tu paleta) */
+      :root{
+        --primary:#4cd309;
+        --accent:#2d8a00;
+      }
+      body{background:#f8fafc;color:#222}
+      .table thead th{background:var(--primary);color:#fff}
+      .btn-accept{background:var(--accent);color:#fff}
+      .btn-accept:hover{background:#206400}
+    </style>
+  </head>
+  <body>
+    <div class="container py-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Solicitudes Pendientes</h1>
+        <a href="/" class="btn btn-outline-secondary">Volver</a>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <p class="text-muted">A continuación se listan los bancos de alimentos que han subido su documento para verificación. Haz clic en el enlace del documento para revisar el PDF.</p>
+
+          <% if (!solicitudes || solicitudes.length === 0) { %>
+            <div class="alert alert-info">No hay solicitudes pendientes en este momento.</div>
+          <% } else { %>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Documento de verificación</th>
+                    <th>Fecha registro</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% solicitudes.forEach(function(solicitud){ %>
+                    <tr data-id="<%= solicitud.id %>">
+                      <td><%= solicitud.username %></td>
+                      <td><%= solicitud.email %></td>
+                      <td>
+                        <% if (solicitud.documentoVerificacion) { %>
+                          <a href="#" class="view-doc-link" data-doc="<%= solicitud.documentoVerificacion %>">Ver documento</a>
+                        <% } else { %>
+                          <span class="text-muted">Sin documento</span>
+                        <% } %>
+                      </td>
+                      <td><%= solicitud.created_at ? new Date(solicitud.created_at).toLocaleString() : '-' %></td>
+                      <td>
+                        <button class="btn btn-sm btn-accept accept-btn" data-id="<%= solicitud.id %>">Aceptar</button>
+                        <button class="btn btn-sm btn-outline-danger reject-btn" data-id="<%= solicitud.id %>" style="margin-left:6px;">Rechazar</button>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <!-- Modal para previsualizar PDF -->
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Previsualizar documento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" style="height:80vh;">
+            <iframe id="previewFrame" src="" style="width:100%; height:100%; border:0;" title="Documento"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Manejo de aceptar/rechazar mediante fetch (AJAX)
+      document.addEventListener('DOMContentLoaded', () => {
+        const acceptButtons = document.querySelectorAll('.accept-btn');
+        const rejectButtons = document.querySelectorAll('.reject-btn');
+        const viewLinks = document.querySelectorAll('.view-doc-link');
+        const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+        const previewFrame = document.getElementById('previewFrame');
+
+        viewLinks.forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const doc = link.dataset.doc;
+            if (!doc) return alert('Documento no disponible');
+            previewFrame.src = `/uploads/${doc}`;
+            previewModal.show();
+          });
+        });
+
+        acceptButtons.forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const id = btn.dataset.id;
+            if (!confirm('¿Aceptar la solicitud del banco?')) return;
+            try {
+              const res = await fetch(`/api/admin/solicitudes/${id}/aceptar`, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'include'
+              });
+              if (res.ok) {
+                const json = await res.json();
+                if (json.success) {
+                  // eliminar la fila o indicar aprobado
+                  const row = document.querySelector(`tr[data-id="${id}"]`);
+                  if (row) row.remove();
+                } else {
+                  alert('No se pudo aprobar la solicitud');
+                }
+              } else {
+                alert('Error en la petición');
+              }
+            } catch (err) {
+              console.error(err);
+              alert('Error conectando con el servidor');
+            }
+          });
+        });
+
+        rejectButtons.forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const id = btn.dataset.id;
+            if (!confirm('¿Rechazar la solicitud del banco?')) return;
+            try {
+              const res = await fetch(`/api/admin/solicitudes/${id}/rechazar`, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'include'
+              });
+              if (res.ok) {
+                const json = await res.json();
+                if (json.success) {
+                  const row = document.querySelector(`tr[data-id="${id}"]`);
+                  if (row) row.remove();
+                } else {
+                  alert('No se pudo rechazar la solicitud');
+                }
+              } else {
+                alert('Error en la petición');
+              }
+            } catch (err) {
+              console.error(err);
+              alert('Error conectando con el servidor');
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

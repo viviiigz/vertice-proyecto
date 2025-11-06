@@ -7,7 +7,7 @@ export const validateRegister = [
     .notEmpty().withMessage("El nombre de usuario es obligatorio")
     .isLength({ min: 3, max: 20 }).withMessage("Debe tener entre 3 y 20 caracteres")
     .custom(async value => {
-      const existingUser = await UserModel.findOne({ where: { username: value } });
+      const existingUser = await UserModel.findOne({ username: value });
       if (existingUser) throw new Error("El nombre de usuario ya está en uso");
       return true;
     }),
@@ -16,7 +16,7 @@ export const validateRegister = [
     .notEmpty().withMessage("El email es obligatorio")
     .isEmail().withMessage("Debe ser un email válido")
     .custom(async value => {
-      const existingEmail = await UserModel.findOne({ where: { email: value } });
+      const existingEmail = await UserModel.findOne({ email: value });
       if (existingEmail) throw new Error("El email ya está en uso");
       return true;
     }),

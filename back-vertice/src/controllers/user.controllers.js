@@ -9,13 +9,13 @@ export const registerUser = async (req, res) => {
     const { username, email, password, role } = req.body;
 
     // Verificar si el email ya existe
-    const existingEmail = await UserModel.findOne({ where: { email } });
+    const existingEmail = await UserModel.findOne({ email });
     if (existingEmail) {
       return res.status(400).json({ error: "El email ya está registrado" });
     }
 
     // Verificar si el username ya existe
-    const existingUsername = await UserModel.findOne({ where: { username } });
+    const existingUsername = await UserModel.findOne({ username });
     if (existingUsername) {
       return res.status(400).json({ error: "El nombre de usuario ya está en uso" });
     }
@@ -24,26 +24,38 @@ export const registerUser = async (req, res) => {
     // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Crear el usuario
+    // Si el rol es 'banco', aceptar un archivo subido (multer) y guardar su ruta/nombre
+    let documentoPath = null;
+    if (role === 'banco' && req.file) {
+      // Almacenamos el filename para poder servirlo desde /uploads
+      documentoPath = req.file.filename || req.file.path || null;
+    }
+
+    // Crear el usuario (incluyendo estadoVerificacion y documentoVerificacion si aplica)
     const newUser = await UserModel.create({
       username,
       email,
       password: hashedPassword,
-      role
+      role,
+      // Solo los bancos requieren verificación; los demás se marcan como aprobados automáticamente
+      estadoVerificacion: role === 'banco' ? 'pendiente' : 'aprobado',
+      documentoVerificacion: documentoPath
     });
 
     res.status(201).json({
       message: "Usuario registrado exitosamente",
       user: {
-        id: newUser.id,
+        id: newUser._id,
         username: newUser.username,
         email: newUser.email,
         role: newUser.role,
-        created_at: newUser.created_at
+        created_at: newUser.created_at,
+        estadoVerificacion: newUser.estadoVerificacion
       }
     });
   } catch (err) {
-    if (err.name === "SequelizeUniqueConstraintError") {
+    if (err.code === 11000) {
+      // Error de duplicado en MongoDB
       return res.status(400).json({ error: "El nombre de usuario o email ya está en uso" });
     }
     console.error(err);
@@ -58,11 +70,8 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Obtener usuario como objeto plano
-    const user = await UserModel.findOne({
-      where: { email },
-      attributes: ['id', 'username', 'email', 'password', 'role', 'created_at', 'updated_at', 'deleted_at'] // <- importante
-    });
+    // Obtener usuario
+    const user = await UserModel.findOne({ email }).select('+password');
 
     if (!user) return res.status(400).json({ error: 'Usuario no encontrado' });
 
@@ -71,10 +80,18 @@ export const loginUser = async (req, res) => {
 
     // Generar token
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { id: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
+
+    // If the user is a 'banco' and not approved, prevent login
+    if (user.role === 'banco' && user.estadoVerificacion !== 'aprobado') {
+      const msg = user.estadoVerificacion === 'pendiente'
+        ? 'PENDIENTE APROBACIÓN. En el caso de banco de alimentos debemos seguir un protocolo de verificación. El admin verificará su veracidad y aceptará o rechazará su solicitud de registro como BANCO DE ALIMENTOS. Espere pacientemente entre 6 a 12hs. Desde ya gracias.'
+        : 'Su solicitud ha sido rechazada. Contacte con soporte.';
+      return res.status(403).json({ error: msg, estadoVerificacion: user.estadoVerificacion });
+    }
 
     res.cookie('token', token, {
       httpOnly: true,
@@ -83,7 +100,8 @@ export const loginUser = async (req, res) => {
     });
 
     // Enviar datos al front sin password
-    const { password: _, ...userWithoutPassword } = user.toJSON ? user.toJSON() : user;
+    const userObject = user.toObject();
+    const { password: _, ...userWithoutPassword } = userObject;
     res.json({ 
       token,
       user: userWithoutPassword

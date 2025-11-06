@@ -1,32 +1,65 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../config/database.js';
+import mongoose from 'mongoose';
 
-const UserModel = sequelize.define('User', {
+const userSchema = new mongoose.Schema({
   username: {
-    type: DataTypes.STRING(20),
-    allowNull: false,
-    unique: true
+    type: String,
+    required: true,
+    unique: true,
+    maxlength: 20
   },
   email: {
-    type: DataTypes.STRING(100),
+    type: String,
     unique: true,
-    allowNull: false
+    required: true,
+    maxlength: 100
   },
   password: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+    type: String,
+    required: true,
+    maxlength: 255
   },
   role: {
-    type: DataTypes.ENUM('consumidor', 'comercio', 'banco'),
-    allowNull: false
+    type: String,
+    enum: ['consumidor', 'comercio', 'banco', 'admin'],
+    required: true
   }
-},{
-  timestamps: true,
-  paranoid: true,
-  underscored: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
-  deletedAt: 'deleted_at',
+  ,
+  estadoVerificacion: {
+    type: String,
+    enum: ['pendiente', 'aprobado', 'rechazado'],
+    default: 'pendiente'
+  },
+  documentoVerificacion: {
+    type: String,
+    default: null
+  }
+}, {
+  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+  versionKey: false
 });
+
+// Normalizar salida JSON/Objeto: exponer id en lugar de _id
+userSchema.set('toJSON', {
+  virtuals: true,
+  transform: (_doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+    return ret;
+  }
+});
+
+userSchema.set('toObject', {
+  virtuals: true,
+  transform: (_doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+    return ret;
+  }
+});
+
+// Los índices ya se crean automáticamente con unique: true
+// No es necesario declararlos manualmente
+
+const UserModel = mongoose.model('User', userSchema);
 
 export default UserModel;
