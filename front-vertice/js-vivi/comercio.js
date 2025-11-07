@@ -78,22 +78,22 @@ async function eliminarProducto(id) {
     try {
         if (!checkAuth()) return;
 
-        console.log('🗑️ Eliminando producto:', id);
+        console.log(' Eliminando producto:', id);
         const response = await fetch(`${API_URL}/productos/${id}`, {
             method: 'DELETE',
             headers: getAuthHeaders()
         });
 
-        console.log('📡 Respuesta del servidor:', response.status);
+        console.log(' Respuesta del servidor:', response.status);
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error('❌ Error del servidor:', errorData);
+            console.error(' Error del servidor:', errorData);
             throw new Error(errorData.message || 'Error al eliminar el producto');
         }
 
         const data = await response.json();
-        console.log('✅ Producto eliminado:', data);
+        console.log(' Producto eliminado:', data);
         
         // Cerrar el modal
         document.getElementById('eliminar-modal').style.display = 'none';
@@ -106,7 +106,7 @@ async function eliminarProducto(id) {
             await cargarYMostrarProductosGlobal();
         }
     } catch (error) {
-        console.error('❌ Error al eliminar producto:', error);
+        console.error(' Error al eliminar producto:', error);
         // Cerrar el modal
         document.getElementById('eliminar-modal').style.display = 'none';
         mostrarMensajeError('Error al eliminar el producto: ' + error.message);
@@ -194,13 +194,51 @@ function abrirModalEliminar(producto) {
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Iniciando comercio.js');
 
+    // ===============================
+    // Mostrar mensaje post-redirección (producto creado)
+    // ===============================
+    try {
+        const flag = sessionStorage.getItem('productoCreado');
+        if (flag) {
+            const dataFlag = JSON.parse(flag);
+            console.log(' Flag productoCreado detectado:', dataFlag);
+            sessionStorage.removeItem('productoCreado');
+            // Reutilizar función de éxito pero sin auto cierre prematuro
+            const mensajeDiv = document.createElement('div');
+            mensajeDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4cd309;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-weight: 500;
+                animation: slideIn 0.3s ease-out;
+            `;
+            const nombreProd = dataFlag.nombre ? ` (${dataFlag.nombre})` : '';
+            mensajeDiv.textContent = `✓ ${dataFlag.texto}${nombreProd}`;
+            document.body.appendChild(mensajeDiv);
+            setTimeout(() => {
+                mensajeDiv.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => mensajeDiv.remove(), 300);
+            }, 3000);
+        } else {
+            console.log('ℹ No hay flag productoCreado en sessionStorage');
+        }
+    } catch (eMsg) {
+        console.warn('⚠ Error procesando flag productoCreado:', eMsg);
+    }
+
     // ========================================
     // GRÁFICO DE ESTADÍSTICAS
     // ========================================
     const ctx = document.getElementById('ventasChart');
     
     if (ctx) {
-        console.log('📊 Inicializando gráfico de ventas');
+        console.log(' Inicializando gráfico de ventas');
         const datosVentasVacios = {
             labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
             datasets: [{
@@ -254,7 +292,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const productTableBody = document.getElementById('product-table-body');
     
     if (productTableBody) {
-        console.log('📦 Inicializando tabla de productos');
+        console.log(' Inicializando tabla de productos');
         
         const searchInput = document.getElementById('search-input');
         const searchBtn = document.getElementById('search-btn');
@@ -328,7 +366,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // FUNCIONES DE FILTRADO Y ORDENAMIENTO
         // ========================================
         function aplicarFiltros() {
-            console.log('🔍 Aplicando filtros...');
+            console.log(' Aplicando filtros...');
             let productos = [...misProductos];
 
             // Filtrar por disponibilidad
@@ -366,14 +404,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     break;
             }
             
-            console.log(`✅ ${productos.length} productos después de filtrar`);
+            console.log(` ${productos.length} productos después de filtrar`);
             mostrarProductos(productos);
             filtroModal.style.display = 'none';
         }
 
         function buscarProductos() {
             const searchTerm = searchInput.value.toLowerCase();
-            console.log('🔍 Buscando:', searchTerm);
+            console.log(' Buscando:', searchTerm);
             const productosFiltrados = misProductos.filter(producto => {
                 return producto.nombre.toLowerCase().includes(searchTerm);
             });
@@ -381,7 +419,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         function mostrarProductos(productos) {
-            console.log('📋 Mostrando productos:', productos.length);
+            console.log(' Mostrando productos:', productos.length);
             productTableBody.innerHTML = '';
             
             if (productos.length > 0) {
@@ -454,9 +492,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         // CARGAR PRODUCTOS AL INICIAR
         // ========================================
         async function cargarYMostrarProductos() {
-            console.log('🔄 Cargando productos del usuario...');
+            console.log(' Cargando productos del usuario...');
             misProductos = await obtenerMisProductos();
-            console.log('✅ Productos cargados:', misProductos.length);
+            console.log(' Productos cargados:', misProductos.length);
             aplicarFiltros();
         }
 

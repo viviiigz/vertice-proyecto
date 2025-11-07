@@ -362,76 +362,116 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Submit del formulario
-        formNuevoProducto.addEventListener('submit', async (e) => {
+        // IMPORTANTE: Prevenir submit del formulario
+        formNuevoProducto.addEventListener('submit', (e) => {
             e.preventDefault();
-            console.log('Formulario enviado');
-
-            const nombre = document.getElementById('nombre')?.value;
-            const descripcion = document.getElementById('descripcion')?.value;
-            const stock = document.getElementById('stock')?.value;
-            const precioOriginal = document.getElementById('precio-original')?.value;
-            const precioOferta = document.getElementById('precio_descuento')?.value;
-            const categoria = document.getElementById('categoria-input')?.value;
-            const tipoProducto = document.getElementById('tipo-producto')?.value;
-            const imagenFile = fileInput?.files[0];
-
-            console.log('Datos del formulario:', {
-                nombre, descripcion, stock, precioOriginal, precioOferta, categoria, tipoProducto,
-                imagen: imagenFile ? imagenFile.name : 'Sin imagen'
-            });
-
-            // Validar campos obligatorios
-            if (!nombre || !stock || !precioOriginal || !precioOferta) {
-                console.log('Validación fallida - Campos faltantes');
-                mostrarMensajeAdvertencia('Por favor completa todos los campos obligatorios (Nombre, Stock, Precio Original y Precio con Descuento)');
-                return;
-            }
-
-            console.log('Validación exitosa');
-
-            // Crear FormData
-            const formData = new FormData();
-            formData.append('nombre_producto', nombre);
-            formData.append('descripcion', descripcion || '');
-            formData.append('cantidad_disponible', stock);
-            formData.append('precio_original', precioOriginal);
-            formData.append('precio_descuento', precioOferta);
-            formData.append('categoria', categoria || '');
-            formData.append('tipo_producto', tipoProducto || '');
-            if (imagenFile) formData.append('foto_url', imagenFile);
-
-            console.log('FormData creado');
-
-            try {
-                console.log('Enviando producto al backend...');
-                const resultado = await crearProducto(formData);
-                console.log('Producto creado exitosamente:', resultado);
-                
-                // Mostrar mensaje de éxito
-                mostrarMensajeExito('¡Producto guardado correctamente! Redirigiendo...');
-                
-                console.log(' Iniciando timeout para redirigir en 2 segundos...');
-                console.log(' URL de redirección: ./comercio.producto.html');
-                
-                // Redireccionar a la página de productos del comercio después de 2 segundos
-                setTimeout(() => {
-                    console.log(' Ejecutando redirección ahora...');
-                    window.location.href = '/comercio.producto.html';
-                }, 5000);
-                
-            } catch (error) {
-                console.error(' Error completo:', error);
-                if (error.message.includes('autenticado')) {
-                    mostrarMensajeError('No estás autenticado. Redirigiendo al login...');
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 2000);
-                } else {
-                    mostrarMensajeError(`Error al guardar el producto: ${error.message}`);
-                }
-            }
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            console.log(' Submit del formulario bloqueado');
+            return false;
         });
+
+        // Manejar el click del botón directamente
+        const submitBtn = document.getElementById('guardar-producto-btn');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                console.log(' Botón clickeado - Iniciando proceso de guardado');
+
+                // Deshabilitar el botón para evitar doble submit
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Guardando...';
+
+                await guardarProducto(submitBtn);
+            });
+        }
+    }
+
+    // Función separada para guardar el producto
+    async function guardarProducto(submitBtn) {
+        const nombre = document.getElementById('nombre')?.value;
+        const descripcion = document.getElementById('descripcion')?.value;
+        const stock = document.getElementById('stock')?.value;
+        const precioOriginal = document.getElementById('precio-original')?.value;
+        const precioOferta = document.getElementById('precio_descuento')?.value;
+        const categoria = document.getElementById('categoria-input')?.value;
+        const tipoProducto = document.getElementById('tipo-producto')?.value;
+        const imagenFile = fileInput?.files[0];
+
+        console.log('Datos del formulario:', {
+            nombre, descripcion, stock, precioOriginal, precioOferta, categoria, tipoProducto,
+            imagen: imagenFile ? imagenFile.name : 'Sin imagen'
+        });
+
+        // Validar campos obligatorios
+        if (!nombre || !stock || !precioOriginal || !precioOferta) {
+            console.log('Validación fallida - Campos faltantes');
+            mostrarMensajeAdvertencia('Por favor completa todos los campos obligatorios (Nombre, Stock, Precio Original y Precio con Descuento)');
+            
+            // Re-habilitar el botón
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Guardar Producto';
+            }
+            return;
+        }
+
+        console.log(' Validación exitosa');
+
+        // Crear FormData
+        const formData = new FormData();
+        formData.append('nombre_producto', nombre);
+        formData.append('descripcion', descripcion || '');
+        formData.append('cantidad_disponible', stock);
+        formData.append('precio_original', precioOriginal);
+        formData.append('precio_descuento', precioOferta);
+        formData.append('categoria', categoria || '');
+        formData.append('tipo_producto', tipoProducto || '');
+        if (imagenFile) formData.append('foto_url', imagenFile);
+
+        console.log(' FormData creado');
+
+        try {
+            console.log('Enviando producto al backend...');
+            const resultado = await crearProducto(formData);
+            console.log('Producto creado exitosamente:', resultado);
+            // Guardar flag en sessionStorage para mostrar mensaje en la otra página
+            const payloadMensaje = {
+                ok: true,
+                tipo: 'exito',
+                texto: '¡Producto guardado correctamente!',
+                nombre: nombre,
+                timestamp: Date.now()
+            };
+            try {
+                sessionStorage.setItem('productoCreado', JSON.stringify(payloadMensaje));
+            } catch (eStore) {
+                console.warn('⚠ No se pudo guardar productoCreado en sessionStorage:', eStore);
+            }
+
+            console.log('➡ Redirigiendo inmediatamente a /front-vertice/comercio.producto.html con flag productoCreado');
+            window.location.href = window.location.origin + '/front-vertice/comercio.producto.html';
+            
+        } catch (error) {
+            console.error(' Error completo:', error);
+            
+            // Re-habilitar el botón
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Guardar Producto';
+            }
+            
+            if (error.message.includes('autenticado')) {
+                mostrarMensajeError('No estás autenticado. Redirigiendo al login...');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            } else {
+                mostrarMensajeError(`Error al guardar el producto: ${error.message}`);
+            }
+        }
     }
 
     // ========================================

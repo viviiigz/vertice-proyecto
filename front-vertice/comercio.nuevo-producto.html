@@ -41,7 +41,7 @@
 
             <div class="content-area">
                 <h1>Nuevo Producto</h1>
-                <form id="form-nuevo-producto">
+                <form id="form-nuevo-producto" onsubmit="event.preventDefault(); return false;">
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
                         <input type="text" id="nombre" name="nombre" placeholder="Nombre del producto" required />
@@ -93,7 +93,7 @@
 
             <div class="form-actions">
                 <a href="./comercio.producto.html" class="btn btn-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-primary" id="guardar-producto-btn">
+                <button type="button" class="btn btn-primary" id="guardar-producto-btn">
                     Guardar Producto
                 </button>
             </div>

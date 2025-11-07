@@ -362,7 +362,7 @@ async function cerrarSesion() {
         console.log(' LocalStorage limpiado');
         
         // Redirigir a la landing o login (ruta absoluta desde la raíz)
-        window.location.href = 'http://localhost:3000/vertice.html';
+        window.location.href = 'http://localhost:3000/front-vertice/vertice.html';
     }
 }
 
