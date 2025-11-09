@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const reiniciarCarritoBtn = document.getElementById('reiniciar-carrito-btn'); 
 
     let productos = [];
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    // Eliminamos la gestión local del carrito - ahora usa CartManager global
+    // let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     // --- Funciones de utilidad ---
 
@@ -25,47 +26,71 @@ document.addEventListener('DOMContentLoaded', () => {
         return productosJSON ? JSON.parse(productosJSON) : [];
     }
 
-    function actualizarContadorCarrito() {
-        if (cartCountSpan) {
-            cartCountSpan.textContent = cart.length;
-        }
-    }
+    // ELIMINADAS - Ahora usa CartManager global
+    // function actualizarContadorCarrito() {
+    //     if (cartCountSpan) {
+    //         cartCountSpan.textContent = cart.length;
+    //     }
+    // }
     
-    function guardarCarrito() {
-        localStorage.setItem('cart', JSON.stringify(cart));
-    }
+    // function guardarCarrito() {
+    //     localStorage.setItem('cart', JSON.stringify(cart));
+    // }
 
     // --- NUEVO: Función para vaciar/reiniciar el carrito ---
-    function vaciarCarrito() { // <--- AÑADE ESTO AQUÍ
-        cart = []; // Reinicia el array del carrito en tu script
-        localStorage.setItem('cart', JSON.stringify(cart)); // Guarda este array vacío en localStorage
-        actualizarContadorCarrito(); // Actualiza el número de productos mostrados
-
-        alert('El carrito ha sido vaciado y está listo para nuevas compras.');
-
-        // Opcional: Si tienes un contenedor donde muestras los ítems del carrito
-        // y quieres que se limpie visualmente, añade esto:
-        // const cartItemsDisplay = document.getElementById('id-de-tu-contenedor-de-items-del-carrito');
-        // if (cartItemsDisplay) {
-        //     cartItemsDisplay.innerHTML = '<p>Tu carrito está vacío.</p>';
-        // }
+    function vaciarCarrito() {
+        if (window.cartManager) {
+            window.cartManager.clearCart();
+            alert('El carrito ha sido vaciado y está listo para nuevas compras.');
+        }
     }
 
     // ... (el resto del código sigue) ...
-    function obtenerProductos() {
-        const productosJSON = localStorage.getItem('productos');
-        return productosJSON ? JSON.parse(productosJSON) : [];
-    }
+    
+    // Función para cargar productos desde la base de datos
+    async function obtenerProductos() {
+        try {
+            const url = 'http://localhost:3000/api/productos'; // SIN filtros => traer TODO
+            console.log('[TODOS] Fetch =>', url);
+            const respuesta = await fetch(url);
+            if (!respuesta.ok) throw new Error('Error al cargar los productos');
+            const productosDB = await respuesta.json();
+            console.log('[TODOS] Total backend =>', productosDB.length);
 
-    function actualizarContadorCarrito() {
-        if (cartCountSpan) { // Agregamos una comprobación por si el elemento no existe en otras páginas
-            cartCountSpan.textContent = cart.length;
+            // Mapeo crudo
+            const productosMapeados = productosDB.map(p => ({
+                id: p._id || p.id,
+                nombre: p.nombre_producto,
+                descripcion: p.descripcion || '',
+                precioOriginal: p.precio_original,
+                precioOferta: p.precio_descuento && p.precio_descuento < p.precio_original ? p.precio_descuento : null,
+                imagen: p.foto_url ? `http://localhost:3000/uploads/${p.foto_url}` : './assets/imgs/placeholder.png',
+                categoria: p.categoria,
+                tipo_producto: p.tipo_producto,
+                stock: p.cantidad_disponible || 0
+            }));
+            console.log('[TODOS] Mapeados =>', productosMapeados.length);
+
+            // Filtro defensivo: solo mostrar comida-por-caducarse
+            const filtrados = productosMapeados.filter(p => p.categoria === 'comida-por-caducarse');
+            console.log('[TODOS] Tras filtro categoria=comida-por-caducarse =>', filtrados.length);
+            return filtrados;
+        } catch (error) {
+            console.error('❌ Error al obtener productos:', error);
+            return [];
         }
     }
+
+    // ELIMINADAS - Ahora usa CartManager global
+    // function actualizarContadorCarrito() {
+    //     if (cartCountSpan) {
+    //         cartCountSpan.textContent = cart.length;
+    //     }
+    // }
     
-    function guardarCarrito() {
-        localStorage.setItem('cart', JSON.stringify(cart));
-    }
+    // function guardarCarrito() {
+    //     localStorage.setItem('cart', JSON.stringify(cart));
+    // }
 
     // --- Lógica de visualización y filtrado ---
     function mostrarProductos(productosAMostrar) {
@@ -107,29 +132,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function aplicarFiltrosYOrden() {
+        console.log('🔍 aplicarFiltrosYOrden - productos disponibles:', productos.length);
         let productosFiltrados = [...productos];
-        const searchTerm = searchInput.value.toLowerCase();
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
         // const sortValue = 'a-z'; // Valor por defecto, si no hay select de ordenamiento
         // const categoryValue = currentCategoryFilter; // Usamos la variable global actualizada por los clicks
 
         // Filtro por búsqueda
         if (searchTerm) {
             productosFiltrados = productosFiltrados.filter(p => p.nombre.toLowerCase().includes(searchTerm) || (p.descripcion && p.descripcion.toLowerCase().includes(searchTerm)));
+            console.log('🔍 Después de buscar:', productosFiltrados.length);
         }
 
         // Filtro por categoría (usando los enlaces)
-        if (currentCategoryFilter !== 'todos') {
+        // Nota: vista-producto-user.html ya viene filtrado solo con 'comida-por-caducarse'
+        // Los enlaces con .html navegan a otras páginas, solo los hash filtran aquí
+        console.log('🔍 currentCategoryFilter:', currentCategoryFilter);
+        if (currentCategoryFilter && currentCategoryFilter !== 'todos' && currentCategoryFilter !== '#todos' && currentCategoryFilter.startsWith('#')) {
+            console.log('🔍 Filtrando por categoría:', currentCategoryFilter);
             productosFiltrados = productosFiltrados.filter(p => {
-                // Aquí adaptas el 'href' de tu enlace a la categoría de tu producto
-                // ¡IMPORTANTE! Ajusta estos valores a las categorías reales que guardas en tus productos
                 switch(currentCategoryFilter) {
-                    case '#por-caducarse': return p.categoria === 'caducarse'; // Ejemplo: Si tu producto tiene categoria 'caducarse'
-                    case '#para-donar': return p.categoria === 'donar'; // Ejemplo: Si tu producto tiene categoria 'donar'
-                    case '#frescos': return ['frutas-verduras', 'lacteos'].includes(p.categoria); // Ejemplo: Si frescos agrupa varias
-                    case '#ofertas': return p.precioOferta && parseFloat(p.precioOferta) < parseFloat(p.precioOriginal); // Ejemplo: Si hay precio de oferta
-                    default: return true; // Para 'todos' o si no hay un mapeo específico
+                    case '#lacteos': return p.tipo_producto === 'lacteos';
+                    case '#bebidas': return p.tipo_producto === 'bebidas';
+                    case '#frescos': return p.tipo_producto === 'frescos';
+                    case '#ofertas': return p.precioOferta && parseFloat(p.precioOferta) < parseFloat(p.precioOriginal);
+                    default: return true; // Para 'todos' o cualquier otro caso
                 }
             });
+            console.log('🔍 Después de filtrar por categoría:', productosFiltrados.length);
         }
 
         // --- Ordenamiento (Manejo para cuando no hay un select de ordenamiento) ---
@@ -139,16 +169,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // Si en el futuro agregas un select para ordenar, necesitarías adaptar esta parte.
         productosFiltrados.sort((a, b) => a.nombre.localeCompare(b.nombre)); // Orden alfabético por defecto
 
+        console.log('✅ Mostrando productos:', productosFiltrados.length);
         mostrarProductos(productosFiltrados);
     }
 
     // --- Lógica del Carrito ---
     function agregarAlCarrito(idProducto) {
         const producto = productos.find(p => p.id == idProducto);
-        if (producto) {
-            cart.push(producto); // Agrega el producto al array del carrito
-            guardarCarrito();
-            actualizarContadorCarrito();
+        if (producto && window.cartManager) {
+            window.cartManager.addItem({
+                id: producto.id,
+                nombre_producto: producto.nombre,
+                precio_descuento: producto.precioOferta,
+                precio_original: producto.precioOriginal,
+                imagenes: [producto.imagen]
+            });
             alert(`"${producto.nombre}" ha sido agregado al carrito.`);
         }
     }
@@ -188,19 +223,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Inicialización y Eventos ---
-    productos = obtenerProductos(); // Carga los productos al inicio
-
-    // Inicializa el filtro de categoría activo y aplica los filtros/orden
-    const activeCategoryLink = document.querySelector('.category-carousel-section .carousel-nav a.active');
-    if (activeCategoryLink) {
-        currentCategoryFilter = activeCategoryLink.getAttribute('href');
-    }
     
-    // Solo aplica filtros y orden si productGrid existe (para evitar errores en otras páginas que quizás no lo tengan)
-    if (productGrid) {
+    // Función async para inicializar todo
+    async function inicializar() {
+        productos = await obtenerProductos(); // Carga los productos desde la BD
+
+        // Inicializa el filtro de categoría activo y aplica los filtros/orden
+        const activeCategoryLink = document.querySelector('.category-carousel-section .carousel-nav a.active');
+        if (activeCategoryLink) {
+            currentCategoryFilter = activeCategoryLink.getAttribute('href');
+        }
+        
+        // Solo aplica filtros y orden si productGrid existe
+        if (productGrid) {
         aplicarFiltrosYOrden(); // Muestra los productos inicialmente
     }
-    actualizarContadorCarrito();
+    // actualizarContadorCarrito(); // ELIMINADO - CartManager lo maneja automáticamente
 
     // Eventos para el buscador
     if (searchInput) {
@@ -212,14 +250,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // NUEVOS EVENTOS: Para los enlaces de categoría
     categoryLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault(); // Evita que el navegador salte a la ancla
+            const href = e.target.getAttribute('href');
+            
+            // Solo prevenir default si es un hash (#todos, #lacteos), no si es una página real (.html)
+            if (href && href.startsWith('#')) {
+                e.preventDefault(); // Evita que el navegador salte a la ancla
 
-            // Quita 'active' de todos los enlaces y lo pone en el clickeado
-            categoryLinks.forEach(l => l.classList.remove('active'));
-            e.target.classList.add('active');
+                // Quita 'active' de todos los enlaces y lo pone en el clickeado
+                categoryLinks.forEach(l => l.classList.remove('active'));
+                e.target.classList.add('active');
 
-            currentCategoryFilter = e.target.getAttribute('href'); // Actualiza el filtro
-            aplicarFiltrosYOrden(); // Vuelve a aplicar filtros
+                currentCategoryFilter = href; // Actualiza el filtro
+                aplicarFiltrosYOrden(); // Vuelve a aplicar filtros
+            }
+            // Si no empieza con #, deja que navegue normalmente a la otra página
         });
     });
 
@@ -257,14 +301,20 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.addEventListener('input', aplicarFiltrosYOrden);
     }
     
-    // Eventos para los enlaces de categoría
+    // Eventos para los enlaces de categoría (segundo bloque)
     categoryLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault();
-            categoryLinks.forEach(l => l.classList.remove('active'));
-            e.target.classList.add('active');
-            currentCategoryFilter = e.target.getAttribute('href');
-            aplicarFiltrosYOrden();
+            const href = e.target.getAttribute('href');
+            
+            // Solo prevenir default si es un hash (#todos, #lacteos), no si es una página real (.html)
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                categoryLinks.forEach(l => l.classList.remove('active'));
+                e.target.classList.add('active');
+                currentCategoryFilter = href;
+                aplicarFiltrosYOrden();
+            }
+            // Si no empieza con #, deja que navegue normalmente a la otra página
         });
     });
 
@@ -301,6 +351,11 @@ document.addEventListener('DOMContentLoaded', () => {
             vaciarCarrito();
         });
     }
+    
+    } // Fin de función inicializar()
+    
+    // Llamar a la función de inicialización
+    inicializar();
 
 }); // Fin de document.addEventListener('DOMContentLoaded')
 

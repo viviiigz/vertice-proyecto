@@ -1,0 +1,8 @@
+/* archivo: assets/css/comercio-pickup.css */
+
+.map-container {
+    width: 100%;
+    height: 450px; /* Altura del mapa */
+    border-radius: 8px;
+    background-color: #f0f0f0; /* Color mientras carga */
+}

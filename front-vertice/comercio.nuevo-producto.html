@@ -11,6 +11,105 @@
     <link rel="stylesheet" href="./assets/css/comercio.productos.css" />
     <link rel="icon" type="image/x-icon" href="../front-vertice/assets/imgs/v-vertice.png" />
 </head>
+<style>
+  /* --- Estilo General para los Botones --- */
+
+  /* 1. Define el estilo base para TODOS los .btn */
+  .btn {
+    /* Quita el "resaltado" (Outline y Shadow de Foco) */
+    text-decoration: none !important; /* Quita cualquier subrayado */
+    outline: none !important;         /* Quita el borde azul de foco */
+    box-shadow: none !important;       /* Quita la sombra de foco de Bootstrap */
+
+    /* Estilo Moderno */
+    border: none;
+    border-radius: 8px;                /* Bordes redondeados */
+    font-weight: 600;
+    padding: 10px 18px;
+    gap: 8px;                          /* Espacio entre icono y texto */
+    
+    /* Permite alinear icono y texto */
+    display: inline-flex; 
+    align-items: center;
+    
+    /* Efecto Hover */
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  /* Efecto "flotar" al pasar el mouse */
+  .btn:hover {
+    transform: translateY(-2px); /* Se eleva un poquito */
+  }
+
+  /* 2. ESTILO PARA BOTONES VERDES (Primarios) */
+  /* Se aplica a "Visitar mi tienda" Y "Nuevo producto" */
+  .btn-primary {
+    background-color: #28a745; /* Verde profesional */
+    color: white !important;   /* El !important asegura que el texto sea blanco */
+  }
+  .btn-primary:hover {
+    background-color: #218838; 
+  }
+
+  /* 3. ESTILO PARA BOTONES GRISES (Secundarios) */
+  /* Se aplica a "Mi Cuenta" y "Filtros" */
+  .btn-secondary {
+    background-color: #f0f2f5; 
+    color: #444 !important;
+  }
+  .btn-secondary:hover {
+    background-color: #e2e6ea; 
+  }
+
+  /* 4. ESPACIO ENTRE BOTONES DEL HEADER */
+  .header-buttons {
+    display: flex;
+    gap: 12px; /* <-- ¡AQUÍ ESTÁ EL ESPACIO QUE PEDISTE! */
+  }
+  /* --- Estilo de Layout General del Dashboard --- */
+
+  html, body {
+    /* Asegura que la página pueda usar la altura completa */
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa; /* Color de fondo general si algo se "escapa" */
+  }
+
+  .dashboard-container {
+    /* 1. USA FLEXBOX PARA EL LAYOUT */
+    /* Esto divide el contenedor en columnas (sidebar y main) */
+    display: flex;
+    
+    /* 2. ALTURA MÍNIMA DE 100% DE LA VENTANA */
+    /* Esto fuerza al contenedor a ocupar, como mínimo,
+       toda la altura de la pantalla del navegador. */
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    /* 3. ANCHO FIJO PARA EL SIDEBAR */
+    /* (Ajusta este número si quieres que sea más ancho o angosto) */
+    width: 260px;
+    
+    /* Evita que el sidebar se encoja si el contenido es muy grande */
+    flex-shrink: 0;
+    
+    /* Fondo blanco (basado en tus capturas) */
+    background-color: #ffffff;
+    
+    /* Un borde sutil para separarlo del contenido */
+    border-right: 1px solid #e9ecef;
+  }
+
+  .main-content {
+    /* 4. EL CONTENIDO TOMA EL RESTO DEL ESPACIO */
+    /* "flex-grow: 1" le dice que ocupe todo el espacio sobrante */
+    flex-grow: 1;
+    
+    /* El padding y demás ya lo tienes en tu CSS `comercio.productos.css` */
+  }
+</style>
 
 <body>
     <div class="dashboard-container">
@@ -22,19 +121,16 @@
                 <a href="./comercio.estadisticas.html"><i class="fas fa-chart-line"></i> Estadísticas</a>
                 <h3>Administración</h3>
                 <a href="comercio.producto.html" class="active"><i class="fas fa-box"></i> Productos</a>
-                <a href="#"><i class="fas fa-sitemap"></i> Clientes</a>
-                <a href="#"><i class="fas fa-map-marker-alt"></i> Pick Up Points</a>
+                <a href="/front-vertice/comercio-pedido.html"><i class="fas fa-sitemap"></i> Pedidos</a>
+                <a href="/front-vertice/comercio-pickup.html"><i class="fas fa-map-marker-alt"></i> Pick Up Points</a>
             </nav>
         </aside>
 
         <main class="main-content">
             <header class="header">
                 <div class="header-buttons">
-                    <button class="btn btn-primary">
-                        <i class="fas fa-eye"></i> Visitar mi tienda
-                    </button>
                     <a href="./profile.comercio.html" class="btn btn-secondary">
-                        <i class="fas fa-user-circle"></i> Mi Cuenta
+                        <i class="fas fa-user-circle"></i> Mi Perfil
                     </a>
                 </div>
             </header>
@@ -66,11 +162,12 @@
                     </div>
                     <div class="form-group">
                       <label for="categoria-input">Categoría</label>
-                        <select id="categoria-input" name="categoria" class="form-control">
-                            <option value="">Selecciona la categoria...</option>
-                            <option value="comida-por-caducarse">Comida por caducarse</option>
-                            <option value="para-donar">Para donar</option>
-                        </select>
+            <select id="categoria-input" name="categoria" class="form-control">
+              <option value="">Selecciona la categoría...</option>
+              <option value="comida-por-caducarse">Comida por caducarse</option>
+              <option value="desperfecto-fisico">Desperfecto Físico</option>
+              <option value="para-donar">Para donar</option>
+            </select>
                     </div>
                     <div class="form-group">
                      <label for="tipo-producto">Tipo de Producto</label>

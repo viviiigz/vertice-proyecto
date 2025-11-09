@@ -1,7 +1,7 @@
   // API Configuration
 const API_URL = 'http://localhost:3000/api';
 
-console.log('✅ perfil.js cargado correctamente');
+console.log(' perfil.js cargado correctamente');
 
 // Función para obtener el token
 function getToken() {
@@ -20,22 +20,41 @@ function getAuthHeaders() {
 function checkAuth() {
     const token = getToken();
     if (!token) {
-        window.location.href = '/login.html';
+        redirectToLogin();
         return false;
     }
     return true;
 }
 
+// Redirección robusta al login
+const LOGIN_RELATIVE = 'login.html';
+function redirectToLogin() {
+    const tryRelative = () => {
+        console.log('➡ Redirigiendo a login (relativo):', LOGIN_RELATIVE);
+        window.location.replace(LOGIN_RELATIVE);
+    };
+    tryRelative();
+    // Fallback absoluto si seguimos en esta página tras 1.2s
+    setTimeout(() => {
+        const onLogin = /login\.html(\?|#|$)/.test(window.location.pathname);
+        if (!onLogin) {
+            const absolute = window.location.origin + '/front-vertice/login.html';
+            console.warn('⚠ Forzando redirección a login (absoluto):', absolute);
+            window.location.href = absolute;
+        }
+    }, 1200);
+}
+
 // Cargar datos del perfil desde el backend
 async function cargarPerfil() {
-    console.log('🔄 Cargando perfil...');
+    console.log(' Cargando perfil...');
     
     if (!checkAuth()) {
-        console.log('❌ Sin autenticación');
+        console.log(' Sin autenticación');
         return;
     }
 
-    console.log('✅ Token encontrado:', getToken().substring(0, 20) + '...');
+    console.log(' Token encontrado:', getToken().substring(0, 20) + '...');
 
     try {
         const response = await fetch(`${API_URL}/perfil`, {
@@ -46,9 +65,9 @@ async function cargarPerfil() {
 
         if (!response.ok) {
             if (response.status === 401) {
-                console.log('❌ Token inválido, redirigiendo a login');
+                console.log(' Token inválido, redirigiendo a login');
                 localStorage.removeItem('token');
-                window.location.href = '/login.html';
+                redirectToLogin();
                 return;
             }
             throw new Error('Error al cargar perfil');
@@ -62,10 +81,12 @@ async function cargarPerfil() {
             return data.user;
         }
     } catch (error) {
-        console.error('❌ Error al cargar perfil:', error);
+        console.error(' Error al cargar perfil:', error);
         mostrarAlerta('Error al cargar el perfil. Por favor recarga la página.', 'error');
     }
 }
+
+const DEFAULT_PROFILE_IMG = './assets/imgs/v-vertice.png';
 
 // Mostrar datos del perfil en el formulario
 function mostrarDatosPerfil(user) {
@@ -93,6 +114,10 @@ function mostrarDatosPerfil(user) {
         } else {
             emailEl.textContent = user.email;
         }
+        const displayEmail = document.getElementById('display-email');
+        if (displayEmail && displayEmail !== emailEl) {
+            displayEmail.textContent = user.email || '—';
+        }
     }
 
     // Avatar inicial (primera letra del username)
@@ -104,8 +129,18 @@ function mostrarDatosPerfil(user) {
 
     // Foto de perfil
     const fotoPerfilEl = document.getElementById('profile-img-preview');
-    if (fotoPerfilEl && user.fotoPerfil) {
-        fotoPerfilEl.src = user.fotoPerfil;
+    if (fotoPerfilEl) {
+        if (user.fotoPerfil && typeof user.fotoPerfil === 'string' && user.fotoPerfil.trim() !== '') {
+            fotoPerfilEl.src = user.fotoPerfil;
+        } else {
+            fotoPerfilEl.src = DEFAULT_PROFILE_IMG;
+        }
+        // Fallback robusto en caso de error de carga
+        fotoPerfilEl.onerror = function () {
+            console.warn('⚠ Error cargando imagen de perfil, usando fallback local');
+            this.onerror = null;
+            this.src = DEFAULT_PROFILE_IMG;
+        };
     }
 
     // Campos editables del perfil
@@ -119,6 +154,10 @@ function mostrarDatosPerfil(user) {
         if (displaySlogan) {
             displaySlogan.textContent = user.descripcion || 'Slogan del comercio o una breve descripción';
         }
+        const displayDescripcion = document.getElementById('display-descripcion');
+        if (displayDescripcion && displayDescripcion !== descripcionEl) {
+            displayDescripcion.textContent = (user.descripcion || '').trim() || '—';
+        }
     }
 
     const telefonoEl = document.getElementById('telefono') || 
@@ -127,6 +166,10 @@ function mostrarDatosPerfil(user) {
     if (telefonoEl) {
         // Mostrar el teléfono completo tal como está guardado
         telefonoEl.value = user.telefono || '';
+        const displayTelefono = document.getElementById('display-telefono');
+        if (displayTelefono && displayTelefono !== telefonoEl) {
+            displayTelefono.textContent = (user.telefono || '').trim() || '—';
+        }
     }
 
     // Campos específicos para comercios
@@ -140,6 +183,10 @@ function mostrarDatosPerfil(user) {
         
         if (direccionEl) {
             direccionEl.value = user.direccion || '';
+            const displayDireccion = document.getElementById('display-direccion');
+            if (displayDireccion && displayDireccion !== direccionEl) {
+                displayDireccion.textContent = (user.direccion || '').trim() || '—';
+            }
         }
         
         if (horariosEl) {
@@ -351,18 +398,11 @@ async function cerrarSesion() {
         console.error(' Error al llamar al logout:', error);
     } finally {
         // Limpiar localStorage SIEMPRE (incluso si el servidor falla)
-        localStorage.removeItem('token');
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-        localStorage.removeItem('profileName');
-        localStorage.removeItem('profileSlogan');
-        localStorage.removeItem('profilePhoto');
-        localStorage.removeItem('editMode');
-        
+        const keysToClear = ['token','authToken','user','profileName','profileSlogan','profilePhoto','editMode'];
+        keysToClear.forEach(k => localStorage.removeItem(k));
         console.log(' LocalStorage limpiado');
-        
-        // Redirigir a la landing o login (ruta absoluta desde la raíz)
-        window.location.href = 'http://localhost:3000/front-vertice/vertice.html';
+        // Redirigir al login (robusto)
+        redirectToLogin();
     }
 }
 

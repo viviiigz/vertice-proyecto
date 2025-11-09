@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.getElementById('imagen');
 
     let productos = [];
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    // Eliminamos la gestión local del carrito - ahora usa CartManager global
+    // let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     // ========================================
     // FUNCIONES DE NOTIFICACIONES
@@ -130,17 +131,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Error al obtener los productos');
             }
             const data = await response.json();
+            // Filtro defensivo: solo mostrar categorias permitidas
+            const permitidas = ['comida-por-caducarse', 'desperfecto-fisico'];
+            const visibles = data.filter(p => permitidas.includes(p.categoria));
+            console.log('[TIENDA] Total backend:', data.length, '| visibles (filtradas):', visibles.length);
             // Mapea los nombres de las propiedades del backend a los del frontend
-            return data.map(p => ({
-                id: p.id,
+            return visibles.map(p => ({
+                id: p.id || p._id,
                 nombre: p.nombre_producto,
                 descripcion: p.descripcion,
                 precioOriginal: p.precio_original,
-                precioOferta: p.precio_descuento,
+                precioOferta: p.precio_descuento && p.precio_descuento < p.precio_original ? p.precio_descuento : null,
                 stock: p.cantidad_disponible,
                 imagen: p.foto_url ? `${API_URL.replace('/api', '')}/uploads/${p.foto_url}` : 'assets/imgs/default.jpg',
                 categoria: p.categoria
-            }));
+            }));   
         } catch (error) {
             console.error('Error:', error);
             return [];
@@ -185,15 +190,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================================
     // FUNCIONES DE UTILIDAD - CARRITO
     // ========================================
-    function actualizarContadorCarrito() {
-        if (cartCountSpan) {
-            cartCountSpan.textContent = cart.length;
-        }
-    }
+    // ELIMINADAS - Ahora usa CartManager global
+    // function actualizarContadorCarrito() {
+    //     if (cartCountSpan) {
+    //         cartCountSpan.textContent = cart.length;
+    //     }
+    // }
 
-    function guardarCarrito() {
-        localStorage.setItem('cart', JSON.stringify(cart));
-    }
+    // function guardarCarrito() {
+    //     localStorage.setItem('cart', JSON.stringify(cart));
+    // }
 
     // ========================================
     // LÓGICA DE VISUALIZACIÓN Y FILTRADO
@@ -279,9 +285,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function agregarAlCarrito(idProducto) {
         const producto = productos.find(p => p.id == idProducto);
         if (producto) {
-            cart.push(producto);
-            guardarCarrito();
-            actualizarContadorCarrito();
+            // Usa CartManager global en lugar de array local
+            if (window.cartManager) {
+                window.cartManager.addItem({
+                    id: producto.id || producto._id,
+                    nombre_producto: producto.nombre,
+                    precio_descuento: producto.precioOferta,
+                    precio_original: producto.precioOriginal,
+                    imagenes: producto.imagenes || []
+                });
+            }
             mostrarMensajeExito(`"${producto.nombre}" ha sido agregado al carrito`);
         }
     }
@@ -391,24 +404,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Función separada para guardar el producto
     async function guardarProducto(submitBtn) {
-        const nombre = document.getElementById('nombre')?.value;
-        const descripcion = document.getElementById('descripcion')?.value;
-        const stock = document.getElementById('stock')?.value;
-        const precioOriginal = document.getElementById('precio-original')?.value;
-        const precioOferta = document.getElementById('precio_descuento')?.value;
+    const nombre = document.getElementById('nombre')?.value?.trim();
+    const descripcion = document.getElementById('descripcion')?.value?.trim();
+    const stock = document.getElementById('stock')?.value;
+    const precioOriginal = document.getElementById('precio-original')?.value;
+    // Campo de oferta es OPCIONAL: si está vacío no debe bloquear el guardado
+    const precioOfertaRaw = document.getElementById('precio_descuento')?.value;
+    const precioOferta = (precioOfertaRaw === '' || precioOfertaRaw == null) ? null : precioOfertaRaw;
         const categoria = document.getElementById('categoria-input')?.value;
         const tipoProducto = document.getElementById('tipo-producto')?.value;
         const imagenFile = fileInput?.files[0];
 
-        console.log('Datos del formulario:', {
+        console.log('Datos del formulario (previa validación):', {
             nombre, descripcion, stock, precioOriginal, precioOferta, categoria, tipoProducto,
             imagen: imagenFile ? imagenFile.name : 'Sin imagen'
         });
 
-        // Validar campos obligatorios
-        if (!nombre || !stock || !precioOriginal || !precioOferta) {
-            console.log('Validación fallida - Campos faltantes');
-            mostrarMensajeAdvertencia('Por favor completa todos los campos obligatorios (Nombre, Stock, Precio Original y Precio con Descuento)');
+        // Validar campos obligatorios (precioOferta ya NO es obligatorio)
+        if (!nombre || !stock || !precioOriginal) {
+            console.log('Validación fallida - Campos obligatorios incompletos', { nombre, stock, precioOriginal });
+            mostrarMensajeAdvertencia('Por favor completa los campos obligatorios: Nombre, Stock y Precio Original.');
             
             // Re-habilitar el botón
             if (submitBtn) {
@@ -426,7 +441,8 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('descripcion', descripcion || '');
         formData.append('cantidad_disponible', stock);
         formData.append('precio_original', precioOriginal);
-        formData.append('precio_descuento', precioOferta);
+    // Solo adjuntar precio_descuento si se ingresó; si no, enviar 0 (o puedes omitirlo según backend)
+    formData.append('precio_descuento', precioOferta != null && precioOferta !== '' ? precioOferta : 0);
         formData.append('categoria', categoria || '');
         formData.append('tipo_producto', tipoProducto || '');
         if (imagenFile) formData.append('foto_url', imagenFile);
@@ -451,8 +467,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.warn('⚠ No se pudo guardar productoCreado en sessionStorage:', eStore);
             }
 
-            console.log('➡ Redirigiendo inmediatamente a /front-vertice/comercio.producto.html con flag productoCreado');
-            window.location.href = window.location.origin + '/front-vertice/comercio.producto.html';
+            console.log('➡ Preparando redirección (timeout corto) hacia listado de productos...');
+            const redirectToProductos = () => {
+                const isHttp = window.location.protocol.startsWith('http');
+                const absolute = window.location.origin + '/front-vertice/comercio.producto.html';
+                const relative = './comercio.producto.html';
+                const destino = isHttp ? absolute : relative;
+                console.log('➡ Ejecutando redirección a', destino);
+                window.location.href = destino;
+            };
+            setTimeout(redirectToProductos, 150); // pequeño delay para asegurar que sessionStorage se haya escrito
             
         } catch (error) {
             console.error(' Error completo:', error);
@@ -525,3 +549,85 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarApp();
 
 });
+
+
+//gestion de PEDIDOS Y ESTADISTICAS
+document.addEventListener('DOMContentLoaded', () => {
+
+    const tablaPedidos = document.getElementById('pedidos-tabla-body');
+
+    if (tablaPedidos) {
+        tablaPedidos.addEventListener('click', async (e) => {
+            
+            // Busca el botón más cercano que fue clickeado
+            const botonCompletar = e.target.closest('.btn-completar');
+            const botonCancelar = e.target.closest('.btn-cancelar');
+
+            if (botonCompletar) {
+                const pedidoId = botonCompletar.dataset.id;
+                // Llama a la función para completar, pasándole el ID
+                await manejarActualizacionPedido(pedidoId, 'completar');
+            }
+
+            if (botonCancelar) {
+                const pedidoId = botonCancelar.dataset.id;
+                // Llama a la función para cancelar, pasándole el ID
+                await manejarActualizacionPedido(pedidoId, 'cancelar');
+            }
+        });
+    }
+});
+
+/**
+ * Función que llama a la API para actualizar el estado de un pedido
+ * @param {string} id - El ID del pedido
+ * @param {'completar' | 'cancelar'} accion - La acción a realizar
+ */
+async function manejarActualizacionPedido(id, accion) {
+    
+    // Ruta de tu API (la que acordamos en el backend)
+    const url = `/api/pedidos/${accion}/${id}`;
+    
+    try {
+        const respuesta = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                // Asegúrate de enviar el token de autenticación si es necesario
+                // 'Authorization': `Bearer ${token}` 
+            }
+        });
+
+        if (!respuesta.ok) {
+            throw new Error(`Error al ${accion} el pedido`);
+        }
+
+        const pedidoActualizado = await respuesta.json();
+
+        // Éxito: Actualizar la UI
+        console.log(`Pedido ${accion}do con éxito`);
+
+        // Busca la fila de la tabla y actualiza su estado
+        const filaPedido = document.getElementById(`pedido-${id}`);
+        if (filaPedido) {
+            const celdaEstado = filaPedido.querySelector('td:nth-child(6)');
+            const celdaAcciones = filaPedido.querySelector('td:nth-child(7)');
+
+            if (accion === 'completar') {
+                celdaEstado.innerHTML = '<span class="badge bg-success">Completado</span>';
+            } else {
+                celdaEstado.innerHTML = '<span class="badge bg-danger">Cancelado</span>';
+            }
+            
+            // Elimina los botones de acción
+            celdaAcciones.innerHTML = ''; 
+        }
+
+        // Opcional: Recargar la página
+        // window.location.reload();
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert(`Hubo un error al ${accion} el pedido.`);
+    }
+}

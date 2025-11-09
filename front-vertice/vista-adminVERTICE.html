@@ -240,15 +240,19 @@
             const tdDoc = document.createElement('td');
             if (solicitud.documentoVerificacion) {
                 const a = document.createElement('a');
-                a.href = `/uploads/${solicitud.documentoVerificacion}`;
+                // Construir URL completa al backend para que funcione correctamente
+                const backendURL = 'http://localhost:3000';
+                const pdfURL = `${backendURL}/uploads/${solicitud.documentoVerificacion}`;
+                a.href = pdfURL;
                 a.target = '_blank';
                 a.rel = 'noopener noreferrer';
                 a.className = 'btn btn-sm btn-primary';
                 a.textContent = 'Ver Documento';
-                // Use modal preview instead of direct open
+                // Use modal preview with proper PDF embedding
                 a.addEventListener('click', (e) => {
                     e.preventDefault();
-                    previewFrame.src = a.href;
+                    // Usar #view=FitH para que el PDF se ajuste al iframe
+                    previewFrame.src = pdfURL + '#view=FitH';
                     if (previewModal) previewModal.show();
                 });
                 tdDoc.appendChild(a);

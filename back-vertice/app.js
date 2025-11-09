@@ -13,8 +13,28 @@ import { fileURLToPath } from 'url';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Permitir credenciales (cookies) y servir el front desde el mismo origen para que las cookies funcionen
-app.use(cors({ origin: true, credentials: true }));
+// Configuración de CORS más permisiva para desarrollo
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Permitir peticiones sin origin (como Postman) o desde cualquier origen en desarrollo
+        const allowedOrigins = [
+            'http://localhost:5500',
+            'http://127.0.0.1:5500',
+            'http://localhost:3000',
+            'http://127.0.0.1:3000'
+        ];
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(null, true); // En desarrollo, permitir todo
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
@@ -25,9 +45,15 @@ const __dirname = path.dirname(__filename);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Servir archivos estáticos de la carpeta uploads
-// Servir archivos estáticos de la carpeta uploads (ruta absoluta)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Servir archivos estáticos de la carpeta uploads con headers correctos para PDFs
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.pdf')) {
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'inline'); // Para que se muestre en el navegador, no descargue
+        }
+    }
+}));
 
 // Servir la carpeta front-vertice como estática en la raíz para que los HTML se sirvan desde el mismo origen
 // front-vertice está en el directorio padre del back-vertice

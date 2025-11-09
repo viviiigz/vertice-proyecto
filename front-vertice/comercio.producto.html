@@ -1,191 +1,430 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Productos - Vértice</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sulphur+Point:wght@300;400;700&display=swap"
-    />
-    <link rel="stylesheet" href="./assets/css/comercio.productos.css" />
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="../front-vertice/assets/imgs/v-vertice.png"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  </head>
-  <body>
-    <div class="dashboard-container">
-      <aside class="sidebar">
-        <div class="logo">
-          <img
-            src="./assets/imgs/vertice-logo-largo (1).png"
-            alt="Logo de Vértice"
-            class="brand-logo"
-          />
-        </div>
-        <nav class="sidebar-nav">
-          <a href="./comercio.estadisticas.html"
-            ><i class="fas fa-chart-line"></i> Estadísticas</a
-          >
-          <h3>Administración</h3>
-          <a href="#" class="active"><i class="fas fa-box"></i> Productos</a>
-          <a href="#"><i class="fas fa-sitemap"></i> Clientes</a>
-          <a href="#"><i class="fas fa-map-marker-alt"></i> Pick Up Points</a>
-        </nav>
-      </aside>
 
-      <main class="main-content">
-        <header class="header">
-          <div class="header-buttons">
-            <button class="btn btn-primary">
-              <i class="fas fa-eye"></i> Visitar mi tienda
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Productos - Vértice</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sulphur+Point:wght@300;400;700&display=swap" />
+  <link rel="stylesheet" href="./assets/css/comercio.productos.css" />
+  <link rel="icon" type="image/x-icon" href="../front-vertice/assets/imgs/v-vertice.png" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<!--style de los botones:-->
+<style>
+  /* --- Estilo General para los Botones --- */
+
+  /* 1. Define el estilo base para TODOS los .btn */
+  .btn {
+    /* Quita el "resaltado" (Outline y Shadow de Foco) */
+    text-decoration: none !important; /* Quita cualquier subrayado */
+    outline: none !important;         /* Quita el borde azul de foco */
+    box-shadow: none !important;       /* Quita la sombra de foco de Bootstrap */
+
+    /* Estilo Moderno */
+    border: none;
+    border-radius: 8px;                /* Bordes redondeados */
+    font-weight: 600;
+    padding: 10px 18px;
+    gap: 8px;                          /* Espacio entre icono y texto */
+    
+    /* Permite alinear icono y texto */
+    display: inline-flex; 
+    align-items: center;
+    
+    /* Efecto Hover */
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  /* Efecto "flotar" al pasar el mouse */
+  .btn:hover {
+    transform: translateY(-2px); /* Se eleva un poquito */
+  }
+
+  /* 2. ESTILO PARA BOTONES VERDES (Primarios) */
+  /* Se aplica a "Visitar mi tienda" Y "Nuevo producto" */
+  .btn-primary {
+    background-color: #28a745; /* Verde profesional */
+    color: white !important;   /* El !important asegura que el texto sea blanco */
+  }
+  .btn-primary:hover {
+    background-color: #218838; 
+  }
+
+  /* 3. ESTILO PARA BOTONES GRISES (Secundarios) */
+  /* Se aplica a "Mi Cuenta" y "Filtros" */
+  .btn-secondary {
+    background-color: #f0f2f5; 
+    color: #444 !important;
+  }
+  .btn-secondary:hover {
+    background-color: #e2e6ea; 
+  }
+
+  /* 4. ESPACIO ENTRE BOTONES DEL HEADER */
+  .header-buttons {
+    display: flex;
+    gap: 12px; /* <-- ¡AQUÍ ESTÁ EL ESPACIO QUE PEDISTE! */
+  }
+  /* --- Estilo de Layout General del Dashboard --- */
+
+  html, body {
+    /* Asegura que la página pueda usar la altura completa */
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa; /* Color de fondo general si algo se "escapa" */
+  }
+
+  .dashboard-container {
+    /* 1. USA FLEXBOX PARA EL LAYOUT */
+    /* Esto divide el contenedor en columnas (sidebar y main) */
+    display: flex;
+    
+    /* 2. ALTURA MÍNIMA DE 100% DE LA VENTANA */
+    /* Esto fuerza al contenedor a ocupar, como mínimo,
+       toda la altura de la pantalla del navegador. */
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    /* 3. ANCHO FIJO PARA EL SIDEBAR */
+    /* (Ajusta este número si quieres que sea más ancho o angosto) */
+    width: 260px;
+    
+    /* Evita que el sidebar se encoja si el contenido es muy grande */
+    flex-shrink: 0;
+    
+    /* Fondo blanco (basado en tus capturas) */
+    background-color: #ffffff;
+    
+    /* Un borde sutil para separarlo del contenido */
+    border-right: 1px solid #e9ecef;
+  }
+
+  .main-content {
+    /* 4. EL CONTENIDO TOMA EL RESTO DEL ESPACIO */
+    /* "flex-grow: 1" le dice que ocupe todo el espacio sobrante */
+    flex-grow: 1;
+    
+    /* El padding y demás ya lo tienes en tu CSS `comercio.productos.css` */
+  }
+
+  /* --- Pulido visual del Modal de Filtros --- */
+  .modal-filtro-container .modal-content {
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  }
+
+  .modal-filtro-container .modal-header h3 {
+    margin: 0;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  .modal-filtro-container .modal-body .filter-group {
+    margin-bottom: 16px;
+  }
+
+  .modal-filtro-container .filter-group label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+  }
+
+  /* Selects (Orden y Categoría) más modernos y consistentes */
+  .modal-filtro-container .form-control {
+    appearance: none;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #111827;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .modal-filtro-container .form-control:focus {
+    outline: none;
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40,167,69,0.15);
+  }
+
+  /* Hacer que TODOS los botones del modal se vean como "Aplicar filtros" */
+  .modal-filtro-container .modal-body .btn,
+  .modal-filtro-container .modal-footer .btn {
+    background-color: #28a745 !important;
+    color: #fff !important;
+    border: none !important;
+  }
+  .modal-filtro-container .modal-body .btn:hover,
+  .modal-filtro-container .modal-footer .btn:hover {
+    background-color: #218838 !important;
+  }
+
+  /* Botones de disponibilidad como pastillas uniformes */
+  .modal-filtro-container .availability-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .modal-filtro-container .availability-buttons .btn {
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-weight: 600;
+  }
+  .modal-filtro-container .availability-buttons .btn.active {
+    background-color: #1e7e34 !important;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+  }
+
+  /* Asegurar que Quitar filtros también se vea como primario */
+  .modal-filtro-container #quitar-filtros-btn {
+    background-color: #28a745 !important;
+    color: #fff !important;
+  }
+
+  /* Sobrescribir clases específicas del CSS externo para los botones del modal */
+  .modal-filtro-container .availability-buttons .btn-sm,
+  .modal-filtro-container .availability-buttons .btn-light {
+    background-color: #28a745 !important;
+    color: white !important;
+    border: 1px solid #28a745 !important;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .modal-filtro-container .availability-buttons .btn-sm:hover,
+  .modal-filtro-container .availability-buttons .btn-light:hover {
+    background-color: #218838 !important;
+    border-color: #218838 !important;
+    transform: translateY(-1px);
+  }
+  
+  .modal-filtro-container .availability-buttons .btn-sm.active,
+  .modal-filtro-container .availability-buttons .btn-light.active {
+    background-color: #1e7e34 !important;
+    border-color: #1e7e34 !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+  }
+
+  /* Mejorar los selectores de Orden y Categoría */
+  .modal-filtro-container #orden-select,
+  .modal-filtro-container #categoria-select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1f2937;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23374151' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  .modal-filtro-container #orden-select:hover,
+  .modal-filtro-container #categoria-select:hover {
+    border-color: #28a745;
+    background-color: #f9fafb;
+  }
+
+  .modal-filtro-container #orden-select:focus,
+  .modal-filtro-container #categoria-select:focus {
+    outline: none;
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+    background-color: #ffffff;
+  }
+
+  /* Mejorar espaciado y estilo de las labels */
+  .modal-filtro-container .filter-group label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Botones del footer con mismo tamaño y espaciado */
+  .modal-filtro-container .modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 2px solid #f3f4f6;
+  }
+
+  .modal-filtro-container .modal-footer .btn {
+    min-width: 140px;
+    padding: 12px 20px;
+    font-weight: 700;
+    border-radius: 8px;
+  }
+</style>
+
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="./assets/imgs/vertice-logo-largo (1).png" alt="Logo de Vértice" class="brand-logo" />
+      </div>
+      <nav class="sidebar-nav">
+        <a href="./comercio.estadisticas.html"><i class="fas fa-chart-line"></i> Estadísticas</a>
+        <h3>Administración</h3>
+        <a href="/front-vertice/comercio.producto.html" class="active"><i class="fas fa-box"></i> Productos</a>
+        <a href="/front-vertice/comercio-pedido.html"><i class="fas fa-sitemap"></i> Pedidos</a>
+        <a href="/front-vertice/comercio-pickup.html"><i class="fas fa-map-marker-alt"></i> Pick Up Points</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <div class="header-buttons">
+          <a href="/front-vertice/profile.comercio.html" class="btn btn-secondary">
+            <i class="fas fa-user-circle"></i> Mi Perfil
+          </a>
+        </div>
+      </header>
+
+      <div class="content-area">
+        <h1>Productos</h1>
+        <div class="product-actions">
+          <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Buscar por nombre o código de producto" />
+            <button class="btn-icon" id="search-btn">
+              <i class="fas fa-search"></i> Buscar
             </button>
-            <a href="/front-vertice/profile.comercio.html" class="btn btn-secondary">
-              <i class="fas fa-user-circle"></i> Mi Cuenta
+          </div>
+
+          <div class="action-buttons">
+            <a href="./comercio.nuevo-producto.html" class="btn btn-primary" id="btn-nuevo-producto">
+              <i class="fas fa-plus"></i> Nuevo producto
             </a>
           </div>
-        </header>
-
-        <div class="content-area">
-          <h1>Productos</h1>
-          <div class="product-actions">
-            <div class="search-bar">
-              <input
-                type="text"
-                id="search-input"
-                placeholder="Buscar por nombre o código de producto"
-              />
-              <button class="btn-icon" id="search-btn">
-                <i class="fas fa-search"></i> Buscar
-              </button>
-            </div>
-
-            <div class="action-buttons">
-              <a
-                href="./comercio.nuevo-producto.html"
-                class="btn btn-primary"
-                id="btn-nuevo-producto"
-              >
-                <i class="fas fa-plus"></i> Nuevo producto
-              </a>
-            </div>
+        </div>
+        <div class="product-list-container">
+          <div class="filters">
+            <button id="filtro-btn" class="btn btn-secondary">
+              <i class="fas fa-sliders-h"></i> Filtros
+            </button>
           </div>
-          <div class="product-list-container">
-            <div class="filters">
-              <button id="filtro-btn" class="btn btn-secondary">
-                <i class="fas fa-sliders-h"></i> Filtros
-              </button>
-            </div>
 
-            <div class="product-table-container">
-              <table class="product-table">
-                <thead>
-                  <tr>
-                    <th>Producto</th>
-                    <th>Stock</th>
-                    <th>Precio Original</th>
-                    <th>Precio en Oferta</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody id="product-table-body"></tbody>
-              </table>
-            </div>
+          <div class="product-table-container">
+            <table class="product-table">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Stock</th>
+                  <th>Precio Original</th>
+                  <th>Precio en Oferta</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="product-table-body"></tbody>
+            </table>
           </div>
         </div>
+      </div>
 
-        <div class="modal-filtro-container" id="filtro-modal">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h3>Filtros y orden</h3>
-              <button class="close-modal" id="close-filtro-modal">
-                &times;
-              </button>
+      <div class="modal-filtro-container" id="filtro-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Filtros y orden</h3>
+            <button class="close-modal" id="close-filtro-modal">
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="filter-group">
+              <label for="orden-select">Orden</label>
+              <select id="orden-select" class="form-control">
+                <option value="mas-nuevos">Más nuevos</option>
+                <option value="mas-viejos">Más viejos</option>
+                <option value="a-z">A-Z</option>
+                <option value="z-a">Z-A</option>
+                <option value="menor-precio">Menor precio</option>
+                <option value="mayor-precio">Mayor precio</option>
+              </select>
             </div>
-            <div class="modal-body">
-              <div class="filter-group">
-                <label for="orden-select">Orden</label>
-                <select id="orden-select" class="form-control">
-                  <option value="mas-nuevos">Más nuevos</option>
-                  <option value="mas-viejos">Más viejos</option>
-                  <option value="a-z">A-Z</option>
-                  <option value="z-a">Z-A</option>
-                  <option value="menor-precio">Menor precio</option>
-                  <option value="mayor-precio">Mayor precio</option>
-                </select>
-              </div>
 
-              <div class="filter-group">
-                <label for="categoria-select">Categoría</label>
-                <select id="categoria-select" class="form-control">
-                  <option value="todas">Todas</option>
-                  <option value="comida-por-caducarse">
-                    Comida por caducarse
-                  </option>
-                  <option value="para-donar">Para donar</option>
-                </select>
-              </div>
-
-              <div class="filter-group">
-                <label>Disponibilidad</label>
-                <div class="availability-buttons">
-                  <button id="todos-btn" class="btn btn-sm btn-light active">
-                    Todos
-                  </button>
-                  <button id="en-stock-btn" class="btn btn-sm btn-light">
-                    En stock
-                  </button>
-                  <button id="sin-stock-btn" class="btn btn-sm btn-light">
-                    Sin stock
-                  </button>
-                </div>
-              </div>
+            <div class="filter-group">
+              <label for="categoria-select">Categoría</label>
+              <select id="categoria-select" class="form-control">
+                <option value="todas">Todas</option>
+                <option value="comida-por-caducarse">
+                  Comida por caducarse
+                </option>
+                <option value="para-donar">Para donar</option>
+              </select>
             </div>
-            <div class="modal-footer">
-              <button id="quitar-filtros-btn" class="btn btn-secondary">
-                Quitar filtros
-              </button>
-              <button id="aplicar-filtros-btn" class="btn btn-primary">
-                Aplicar filtros
-              </button>
+
+            <div class="filter-group">
+              <label>Disponibilidad</label>
+              <div class="availability-buttons">
+                <button id="todos-btn" class="btn btn-sm btn-light active">
+                  Todos
+                </button>
+                <button id="en-stock-btn" class="btn btn-sm btn-light">
+                  En stock
+                </button>
+                <button id="sin-stock-btn" class="btn btn-sm btn-light">
+                  Sin stock
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- Modal de confirmación de eliminación -->
-        <div class="modal-filtro-container" id="eliminar-modal">
-          <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-              <h3>Confirmar eliminación</h3>
-              <button class="close-modal" id="close-eliminar-modal">
-                &times;
-              </button>
-            </div>
-            <div class="modal-body">
-              <p style="margin-bottom: 15px; color: #666;">¿Estás seguro de que deseas eliminar este producto?</p>
-              <div id="producto-info-eliminar" style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-top: 10px;">
-                <!-- Aquí se mostrará la info del producto -->
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button id="cancelar-eliminar-btn" class="btn btn-secondary">
-                Cancelar
-              </button>
-              <button id="confirmar-eliminar-btn" class="btn btn-danger">
-                Eliminar producto
-              </button>
-            </div>
+          <div class="modal-footer">
+            <button id="quitar-filtros-btn" class="btn btn-secondary">
+              Quitar filtros
+            </button>
+            <button id="aplicar-filtros-btn" class="btn btn-primary">
+              Aplicar filtros
+            </button>
           </div>
         </div>
-      </main>
-    </div>
-    <script src="./js-vivi/comercio.js"></script>
-  </body>
+      </div>
+
+      <!-- Modal de confirmación de eliminación -->
+      <div class="modal-filtro-container" id="eliminar-modal">
+        <div class="modal-content" style="max-width: 500px;">
+          <div class="modal-header">
+            <h3>Confirmar eliminación</h3>
+            <button class="close-modal" id="close-eliminar-modal">
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">
+            <p style="margin-bottom: 15px; color: #666;">¿Estás seguro de que deseas eliminar este producto?</p>
+            <div id="producto-info-eliminar"
+              style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-top: 10px;">
+              <!-- Aquí se mostrará la info del producto -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="cancelar-eliminar-btn" class="btn btn-secondary">
+              Cancelar
+            </button>
+            <button id="confirmar-eliminar-btn" class="btn btn-danger">
+              Eliminar producto
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="./js-vivi/comercio.js"></script>
+</body>
+
 </html>

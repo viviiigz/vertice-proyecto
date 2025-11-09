@@ -34,7 +34,7 @@ const productSchema = new mongoose.Schema({
   categoria: {
     type: String,
     required: false,
-    enum: ['comida-por-caducarse', 'para-donar']
+    enum: ['comida-por-caducarse', 'desperfecto-fisico', 'para-donar']
   },
   tipo_producto: {
     type: String,

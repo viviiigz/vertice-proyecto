@@ -33,13 +33,56 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// Obtener todos los productos
+// Obtener productos con nueva lógica de escenarios:
+// Escenario A (página principal, sin query params): devolver productos cuya categoria sea
+//    'comida-por-caducarse' OR 'desperfecto-fisico'
+// Escenario B (páginas de categoría, tiene tipo_producto): devolver productos con ese tipo_producto
+//    y categoria != 'para-donar'
+// Extras: soportar búsqueda libre (q), y otros filtros exactos si se extendiera.
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate('user_id', 'username email role');
-    res.status(200).json(products);
+    const { tipo_producto, q } = req.query;
+
+    let filter;
+
+    if (!tipo_producto) {
+      // Escenario A: página principal (sin tipo_producto)
+      filter = {
+        $or: [
+          { categoria: 'comida-por-caducarse' },
+          { categoria: 'desperfecto-fisico' }
+        ]
+      };
+    } else {
+      // Escenario B: página de tipo específico
+      filter = {
+        tipo_producto,
+        categoria: { $ne: 'para-donar' }
+      };
+    }
+
+    // Búsqueda textual opcional
+    if (q && typeof q === 'string' && q.trim()) {
+      const regex = new RegExp(q.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+      // Integrar búsqueda OR sobre nombre y descripción manteniendo el filtro base
+      filter = {
+        $and: [ filter, { $or: [ { nombre_producto: regex }, { descripcion: regex } ] } ]
+      };
+    }
+
+    const products = await Product.find(filter)
+      .populate('user_id', 'username email role')
+      .lean();
+
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[GET /api/productos] filter usado =>', JSON.stringify(filter));
+      console.log(`[GET /api/productos] total devuelto => ${products.length}`);
+    }
+
+    return res.status(200).json(products);
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener los productos" });
+    console.error('Error en getProducts:', error);
+    return res.status(500).json({ message: 'Error al obtener los productos', error: error.message });
   }
 };
 
