@@ -4,6 +4,13 @@ import routerUser from "./user.routes.js";
 import routerProduct from "./product.routes.js"; // el router de productos
 import routerAdmin from "./admin.routes.js"; // rutas de admin (panel)
 import routerPerfil from "./perfil.routes.js"; // rutas de perfil
+//gestion de estadisticas y puntos pickUp
+import pickUpPointRoutes from './pickUpPointRoutes.js';
+import pedidoRoutes from './pedidoRoutes.js';
+import estadisticasRoutes from './estadisticasRoutes.js';
+import publicRoutes from './publicRoutes.js';
+
+
 
 const routes = Router();
 
@@ -18,5 +25,12 @@ routes.use("/admin", routerAdmin); // ahora /api/admin/solicitudes
 
 // rutas de perfil (requiere autenticación)
 routes.use("/perfil", routerPerfil); // ahora /api/perfil
+
+//rutas para pedidos y puntos pickUp
+routes.use('/pickup-points', pickUpPointRoutes);
+routes.use('/pedidos', pedidoRoutes);
+routes.use('/comercio', estadisticasRoutes);
+//rutas publicas
+routes.use('/api', publicRoutes);
 
 export default routes;

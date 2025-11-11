@@ -34,6 +34,23 @@ body {
     padding: 20px;
 }
 
+/* Make header sticky so it remains above the map and page content when scrolling */
+.main-header {
+    position: sticky;
+    top: 0;
+    z-index: 9999; /* sit above maps and other content */
+    background-color: var(--bg-light); /* ensure opaque background */
+    box-shadow: 0 2px 6px var(--shadow-color);
+}
+
+/* Ensure leaflet map and map tiles don't overlay the header */
+.leaflet-container,
+.map-container,
+#map {
+    z-index: 0;
+}
+
+
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -73,94 +90,108 @@ body {
     margin-bottom: 10px;
 }
 
+/* ESTILOS CONSISTENTES DEL HEADER - FORZADOS CON !important PARA GARANTIZAR UNIFORMIDAD */
 .header-logo {
-    height: 40px;
+    height: 40px !important;
+    width: auto !important;
+    object-fit: contain !important;
 }
 
 .search-bar {
-    display: flex;
-    flex-grow: 1;
-    max-width: 500px;
-    margin: 10px 20px;
+    display: flex !important;
+    flex-grow: 1 !important;
+    max-width: 500px !important;
+    margin: 10px 20px !important;
 }
 
 .search-bar input {
-    flex-grow: 1;
-    padding: 10px 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    font-size: 1rem;
-    outline: none;
+    flex-grow: 1 !important;
+    padding: 10px 15px !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 20px !important;
+    font-size: 1rem !important;
+    outline: none !important;
 }
 
 .search-bar button {
-    background-color: var(--primary-color);
-    color: var(--text-color-light);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 20px;
-    margin-left: -40px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    background-color: var(--primary-color) !important;
+    color: var(--text-color-light) !important;
+    border: none !important;
+    padding: 10px 15px !important;
+    border-radius: 20px !important;
+    margin-left: -40px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s !important;
 }
 
 .search-bar button:hover {
-    background-color: var(--primary-hover);
+    background-color: var(--primary-hover) !important;
 }
 
 .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
 }
 
 .profile-btn {
-    background-color: #fff;
-    color: var(--secondary-color);
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    padding: 8px 15px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: background-color 0.3s;
+    background-color: #fff !important;
+    color: var(--secondary-color) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 20px !important;
+    padding: 8px 15px !important;
+    text-decoration: none !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    transition: background-color 0.3s !important;
+    white-space: nowrap !important;
 }
 
 .profile-btn:hover {
-    background-color: var(--bg-medium);
+    background-color: var(--bg-medium) !important;
 }
 
 .profile-btn i {
-    margin-right: 5px;
+    margin-right: 5px !important;
 }
 
 .cart-btn {
-    background-color: transparent;
-    border: 1px solid var(--border-color);
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    position: relative;
-    color: var(--secondary-color);
-    transition: background-color 0.3s, color 0.3s;
+    background-color: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 50% !important;
+    width: 45px !important;
+    height: 45px !important;
+    font-size: 1.2rem !important;
+    cursor: pointer !important;
+    position: relative !important;
+    color: var(--secondary-color) !important;
+    transition: background-color 0.3s, color 0.3s !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
 }
 
 .cart-btn:hover {
-    background-color: var(--bg-medium);
-    color: var(--primary-color);
+    background-color: var(--bg-medium) !important;
+    color: var(--primary-color) !important;
 }
 
 .cart-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: var(--secondary-color);
-    color: var(--text-color-light);
-    font-size: 0.7rem;
-    padding: 3px 6px;
-    border-radius: 50%;
+    position: absolute !important;
+    top: -5px !important;
+    right: -5px !important;
+    background-color: var(--secondary-color) !important;
+    color: var(--text-color-light) !important;
+    font-size: 0.7rem !important;
+    padding: 3px 6px !important;
+    border-radius: 50% !important;
+    min-width: 20px !important;
+    height: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: 600 !important;
 }
 
 .main-nav {
@@ -222,6 +253,164 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* HERO SECTION CONTACTO - Diseño distintivo para página de contacto */
+.hero-section-contacto {
+    background: linear-gradient(135deg, #008744 0%, #00562e 100%);
+    padding: 60px 40px;
+    border-radius: 16px;
+    margin: 40px 0;
+    box-shadow: 0 8px 30px rgba(0, 135, 68, 0.3);
+}
+
+.hero-contacto-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.hero-contacto-icon {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.hero-contacto-icon i {
+    font-size: 3.5rem;
+    color: #fff;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.hero-contacto-content {
+    flex: 1;
+    color: #fff;
+}
+
+.hero-contacto-content h1 {
+    font-family: var(--font-secondary);
+    font-size: 3rem;
+    margin: 0 0 10px 0;
+    color: #fff;
+    font-weight: 700;
+}
+
+.hero-contacto-subtitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    opacity: 0.95;
+    color: #e0f7e9;
+}
+
+.hero-contacto-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin: 0 0 30px 0;
+    opacity: 0.9;
+    color: #fff;
+}
+
+.hero-contacto-description strong {
+    color: #e0f7e9;
+    font-weight: 700;
+}
+
+.hero-contacto-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-contacto-primary,
+.btn-contacto-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.btn-contacto-primary {
+    background-color: #fff;
+    color: var(--primary-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-contacto-primary:hover {
+    background-color: #4cd309;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(76, 211, 9, 0.4);
+}
+
+.btn-contacto-secondary {
+    background-color: transparent;
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.btn-contacto-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #fff;
+    transform: translateY(-3px);
+}
+
+/* Responsive para hero contacto */
+@media (max-width: 768px) {
+    .hero-contacto-wrapper {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .hero-contacto-icon {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .hero-contacto-icon i {
+        font-size: 2.5rem;
+    }
+    
+    .hero-contacto-content h1 {
+        font-size: 2.2rem;
+    }
+    
+    .hero-contacto-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .hero-contacto-description {
+        font-size: 1rem;
+    }
+    
+    .hero-contacto-actions {
+        justify-content: center;
+    }
+}
 
 .filters-nav {
     display: flex;
@@ -441,6 +630,87 @@ body {
 
 .modal-add-to-cart:hover {
     background-color: var(--primary-hover);
+}
+
+/* ESTILOS PARA PUNTOS PICKUP - Sobrescribe Bootstrap con colores Vértice */
+.consumidor-pickup-page .alert-primary {
+    background-color: rgba(0, 135, 68, 0.1) !important;
+    border-color: var(--primary-color) !important;
+    color: var(--secondary-color) !important;
+}
+
+.consumidor-pickup-page .alert-primary .alert-heading {
+    color: var(--primary-color) !important;
+}
+
+.consumidor-pickup-page .alert-primary hr {
+    border-top-color: rgba(0, 135, 68, 0.3) !important;
+}
+
+.consumidor-pickup-page .card {
+    border: 2px solid var(--primary-color) !important;
+    border-radius: 12px !important;
+}
+
+.consumidor-pickup-page .card-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%) !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    border-bottom: none !important;
+    padding: 15px 20px !important;
+}
+
+.consumidor-pickup-page h1 {
+    color: var(--primary-color) !important;
+    font-family: var(--font-secondary) !important;
+    font-weight: 700 !important;
+}
+
+.consumidor-pickup-page .lead {
+    color: var(--secondary-color) !important;
+    font-size: 1.2rem !important;
+}
+
+/* Estilos específicos del contenedor del mapa */
+.consumidor-pickup-page .map-container {
+    width: 100% !important;
+    height: 450px !important;
+    border: 3px solid var(--primary-color) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background-color: #e8f5e9 !important; /* Verde claro mientras carga */
+    box-shadow: 0 4px 15px rgba(0, 135, 68, 0.2) !important;
+}
+
+.consumidor-pickup-page .main-content {
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+}
+
+/* Botones y links en pickup con verde Vértice */
+.consumidor-pickup-page .btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.consumidor-pickup-page .btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+}
+
+/* Personalizar iconos de info en verde */
+.consumidor-pickup-page .fa-info-circle {
+    color: var(--primary-color) !important;
+}
+
+/* Estilo para el contenedor del mapa con sombra verde */
+.consumidor-pickup-page .card-body {
+    padding: 0 !important;
+}
+
+.consumidor-pickup-page .shadow-sm {
+    box-shadow: 0 4px 20px rgba(0, 135, 68, 0.15) !important;
 }
 
 /* SECCIÓN DE CONTACTO */
@@ -1087,7 +1357,7 @@ body {
 }
 
 
-/* Animaciones para mensajes de notificaci�n */
+/* Animaciones para mensajes de notificaci�n */
 @keyframes slideIn {
     from {
         transform: translateX(400px);

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Token</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .status {
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔐 Verificador de Token</h1>
+    
+    <div id="token-info"></div>
+    
+    <button onclick="verificarToken()">Verificar Token Actual</button>
+    <button onclick="borrarToken()">Borrar Token (Cerrar Sesión)</button>
+    <button onclick="location.href='login.html'">Ir al Login</button>
+    
+    <div id="resultado"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+        
+        function mostrarInfo() {
+            const token = localStorage.getItem('token');
+            const infoDiv = document.getElementById('token-info');
+            
+            if (!token) {
+                infoDiv.innerHTML = '<div class="status error">❌ NO HAY TOKEN en localStorage. Debes iniciar sesión.</div>';
+                return;
+            }
+            
+            // Decodificar el token (JWT tiene 3 partes separadas por puntos)
+            try {
+                const partes = token.split('.');
+                if (partes.length !== 3) {
+                    infoDiv.innerHTML = '<div class="status error">❌ Token malformado</div>';
+                    return;
+                }
+                
+                const payload = JSON.parse(atob(partes[1]));
+                const ahora = Math.floor(Date.now() / 1000);
+                const expira = payload.exp;
+                const tiempoRestante = expira - ahora;
+                
+                let html = '<div class="status ' + (tiempoRestante > 0 ? 'success' : 'error') + '">';
+                html += '<h3>📋 Información del Token:</h3>';
+                html += '<p><strong>Usuario ID:</strong> ' + payload.id + '</p>';
+                html += '<p><strong>Email:</strong> ' + (payload.email || 'No disponible') + '</p>';
+                html += '<p><strong>Role:</strong> ' + (payload.role || 'No disponible') + '</p>';
+                html += '<p><strong>Expira:</strong> ' + new Date(expira * 1000).toLocaleString() + '</p>';
+                
+                if (tiempoRestante > 0) {
+                    const minutos = Math.floor(tiempoRestante / 60);
+                    html += '<p><strong>⏰ Tiempo restante:</strong> ' + minutos + ' minutos</p>';
+                    html += '<p>✅ <strong>Token VÁLIDO</strong></p>';
+                } else {
+                    html += '<p>❌ <strong>Token EXPIRADO hace ' + Math.abs(Math.floor(tiempoRestante / 60)) + ' minutos</strong></p>';
+                    html += '<p>🔄 Debes iniciar sesión de nuevo</p>';
+                }
+                
+                html += '</div>';
+                html += '<details><summary>Ver token completo</summary><pre>' + token + '</pre></details>';
+                
+                infoDiv.innerHTML = html;
+            } catch (error) {
+                infoDiv.innerHTML = '<div class="status error">❌ Error al decodificar token: ' + error.message + '</div>';
+            }
+        }
+        
+        async function verificarToken() {
+            const resultDiv = document.getElementById('resultado');
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                resultDiv.innerHTML = '<div class="status error">❌ No hay token. Inicia sesión primero.</div>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<p>⏳ Verificando token con el servidor...</p>';
+            
+            try {
+                // Intentar obtener el perfil del usuario (requiere token válido)
+                const response = await fetch(`${API_BASE}/users/perfil`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `
+                        <div class="status success">
+                            <h3>✅ Token VÁLIDO</h3>
+                            <p><strong>Usuario:</strong> ${data.username}</p>
+                            <p><strong>Email:</strong> ${data.email}</p>
+                            <p><strong>Role:</strong> ${data.role}</p>
+                            <p>Puedes crear productos sin problemas.</p>
+                        </div>
+                    `;
+                } else if (response.status === 401) {
+                    resultDiv.innerHTML = `
+                        <div class="status error">
+                            <h3>❌ Token INVÁLIDO o EXPIRADO</h3>
+                            <p>El servidor rechazó el token.</p>
+                            <p><strong>Solución:</strong> Cierra sesión e inicia sesión de nuevo.</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="status error">
+                            <h3>⚠️ Error ${response.status}</h3>
+                            <p>El servidor respondió: ${response.statusText}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status error">
+                        <h3>❌ Error de Conexión</h3>
+                        <p>${error.message}</p>
+                        <p>Asegúrate de que el backend esté corriendo.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function borrarToken() {
+            localStorage.removeItem('token');
+            alert('✅ Token borrado. Ahora inicia sesión de nuevo.');
+            location.reload();
+        }
+        
+        // Mostrar info al cargar
+        mostrarInfo();
+    </script>
+</body>
+</html>

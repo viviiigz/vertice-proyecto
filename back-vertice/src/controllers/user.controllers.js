@@ -7,6 +7,8 @@ import jwt from "jsonwebtoken";
 export const registerUser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
+    
+    console.log('🔷 Intento de registro:', { username, email, role, tieneArchivo: !!req.file });
 
     // Verificar si el email ya existe
     const existingEmail = await UserModel.findOne({ email });
@@ -24,11 +26,26 @@ export const registerUser = async (req, res) => {
     // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Si el rol es 'banco', aceptar un archivo subido (multer) y guardar su ruta/nombre
+    // Si el rol es 'banco', verificar y procesar el archivo subido
     let documentoPath = null;
-    if (role === 'banco' && req.file) {
-      // Almacenamos el filename para poder servirlo desde /uploads
-      documentoPath = req.file.filename || req.file.path || null;
+    if (role === 'banco') {
+      if (req.file) {
+        // El filename ya viene con extensión .pdf desde la configuración de multer
+        documentoPath = req.file.filename;
+        
+        // Log para debugging
+        console.log('📄 Documento de banco subido:', {
+          originalname: req.file.originalname,
+          filename: req.file.filename,
+          mimetype: req.file.mimetype,
+          size: req.file.size
+        });
+      } else {
+        // Si es banco y no hay archivo, se puede permitir (quedará pendiente sin documento)
+        // O puedes hacer que sea obligatorio descomentando la siguiente línea:
+        // return res.status(400).json({ error: "Los bancos de alimentos deben adjuntar un documento PDF" });
+        console.log('⚠️ Banco registrado sin documento');
+      }
     }
 
     // Crear el usuario (incluyendo estadoVerificacion y documentoVerificacion si aplica)

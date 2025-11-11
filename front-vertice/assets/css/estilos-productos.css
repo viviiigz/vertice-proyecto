@@ -296,78 +296,7 @@ body {
     align-items: center;
 }
 
-.header-logo {
-    height: 40px;
-}
-
-.search-bar {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    max-width: 500px;
-    margin: 0 20px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    overflow: hidden;
-}
-
-#search-input {
-    border: none;
-    padding: 8px 15px;
-    width: 100%;
-    outline: none;
-}
-
-#search-btn {
-    background-color: transparent;
-    border: none;
-    color: #555;
-    padding: 8px 15px;
-    cursor: pointer;
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-
-.profile-btn,
-.cart-btn {
-    background-color: var(--bg-medium);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    color: var(--secondary-color);
-}
-
-.profile-btn:hover,
-.cart-btn:hover {
-    background-color: var(--border-color);
-}
-
-.user-icon {
-    margin-right: 5px;
-}
-
-.cart-btn {
-    position: relative;
-}
-
-.cart-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: var(--danger-color);
-    color: var(--text-color-light);
-    font-size: 0.7rem;
-    padding: 3px 6px;
-    border-radius: 50%;
-}
+/* Header element styles removed - using estilos-tienda.css for consistency across all consumer pages */
 
 .content {
     padding: 20px 40px;
@@ -488,11 +417,43 @@ body {
 }
 
 .promotion-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px); 
 }
 
 .promotion-card img {
     width: 100%;
     height: 300px; /* Ajusta la altura de las imágenes de las tarjetas de servicio */
     object-fit: cover;
+}
+
+/* BARRA DE NAVEGACIÓN NUEVA*/
+/* --- NUEVO: Estilo para la Navegación Horizontal --- */
+.main-nav-horizontal {
+  display: flex;
+  justify-content: center; /* Centra los links */
+  align-items: center;
+  gap: 40px; /* Espacio entre links */
+  padding: 15px 0;
+  border-bottom: 1px solid #e0e0e0; /* Línea divisoria */
+  background-color: #ffffff;
+}
+
+.main-nav-horizontal a {
+  text-decoration: none;
+  color: #555;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding-bottom: 5px;
+  border-bottom: 3px solid transparent; /* Borde inferior para el "activo" */
+  transition: color 0.2s ease, border-bottom-color 0.2s ease;
+}
+
+.main-nav-horizontal a:hover {
+  color: #000;
+}
+
+.main-nav-horizontal a.active {
+  color: #28a745; /* Verde Vértice */
+  border-bottom-color: #28a745; /* Línea verde para el link activo */
 }

@@ -36,6 +36,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             max-width: 800px;
             margin: 2rem auto;
+            position: relative; /* Para posicionar acciones absolutas dentro de la tarjeta */
         }
 
         /* Contenedor del encabezado del perfil para la disposición flexible */
@@ -166,12 +167,16 @@
         }
 
         .form-actions-hidden {
-            display: none;
+            display: none !important;
         }
+
+        /* util para ocultar elementos en modo visualización/edición */
+        .hidden { display: none !important; }
 
         /* Estilos para el resto del formulario */
         .profile-form-body {
             text-align: left;
+            padding-bottom: 90px; /* espacio para que los botones inferiores no tapen contenido */
         }
 
         .form-group {
@@ -205,6 +210,27 @@
             display: flex;
             justify-content: flex-end;
             gap: 10px;
+        }
+
+        .bottom-left-actions {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 2;
+        }
+
+        .bottom-right-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2;
         }
 
         .btn {
@@ -268,8 +294,8 @@
                 <a href="./comercio.estadisticas.html"><i class="fas fa-chart-line"></i> Estadísticas</a>
                 <h3>Administración</h3>
                 <a href="comercio.producto.html" class="active"><i class="fas fa-box"></i> Productos</a>
-                <a href="#"><i class="fas fa-sitemap"></i> Clientes</a>
-                <a href="#"><i class="fas fa-map-marker-alt"></i> Pick Up Points</a>
+                <a href="/front-vertice/comercio-pedido.html"><i class="fas fa-sitemap"></i> Pedidos</a>
+                <a href="/front-vertice/comercio-pickup.html"><i class="fas fa-map-marker-alt"></i> Pick Up Points</a>
             </nav>
         </aside>
 
@@ -288,8 +314,9 @@
                 <div class="card-perfil-edit">
                     <div class="profile-header">
                         <div class="profile-img-container">
-                            <img src="https://via.placeholder.com/150" alt="Foto de perfil del comercio"
-                                class="profile-img-preview" id="profile-img-preview" />
+                            <img src="./assets/imgs/v-vertice.png" alt="Foto de perfil del comercio"
+                                class="profile-img-preview" id="profile-img-preview"
+                                onerror="this.onerror=null; this.src='./assets/imgs/v-vertice.png';" />
                             <div class="file-upload-box-perfil">
                                 <i class="fas fa-camera"></i>
                                 <label for="profile-img-input" class="label-img">Cambiar foto de perfil</label>
@@ -309,34 +336,48 @@
                     </div>
 
                     <div class="profile-form-body">
+                        <!-- Acciones inferiores (derecha): Editar o Guardar/Cancelar -->
+                        <div class="bottom-right-actions">
+                            <button type="button" class="btn btn-secondary" id="editar-perfil-btn">Editar Perfil</button>
+                            <div class="form-actions form-actions-hidden" id="form-actions-edit">
+                                <button type="button" class="btn btn-secondary" id="cancelar-edicion">Cancelar</button>
+                                <button type="button" class="btn btn-primary" id="guardar-cambios-btn">Guardar Cambios</button>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="telefono-comercio">Teléfono</label>
-                            <input type="tel" id="telefono-comercio" name="telefono" class="form-control"
+                            <!-- Texto de visualización -->
+                            <div id="display-telefono" class="display-field">—</div>
+                            <!-- Input para modo edición -->
+                            <input type="tel" id="telefono-comercio" name="telefono" class="form-control hidden"
                                 placeholder="Ej. +54 9 11 1234-5678" />
                         </div>
                         <div class="form-group">
                             <label for="email-comercio">Email</label>
-                            <input type="email" id="email-comercio" name="email" class="form-control"
+                            <!-- Email siempre texto plano -->
+                            <div id="display-email" class="display-field">—</div>
+                            <!-- Input oculto para uso interno de scripts (no visible) -->
+                            <input type="email" id="email-comercio" name="email" class="form-control hidden"
                                 placeholder="Ej. correo@comercio.com" readonly />
                         </div>
                         <div class="form-group">
                             <label for="direccion-comercio">Dirección</label>
-                            <input type="text" id="direccion-comercio" name="direccion" class="form-control"
+                            <div id="display-direccion" class="display-field">—</div>
+                            <input type="text" id="direccion-comercio" name="direccion" class="form-control hidden"
                                 placeholder="Ej. Calle Falsa 123, Ciudad" />
                         </div>
                         <div class="form-group">
                             <label for="descripcion-comercio">Descripción</label>
-                            <textarea id="descripcion-comercio" name="descripcion" class="form-control" rows="4"
+                            <div id="display-descripcion" class="display-field" style="white-space: pre-wrap;">—</div>
+                            <textarea id="descripcion-comercio" name="descripcion" class="form-control hidden" rows="4"
                                 placeholder="Describe tu comercio, lo que ofreces, etc."></textarea>
                         </div>
-                        <div class="form-actions form-actions-hidden" id="form-actions-edit">
-                            <button type="button" class="btn btn-secondary" id="cancelar-edicion">Cancelar</button>
-                            <button type="button" class="btn btn-primary" id="guardar-cambios-btn">Guardar
-                                Cambios</button>
+                        <!-- Logout siempre visible (inferior izquierda) -->
+                        <div class="bottom-left-actions">
+                            <button id="cerrar-sesion-btn" class="btn btn-logout">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                            </button>
                         </div>
-                        <button id="cerrar-sesion-btn" class="btn btn-logout">
-                            <i class="fas fa-sign-out-alt"></i> Cerrar sesión
-                        </button>
                     </div>
                 </div>
             </div>
@@ -363,10 +404,71 @@
             }
         });
 
-        // La foto se carga desde la BD mediante perfil.js (función cargarPerfil)
-        
-        // Evento para el botón "Cerrar sesión" (ya manejado por perfil.js)
-        // La función setupCerrarSesion() en perfil.js maneja el logout
+        // Lógica de edición (toggle visualización/edición)
+        (function(){
+            const editBtn = document.getElementById('editar-perfil-btn');
+            const actions = document.getElementById('form-actions-edit');
+            const cancelarBtn = document.getElementById('cancelar-edicion');
+            const guardarBtn = document.getElementById('guardar-cambios-btn');
+
+            const campos = [
+                { input: document.getElementById('telefono-comercio'), display: document.getElementById('display-telefono') },
+                { input: document.getElementById('direccion-comercio'), display: document.getElementById('display-direccion') },
+                { input: document.getElementById('descripcion-comercio'), display: document.getElementById('display-descripcion') },
+            ];
+
+            function showViewMode(){
+                // Mostrar texto, ocultar inputs, ocultar acciones, mostrar Editar
+                campos.forEach(({input, display})=>{
+                    if (input) input.classList.add('hidden');
+                    if (display) display.classList.remove('hidden');
+                });
+                if (actions) actions.classList.add('form-actions-hidden');
+                if (editBtn) editBtn.classList.remove('hidden');
+                window.isEditing = false;
+            }
+
+            function showEditMode(){
+                // Mostrar inputs, ocultar texto, mostrar acciones, ocultar Editar
+                campos.forEach(({input, display})=>{
+                    if (display) display.classList.add('hidden');
+                    if (input) input.classList.remove('hidden');
+                });
+                if (actions) actions.classList.remove('form-actions-hidden');
+                if (editBtn) editBtn.classList.add('hidden');
+                // Guardar snapshot inicial para cancelar
+                window._perfilEditInitial = campos.reduce((acc,{input,display})=>{
+                    acc[input.id] = input.value || '';
+                    return acc;
+                },{});
+                window.isEditing = true;
+            }
+
+            function cancelarCambios(){
+                // Restaurar valores iniciales
+                const init = window._perfilEditInitial || {};
+                campos.forEach(({input, display})=>{
+                    if (input && init.hasOwnProperty(input.id)) {
+                        input.value = init[input.id];
+                    }
+                    if (display) {
+                        display.textContent = (input?.value || '').trim() || '—';
+                    }
+                });
+                showViewMode();
+            }
+
+            // Exponer función global para que perfil.js pueda cerrar modo edición tras guardar
+            window.toggleEditMode = (flag) => {
+                if (flag) showEditMode(); else showViewMode();
+            };
+
+            if (editBtn) editBtn.addEventListener('click', showEditMode);
+            if (cancelarBtn) cancelarBtn.addEventListener('click', cancelarCambios);
+
+            // Iniciar en modo visualización
+            showViewMode();
+        })();
     </script>
 </body>
 

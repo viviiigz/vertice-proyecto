@@ -178,20 +178,26 @@
 
             async function loadSolicitudes() {
             try {
+                console.log('🔍 Obteniendo solicitudes del admin panel...');
                 const headers = getAuthHeaders();
+                console.log('🔐 Headers enviados:', headers);
+                
                 const res = await fetch(`${API_BASE}/solicitudes/data`, { credentials: 'include', headers });
+                console.log('📥 Respuesta recibida - Status:', res.status, res.statusText);
 
                 if (!res.ok) {
                     // Si la DB no está conectada, el backend responde 503 con DB_NOT_CONNECTED
                     if (res.status === 503) {
                         try {
                             const body = await res.json();
+                            console.log('⚠️ Error 503 - Body:', body);
                             if (body && body.error === 'DB_NOT_CONNECTED') {
                                 showAdminAlert('La base de datos no está disponible en este momento. Cargando datos de ejemplo para pruebas.', 'info');
                                 // Intentar cargar datos mock para UI (no requiere auth)
                                 const mockRes = await fetch(`${API_BASE}/solicitudes/mock`);
                                 if (mockRes.ok) {
                                     const mockData = await mockRes.json();
+                                    console.log('📦 Datos mock cargados:', mockData);
                                     if (mockData.success && Array.isArray(mockData.solicitudes) && mockData.solicitudes.length > 0) {
                                         noDataRow.style.display = 'none';
                                         mockData.solicitudes.forEach(s => appendRow(s));
@@ -202,28 +208,41 @@
                                 return;
                             }
                         } catch (e) {
-                            console.error('Error parseando 503:', e);
+                            console.error('❌ Error parseando 503:', e);
                         }
                     }
 
                     if (res.status === 401 || res.status === 403) {
+                        console.error('🚫 No autorizado - Status:', res.status);
                         showAdminAlert('No estás autorizado. Por favor inicia sesión como admin.', 'warning');
                     } else {
+                        console.error('❌ Error desconocido - Status:', res.status);
                         showAdminAlert('Error al obtener solicitudes. Revisa la consola para más detalles.', 'danger');
                     }
                     return;
                 }
 
                 const data = await res.json();
-                if (!data.success || !Array.isArray(data.solicitudes) || data.solicitudes.length === 0) {
+                console.log('✅ Datos recibidos:', data);
+                
+                if (!data.success || !Array.isArray(data.solicitudes)) {
+                    console.warn('⚠️ Respuesta inesperada:', data);
                     noDataRow.style.display = '';
                     return;
                 }
+                
+                if (data.solicitudes.length === 0) {
+                    console.log('ℹ️ No hay solicitudes pendientes');
+                    noDataRow.style.display = '';
+                    return;
+                }
+                
+                console.log(`✅ ${data.solicitudes.length} solicitudes pendientes encontradas`);
                 noDataRow.style.display = 'none';
                 data.solicitudes.forEach(s => appendRow(s));
             } catch (err) {
-                console.error(err);
-                showAdminAlert('Error conectando al servidor', 'danger');
+                console.error('💥 Error conectando al servidor:', err);
+                showAdminAlert('Error conectando al servidor: ' + err.message, 'danger');
             }
         }
 
@@ -240,15 +259,19 @@
             const tdDoc = document.createElement('td');
             if (solicitud.documentoVerificacion) {
                 const a = document.createElement('a');
-                a.href = `/uploads/${solicitud.documentoVerificacion}`;
+                // Construir URL completa al backend para que funcione correctamente
+                const backendURL = 'http://localhost:3000';
+                const pdfURL = `${backendURL}/uploads/${solicitud.documentoVerificacion}`;
+                a.href = pdfURL;
                 a.target = '_blank';
                 a.rel = 'noopener noreferrer';
                 a.className = 'btn btn-sm btn-primary';
                 a.textContent = 'Ver Documento';
-                // Use modal preview instead of direct open
+                // Use modal preview with proper PDF embedding
                 a.addEventListener('click', (e) => {
                     e.preventDefault();
-                    previewFrame.src = a.href;
+                    // Usar #view=FitH para que el PDF se ajuste al iframe
+                    previewFrame.src = pdfURL + '#view=FitH';
                     if (previewModal) previewModal.show();
                 });
                 tdDoc.appendChild(a);

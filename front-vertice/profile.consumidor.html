@@ -11,10 +11,64 @@
     <link rel="stylesheet" href="./assets/css/comercio.productos.css" />
     <link rel="icon" type="image/x-icon" href="../front-vertice/assets/imgs/v-vertice.png" />
     <style>
-        /* Contenedor principal del perfil para centrarlo y darle sombra */
-        .profile-btn,
-        .cart-btn {
-            background-color: var(--bg-medium);
+        /* --- NUEVO ESTILO PARA SIDEBAR (Look Horizontal) --- */
+
+/* 1. Resetea el estilo de los links del sidebar */
+.sidebar-nav a {
+  /* Quita cualquier fondo de botón (como el gris del 'active') */
+  background-color: transparent !important; 
+  
+  /* Quita el subrayado y pone bordes redondeados */
+  text-decoration: none;
+  border-radius: 8px;
+  
+  /* Ajusta el espaciado para que se vea limpio */
+  padding: 12px 24px;
+  margin: 4px 10px; /* Margen para centrarlo y separarlo */
+  
+  /* Estilo de texto (COPIADO de tu barra horizontal) */
+  color: #555;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1rem; /* Un poco más chico para el sidebar */
+  
+  /* Borde para el 'active' (empezará transparente) */
+  border-left: 4px solid transparent; 
+  
+  /* Transición suave */
+  transition: color 0.2s ease, background-color 0.2s ease, border-left-color 0.2s ease;
+}
+
+/* 2. Estilo al pasar el mouse (Hover) */
+.sidebar-nav a:hover {
+  color: #000;
+  background-color: #f8f9fa; /* Un fondo gris muy sutil */
+}
+
+/* 3. Estilo del link ACTIVO */
+.sidebar-nav a.active {
+  color: #28a745; /* ¡El verde Vértice! */
+  font-weight: 700;
+  background-color: transparent; /* Se asegura que no tenga fondo */
+  
+  /* En lugar de un "subrayado" (que se ve mal en vertical),
+    ponemos un "borde izquierdo" verde.
+  */
+  border-left-color: #28a745; 
+  
+  /* Ajusta el padding para que el texto se alinee */
+  padding-left: 20px; /* (24px - 4px del borde) */
+}
+
+/* 4. (Opcional) Oculta el título "Administración" si lo tienes */
+.sidebar-nav h3 {
+  display: none;
+}
+
+/* Contenedor principal del perfil para centrarlo y darle sombra */
+.profile-btn,
+.cart-btn {
+    background-color: var(--bg-medium);
             border: none;
             padding: 10px 15px;
             border-radius: 20px;

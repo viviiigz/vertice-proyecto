@@ -12,7 +12,8 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Sulphur+Point:wght@700&display=swap"
     />
-    <link rel="stylesheet" href="./assets/css/estilos-productos.css" />
+  <link rel="stylesheet" href="./assets/css/estilos-tienda.css" />
+  <link rel="stylesheet" href="./assets/css/estilos-productos.css" />
     <link
       rel="icon"
       type="image/x-icon"
@@ -20,7 +21,7 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
-  <body>
+<body>
     <header class="main-header">
       <div class="header-top">
         <div class="logo-container">
@@ -48,22 +49,21 @@
           </button>
         </div>
       </div>
+        <nav class="main-nav">
+          <a href="./usuario.tienda.html">Inicio</a>
+          <a href="./vista-producto-user.html" class="active">Productos</a>
+          <a href="./consumidor-contactanos.html">Contáctanos</a>
+          <a href="./consumidor-pickup.html">Puntos Pick Up</a>
+        </nav>
     </header>
 
-    <nav class="main-nav-lateral">
-      <a href="./usuario.tienda.html">Inicio</a>
-      <a href="" class="active"> Productos</a>
-      <a href="#contactanos">Contáctanos</a>
-    </nav>
-
-    <main class="main-content-shifted">
+    <main class="main-content">
       <section class="category-carousel-section">
         <div class="carousel-nav">
           <a href="#todos" class="active">Todos</a>
-          <a href="#por-caducarse">Por Caducarse</a>
-          <a href="#para-donar">Para Donar</a>
-          <a href="#frescos">Frescos</a>
-          <a href="#ofertas">Ofertas</a>
+          <a href="./consumidor-lacteos.html">Lacteos</a>
+          <a href="./consumidor-bebidas.html">Bebidas</a>
+          <a href="./consumidor-frescos.html">Frescos</a> 
         </div>
       </section>
 
@@ -74,103 +74,23 @@
           class="banner-oferta"
         />
         <div class="promotions-grid1">
-          <div class="promotion-card1">
-            <img
-              src="./assets/imgs/propagandaCanva/2.png"
-              alt="Ofertas en productos frescos"
-            />
-            <div class="promo-info">
-              <h3>Frescos al Mejor Precio</h3>
-              <p>
-                Descubre nuestras ofertas en frutas, verduras y lácteos de
-                temporada.
-              </p>
-            </div>
           </div>
-          <div class="promotion-card1">
-            <img
-              src="./assets/imgs/propagandaCanva/1.png"
-              alt="Leche Descremada"
-            />
-            <div class="promo-info">
-              <h3>Lácteos y Cereales</h3>
-              <p>Los mejores desayunos al mejor precio.</p>
-            </div>
-          </div>
-          <div class="promotion-card1">
-            <img src="./assets/imgs/placer.png" alt="Pickup en 3 pasos" />
-
-
-
-            <div class="promo-info">
-              <h3>Jugos Placer</h3>
-              <p>
-                Al finalizar la compra, seleccioná tu sucursal de preferencia y
-                marcá la opción "Retiro por Pickup".
-              </p>
-            </div>
-          </div>
-          <div class="promotion-card1">
-            <img
-              src="./assets/imgs/verduras.png"
-              alt="Sección Banco de Alimentos"
-            />
-
-
-            <div class="promo-info">
-              <h3>Banco de Alimentos</h3>
-              <p>
-                Dona o retira alimentos en buen estado para ayudar a la
-                comunidad.
-              </p>
-            </div>
-          </div>
-        </div>
       </section>
 
       <section id="productos">
-        <div class="section-header">
-          <h2>Productos Destacados</h2>
-        </div>
-
+        <!-- Contenedor de productos para vista.usuario.js -->
         <div class="product-grid" id="product-grid-container"></div>
       </section>
 
       <section class="promotions-section-banco-alimentos">
-        <h2>Nuestros Servicios</h2>
-        <div class="services-grid">
-
-          <div class="promotion-card">
-            <img
-              src="./assets/imgs/1banco.png"
-              alt="Sección Banco de Alimentos"
-            />
-            <div class="promo-info">
-              <h3>Banco de Alimentos</h3>
-              <p>
-                Dona o retira alimentos en buen estado para ayudar a la
-                comunidad.
-              </p>
-            </div>
-          </div>
-            <div class="promotion-card">
-            <img src="./assets/imgs/pickup.png" alt="Selecciona Pickup" />
-            <div class="promo-info">
-              <h3>Seleccioná Pick up Points</h3>
-              <p>
-                Al finalizar la compra, seleccioná tu sucursal de preferencia y
-                marcá la opción "Retiro por Pickup".
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
     </main>
 
     <footer class="main-footer">
       <p>© 2025 Vértice. Todos los derechos reservados.</p>
     </footer>
 
+    <script src="./js-vivi/cart-persistence.js"></script>
     <script src="./js-vivi/vista.usuario.js"></script>
   </body>
 </html>

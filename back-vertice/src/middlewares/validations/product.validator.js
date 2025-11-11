@@ -33,8 +33,8 @@ export const validateProduct = [
     .withMessage("La cantidad disponible debe ser un número entero no negativo"),
   body("categoria")
     .optional()
-    .isIn(['comida-por-caducarse', 'para-donar'])
-    .withMessage("La categoría debe ser 'comida-por-caducarse' o 'para-donar'"),
+    .isIn(['comida-por-caducarse', 'desperfecto-fisico', 'para-donar'])
+    .withMessage("La categoría debe ser 'comida-por-caducarse', 'desperfecto-fisico' o 'para-donar'"),
   body("tipo_producto")
     .optional()
     .isIn(['lacteos', 'frescos', 'bebidas'])
