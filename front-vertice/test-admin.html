@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin Solicitudes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #4cd309;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #3ba307;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 3px;
+            margin: 5px 0;
+        }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test de Admin - Solicitudes de Bancos</h1>
+    
+    <div class="test-section">
+        <h2>1. Test de Conexión al Backend</h2>
+        <button onclick="testPing()">Test Ping</button>
+        <div id="ping-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Test de Solicitudes (Debug - Sin Auth)</h2>
+        <button onclick="testDebugSolicitudes()">GET /solicitudes/debug</button>
+        <div id="debug-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Test de Mock Data</h2>
+        <button onclick="testMockSolicitudes()">GET /solicitudes/mock</button>
+        <div id="mock-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Test de Solicitudes (Con Auth)</h2>
+        <p>Token guardado: <span id="token-status">Verificando...</span></p>
+        <button onclick="testAuthSolicitudes()">GET /solicitudes/data (con auth)</button>
+        <div id="auth-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>5. Verificar Usuarios Banco en DB</h2>
+        <button onclick="checkBancosInDB()">Verificar Bancos Registrados</button>
+        <div id="bancos-result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api/admin';
+        
+        function showResult(elementId, status, message, data = null) {
+            const element = document.getElementById(elementId);
+            const statusClass = status === 'success' ? 'success' : status === 'error' ? 'error' : 'info';
+            let html = `<div class="status ${statusClass}">${message}</div>`;
+            if (data) {
+                html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+            element.innerHTML = html;
+        }
+        
+        async function testPing() {
+            try {
+                console.log('🔍 Testing ping...');
+                const res = await fetch(`${API_BASE}/_ping`);
+                const data = await res.json();
+                console.log('✅ Ping response:', data);
+                showResult('ping-result', 'success', `✅ Backend responde OK`, data);
+            } catch (error) {
+                console.error('❌ Error en ping:', error);
+                showResult('ping-result', 'error', `❌ Error: ${error.message}`);
+            }
+        }
+        
+        async function testDebugSolicitudes() {
+            try {
+                console.log('🔍 Testing debug solicitudes...');
+                const res = await fetch(`${API_BASE}/solicitudes/debug`);
+                const data = await res.json();
+                console.log('✅ Debug response:', data);
+                
+                if (data.success && data.solicitudes.length > 0) {
+                    showResult('debug-result', 'success', 
+                        `✅ Encontradas ${data.solicitudes.length} solicitudes pendientes`, data);
+                } else if (data.success && data.solicitudes.length === 0) {
+                    showResult('debug-result', 'info', 
+                        `ℹ️ No hay solicitudes pendientes en la DB`, data);
+                } else {
+                    showResult('debug-result', 'error', 
+                        `⚠️ Respuesta inesperada`, data);
+                }
+            } catch (error) {
+                console.error('❌ Error en debug:', error);
+                showResult('debug-result', 'error', `❌ Error: ${error.message}`);
+            }
+        }
+        
+        async function testMockSolicitudes() {
+            try {
+                console.log('🔍 Testing mock solicitudes...');
+                const res = await fetch(`${API_BASE}/solicitudes/mock`);
+                const data = await res.json();
+                console.log('✅ Mock response:', data);
+                showResult('mock-result', 'success', 
+                    `✅ Mock data cargado: ${data.solicitudes.length} solicitudes`, data);
+            } catch (error) {
+                console.error('❌ Error en mock:', error);
+                showResult('mock-result', 'error', `❌ Error: ${error.message}`);
+            }
+        }
+        
+        async function testAuthSolicitudes() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    showResult('auth-result', 'error', 
+                        `❌ No hay token en localStorage. Debes iniciar sesión como admin primero.`);
+                    return;
+                }
+                
+                console.log('🔍 Testing auth solicitudes...');
+                console.log('🔐 Token:', token.substring(0, 20) + '...');
+                
+                const res = await fetch(`${API_BASE}/solicitudes/data`, {
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                console.log('📥 Response status:', res.status);
+                
+                if (res.status === 401 || res.status === 403) {
+                    showResult('auth-result', 'error', 
+                        `❌ No autorizado (${res.status}). El token puede ser inválido o no eres admin.`);
+                    return;
+                }
+                
+                const data = await res.json();
+                console.log('✅ Auth response:', data);
+                
+                if (data.success && data.solicitudes.length > 0) {
+                    showResult('auth-result', 'success', 
+                        `✅ Solicitudes obtenidas con éxito: ${data.solicitudes.length}`, data);
+                } else if (data.success && data.solicitudes.length === 0) {
+                    showResult('auth-result', 'info', 
+                        `ℹ️ No hay solicitudes pendientes`, data);
+                } else {
+                    showResult('auth-result', 'error', 
+                        `⚠️ Respuesta inesperada`, data);
+                }
+            } catch (error) {
+                console.error('❌ Error en auth:', error);
+                showResult('auth-result', 'error', `❌ Error: ${error.message}`);
+            }
+        }
+        
+        async function checkBancosInDB() {
+            try {
+                console.log('🔍 Verificando bancos en DB...');
+                const res = await fetch('http://localhost:3000/api/users');
+                
+                if (!res.ok) {
+                    showResult('bancos-result', 'error', 
+                        `❌ No se pudo obtener lista de usuarios (${res.status})`);
+                    return;
+                }
+                
+                const users = await res.json();
+                const bancos = users.filter(u => u.role === 'banco');
+                const pendientes = bancos.filter(u => u.estadoVerificacion === 'pendiente');
+                
+                console.log('✅ Usuarios banco:', bancos);
+                console.log('✅ Pendientes:', pendientes);
+                
+                const summary = {
+                    totalUsuarios: users.length,
+                    totalBancos: bancos.length,
+                    bancosPendientes: pendientes.length,
+                    bancosAprobados: bancos.filter(u => u.estadoVerificacion === 'aprobado').length,
+                    bancosRechazados: bancos.filter(u => u.estadoVerificacion === 'rechazado').length,
+                    listaPendientes: pendientes.map(b => ({
+                        username: b.username,
+                        email: b.email,
+                        estadoVerificacion: b.estadoVerificacion,
+                        created_at: b.created_at
+                    }))
+                };
+                
+                showResult('bancos-result', 'success', 
+                    `✅ Total bancos: ${bancos.length} | Pendientes: ${pendientes.length}`, summary);
+            } catch (error) {
+                console.error('❌ Error verificando bancos:', error);
+                showResult('bancos-result', 'error', `❌ Error: ${error.message}`);
+            }
+        }
+        
+        // Verificar token al cargar
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token');
+            const tokenStatus = document.getElementById('token-status');
+            if (token) {
+                tokenStatus.textContent = '✅ Token encontrado';
+                tokenStatus.style.color = 'green';
+            } else {
+                tokenStatus.textContent = '❌ No hay token (necesitas iniciar sesión como admin)';
+                tokenStatus.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>

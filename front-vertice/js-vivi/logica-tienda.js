@@ -155,13 +155,22 @@ document.addEventListener('DOMContentLoaded', () => {
     async function crearProducto(formData) {
         try {
             const token = localStorage.getItem('token');
-            console.log('Token en localStorage:', token ? 'Existe' : 'No existe');
+            console.log('🔐 Token en localStorage:', token ? 'Existe ✅' : 'NO EXISTE ❌');
             
             if (!token) {
                 throw new Error('No estás autenticado. Por favor inicia sesión.');
             }
 
-            console.log('Haciendo fetch a:', `${API_URL}/productos`);
+            console.log('📤 Haciendo POST a:', `${API_URL}/productos`);
+            console.log('📦 FormData entries:');
+            for (let pair of formData.entries()) {
+                if (pair[0] === 'foto') {
+                    console.log(`  ${pair[0]}:`, pair[1].name, `(${pair[1].size} bytes)`);
+                } else {
+                    console.log(`  ${pair[0]}:`, pair[1]);
+                }
+            }
+
             const response = await fetch(`${API_URL}/productos`, {
                 method: 'POST',
                 headers: {
@@ -170,19 +179,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: formData
             });
 
-            console.log('Respuesta del servidor - Status:', response.status, response.statusText);
+            console.log('📥 Respuesta del servidor - Status:', response.status, response.statusText);
 
             if (!response.ok) {
-                const errorData = await response.json();
-                console.error('Error del servidor:', errorData);
-                throw new Error(errorData.message || errorData.error || `HTTP ${response.status}`);
+                let errorData;
+                try {
+                    errorData = await response.json();
+                } catch (e) {
+                    errorData = { message: 'Error del servidor sin detalles' };
+                }
+                console.error('❌ Error del servidor:', errorData);
+                throw new Error(errorData.message || errorData.error || `HTTP ${response.status}: ${response.statusText}`);
             }
 
             const result = await response.json();
-            console.log('Respuesta exitosa:', result);
+            console.log('✅ Respuesta exitosa:', result);
             return result;
         } catch (error) {
-            console.error('Error en crearProducto:', error);
+            console.error('💥 Error en crearProducto:', error.message);
+            console.error('Stack:', error.stack);
             throw error;
         }
     }
@@ -341,7 +356,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // LÓGICA DE FORMULARIO NUEVO PRODUCTO
     // ========================================
     function inicializarFormularioProducto() {
-        if (!formNuevoProducto) return;
+        console.log('🔧 === INICIALIZANDO FORMULARIO NUEVO PRODUCTO ===');
+        
+        if (!formNuevoProducto) {
+            console.log('ℹ️ No hay formulario de nuevo producto en esta página');
+            return;
+        }
+        
+        console.log('✅ Formulario encontrado:', formNuevoProducto.id);
 
         // Preview de imagen
         if (fileUploadBox && fileInput) {
@@ -377,33 +399,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // IMPORTANTE: Prevenir submit del formulario
         formNuevoProducto.addEventListener('submit', (e) => {
+            console.log('🛑 Submit del formulario interceptado');
             e.preventDefault();
             e.stopPropagation();
             e.stopImmediatePropagation();
-            console.log(' Submit del formulario bloqueado');
+            console.log('✅ Submit del formulario bloqueado correctamente');
             return false;
         });
 
         // Manejar el click del botón directamente
         const submitBtn = document.getElementById('guardar-producto-btn');
         if (submitBtn) {
+            console.log('✅ Listener agregado al botón de guardar producto');
             submitBtn.addEventListener('click', async (e) => {
+                console.log('🖱️ === CLICK EN BOTÓN GUARDAR PRODUCTO ===');
                 e.preventDefault();
                 e.stopPropagation();
                 
-                console.log(' Botón clickeado - Iniciando proceso de guardado');
+                console.log('⏸️ Evento de click detenido');
+                console.log('🚀 Iniciando proceso de guardado...');
 
                 // Deshabilitar el botón para evitar doble submit
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Guardando...';
+                console.log('🔒 Botón deshabilitado temporalmente');
 
-                await guardarProducto(submitBtn);
+                try {
+                    await guardarProducto(submitBtn);
+                } catch (error) {
+                    console.error('💥 Error inesperado en el listener del botón:', error);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Guardar Producto';
+                }
             });
+        } else {
+            console.error('❌ NO SE ENCONTRÓ el botón guardar-producto-btn');
         }
     }
 
     // Función separada para guardar el producto
     async function guardarProducto(submitBtn) {
+    console.log('🚀 === INICIO DE guardarProducto() ===');
+    
     const nombre = document.getElementById('nombre')?.value?.trim();
     const descripcion = document.getElementById('descripcion')?.value?.trim();
     const stock = document.getElementById('stock')?.value;
@@ -415,14 +452,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const tipoProducto = document.getElementById('tipo-producto')?.value;
         const imagenFile = fileInput?.files[0];
 
-        console.log('Datos del formulario (previa validación):', {
+        console.log('📝 Datos del formulario (previa validación):', {
             nombre, descripcion, stock, precioOriginal, precioOferta, categoria, tipoProducto,
             imagen: imagenFile ? imagenFile.name : 'Sin imagen'
         });
 
         // Validar campos obligatorios (precioOferta ya NO es obligatorio)
         if (!nombre || !stock || !precioOriginal) {
-            console.log('Validación fallida - Campos obligatorios incompletos', { nombre, stock, precioOriginal });
+            console.error('❌ Validación fallida - Campos obligatorios incompletos', { nombre, stock, precioOriginal });
             mostrarMensajeAdvertencia('Por favor completa los campos obligatorios: Nombre, Stock y Precio Original.');
             
             // Re-habilitar el botón
@@ -430,10 +467,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Guardar Producto';
             }
+            console.log('🛑 === FIN DE guardarProducto() - VALIDACIÓN FALLIDA ===');
             return;
         }
 
-        console.log(' Validación exitosa');
+        console.log('✅ Validación exitosa');
 
         // Crear FormData
         const formData = new FormData();
@@ -447,12 +485,13 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('tipo_producto', tipoProducto || '');
         if (imagenFile) formData.append('foto_url', imagenFile);
 
-        console.log(' FormData creado');
+        console.log('📦 FormData creado');
 
         try {
-            console.log('Enviando producto al backend...');
+            console.log('📤 Enviando producto al backend...');
             const resultado = await crearProducto(formData);
-            console.log('Producto creado exitosamente:', resultado);
+            console.log('✅ Producto creado exitosamente:', resultado);
+            
             // Guardar flag en sessionStorage para mostrar mensaje en la otra página
             const payloadMensaje = {
                 ok: true,
@@ -463,38 +502,143 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             try {
                 sessionStorage.setItem('productoCreado', JSON.stringify(payloadMensaje));
+                console.log('💾 Flag guardado en sessionStorage');
             } catch (eStore) {
-                console.warn('⚠ No se pudo guardar productoCreado en sessionStorage:', eStore);
+                console.warn('⚠️ No se pudo guardar productoCreado en sessionStorage:', eStore);
             }
-
-            console.log('➡ Preparando redirección (timeout corto) hacia listado de productos...');
-            const redirectToProductos = () => {
-                const isHttp = window.location.protocol.startsWith('http');
-                const absolute = window.location.origin + '/front-vertice/comercio.producto.html';
-                const relative = './comercio.producto.html';
-                const destino = isHttp ? absolute : relative;
-                console.log('➡ Ejecutando redirección a', destino);
-                window.location.href = destino;
-            };
-            setTimeout(redirectToProductos, 150); // pequeño delay para asegurar que sessionStorage se haya escrito
+            
+            // Mostrar mensaje de éxito GRANDE y VISIBLE
+            const mensajeExito = document.createElement('div');
+            mensajeExito.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #28a745;
+                color: white;
+                padding: 30px 50px;
+                border-radius: 15px;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+                z-index: 999999;
+                font-size: 24px;
+                font-weight: bold;
+                text-align: center;
+            `;
+            mensajeExito.innerHTML = `
+                <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
+                <div>¡Producto "${nombre}" guardado correctamente!</div>
+                <div style="font-size: 16px; margin-top: 10px; opacity: 0.9;">Redirigiendo en 3 segundos...</div>
+                <button style="
+                    margin-top: 20px;
+                    padding: 10px 20px;
+                    background: white;
+                    color: #28a745;
+                    border: 2px solid white;
+                    border-radius: 5px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    font-size: 14px;
+                " onclick="window.location.href='./comercio.producto.html'">
+                    Ir ahora →
+                </button>
+            `;
+            document.body.appendChild(mensajeExito);
+            
+            console.log('🎉 Mensaje de éxito mostrado');
+            console.log('⏰ Esperando 3 segundos antes de redirigir...');
+            
+            // Agregar contador visual
+            let countdown = 3;
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                const countdownDiv = mensajeExito.querySelector('div:last-child');
+                if (countdownDiv) {
+                    countdownDiv.textContent = `Redirigiendo en ${countdown} segundo${countdown !== 1 ? 's' : ''}...`;
+                }
+                console.log(`⏱️ Redirigiendo en ${countdown} segundos...`);
+            }, 1000);
+            
+            // Redirigir después de 3 segundos
+            const redirectTimeout = setTimeout(() => {
+                clearInterval(countdownInterval);
+                console.log('➡️ EJECUTANDO REDIRECCIÓN...');
+                const destino = './comercio.producto.html';
+                console.log('📍 Destino:', destino);
+                console.log('🏁 === FIN DE guardarProducto() - ÉXITO ===');
+                
+                try {
+                    window.location.href = destino;
+                    console.log('✅ window.location.href ejecutado');
+                } catch (e) {
+                    console.error('❌ Error al redirigir:', e);
+                    // Intento alternativo
+                    window.location.replace(destino);
+                }
+            }, 3000);
+            
+            console.log('⏰ Timeout de redirección configurado (ID:', redirectTimeout, ')');
             
         } catch (error) {
-            console.error(' Error completo:', error);
+            console.error('💥 === ERROR EN guardarProducto() ===');
+            console.error('❌ Error completo:', error);
+            console.error('📋 Error message:', error.message);
+            console.error('🔍 Stack trace:', error.stack);
             
-            // Re-habilitar el botón
+            // Re-habilitar el botón SIEMPRE
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Guardar Producto';
             }
             
-            if (error.message.includes('autenticado')) {
-                mostrarMensajeError('No estás autenticado. Redirigiendo al login...');
+            // Mostrar error GRANDE y VISIBLE
+            const mensajeError = document.createElement('div');
+            mensajeError.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #dc3545;
+                color: white;
+                padding: 30px 50px;
+                border-radius: 15px;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+                z-index: 999999;
+                font-size: 20px;
+                font-weight: bold;
+                text-align: center;
+                max-width: 600px;
+            `;
+            
+            let mensajeTexto = error.message || 'Error desconocido';
+            
+            mensajeError.innerHTML = `
+                <div style="font-size: 48px; margin-bottom: 10px;">❌</div>
+                <div style="margin-bottom: 10px;">Error al guardar el producto</div>
+                <div style="font-size: 16px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    ${mensajeTexto}
+                </div>
+                <div style="font-size: 14px; margin-top: 15px; opacity: 0.9;">
+                    Revisa la consola (F12) para más detalles
+                </div>
+            `;
+            document.body.appendChild(mensajeError);
+            
+            // Auto-cerrar después de 8 segundos
+            setTimeout(() => {
+                mensajeError.remove();
+            }, 8000);
+            
+            console.log('🛑 === FIN DE guardarProducto() - ERROR ===');
+            
+            // Si es error de autenticación, redirigir al login después de mostrar el mensaje
+            if (error.message && error.message.includes('autenticado')) {
+                console.log('⚠️ Error de autenticación - redirigiendo al login en 3 segundos...');
                 setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-            } else {
-                mostrarMensajeError(`Error al guardar el producto: ${error.message}`);
+                    window.location.href = './login.html';
+                }, 3000);
             }
+            
+            // NO redirigir en caso de error para que el usuario vea el mensaje
         }
     }
 

@@ -199,8 +199,30 @@
     </main>
     </div>
     
+    <!-- Script de debugging temporal -->
+    <script>
+        console.log('🎬 === PÁGINA COMERCIO.NUEVO-PRODUCTO CARGADA ===');
+        console.log('📍 URL actual:', window.location.href);
+        console.log('🔐 Token en localStorage:', localStorage.getItem('token') ? 'SÍ EXISTE' : 'NO EXISTE');
+        
+        // Detectar cualquier recarga automática
+        window.addEventListener('beforeunload', function(e) {
+            console.log('⚠️ === LA PÁGINA SE VA A RECARGAR ===');
+            console.trace('Stack trace de la recarga:');
+        });
+        
+        // Detectar navegación
+        window.addEventListener('unload', function(e) {
+            console.log('🚪 === SALIENDO DE LA PÁGINA ===');
+        });
+    </script>
+    
     <!-- Script centralizado para toda la lógica de productos -->
     <script src="./js-vivi/logica-tienda.js"></script>
+    
+    <script>
+        console.log('✅ Script logica-tienda.js cargado');
+    </script>
 </body>
 
 </html>
