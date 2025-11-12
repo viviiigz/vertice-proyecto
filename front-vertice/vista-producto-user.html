@@ -12,10 +12,13 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Sulphur+Point:wght@700&display=swap"
     />
-  <link rel="stylesheet" href="./assets/css/estilos-tienda.css" />
-  <link rel="stylesheet" href="./assets/css/shared.css">
-  <link rel="stylesheet" href="./assets/css/estilos-productos.css" />
-      <link rel="stylesheet" href="./assets/css/comercio-pickup.css" />
+    <!-- Archivos CSS existentes -->
+    <link rel="stylesheet" href="./assets/css/estilos-tienda.css" />
+    <link rel="stylesheet" href="./assets/css/shared.css">
+    <link rel="stylesheet" href="./assets/css/estilos-productos.css" />
+    <link rel="stylesheet" href="./assets/css/comercio-pickup.css" />
+    <!-- NUEVO CSS PARA CARRUSEL Y CHIPS -->
+    <link rel="stylesheet" href="./assets/css/estilos-carrusel.css" /> 
 
     <link
       rel="icon"
@@ -24,7 +27,7 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
-<body>
+  <body>
     <header class="main-header">
         <div class="header-top">
             <div class="logo-container">
@@ -50,34 +53,36 @@
         </nav>
     </header>
 
+    <!-- NUEVA BARRA DE CATEGORÍAS CONSOLIDADA (CHIPS DESPLAZABLES) -->
+    <nav class="category-navigation">
+        <ul class="category-list">
+            <li class="category-chip offer-chip active" data-category="todas-ofertas">Todas las Ofertas</li>
+            <li class="category-chip" data-category="bebidas">Bebidas</li>         
+            <li class="category-chip" data-category="carnes-aves">Carnes y Aves</li>
+            <li class="category-chip" data-category="pescados-mariscos">Pescados y Mariscos</li>
+            <li class="category-chip" data-category="lacteos-huevos">Lácteos y Huevos</li>
+            <li class="category-chip" data-category="comidas-preparadas">Comidas Preparadas</li>
+            <li class="category-chip" data-category="vegetales-congelados">Vegetales Congelados</li>
+            <li class="category-chip" data-category="platos-congelados">Platos Preparados Congelados</li>
+            <li class="category-chip" data-category="carnes-pescados-congelados">Carnes y Pescados Congelados</li>
+            <li class="category-chip" data-category="helados-postres">Helados y Postres</li>
+            <li class="category-chip" data-category="arroces-pastas">Arroces y Pastas</li>
+            <li class="category-chip" data-category="conservas-encurtidos">Conservas y Encurtidos</li>
+            <li class="category-chip" data-category="aceites-vinagres">Aceites, Vinagres y Condimentos</li>
+            <li class="category-chip" data-category="harinas-reposteria">Harinas y Repostería</li>
+            <li class="category-chip" data-category="cereales-desayuno">Cereales y Desayuno</li>
+            <li class="category-chip" data-category="snacks-galletitas">Snacks y Galletitas</li>
+            <li class="category-chip" data-category="salsas-aderezos">Salsas y Aderezos</li>
+            <li class="category-chip" data-category="comidas-etnicas">Comidas Étnicas</li>
+            <li class="category-chip" data-category="aguas-refrescos">Aguas y Refrescos</li>
+            <li class="category-chip" data-category="cafe-te">Café, Té e Infusiones</li>
+            <li class="category-chip" data-category="bebidas-alcoholicas">Bebidas Alcohólicas</li>
+            <li class="category-chip" data-category="bebidas-vegetales">Bebidas Vegetales</li>
+            <li class="category-chip" data-category="panaderia-pasteleria">Panadería y Pastelería</li>
+        </ul>
+    </nav>
+    
     <main class="main-content">
-<nav class="category-navigation">
-    <ul class="category-list">
-        <li class="category-chip offer-chip active" data-category="todas-ofertas">Todas las Ofertas</li>
-        
-        <li class="category-chip" data-category="bebidas">Bebidas</li>        
-        <li class="category-chip" data-category="carnes-aves">Frutas y Verduras</li>
-        <li class="category-chip" data-category="pescados-mariscos">Carnes y Aves</li>
-        <li class="category-chip" data-category="lacteos-huevos">Lácteos y Huevos</li>
-        <li class="category-chip" data-category="comidas-preparadas">Pescados y Mariscos</li>
-        <li class="category-chip" data-category="vegetales-congelados">Comidas Preparadas</li>
-        <li class="category-chip" data-category="platos-congelados">Vegetales Congelados</li>
-        <li class="category-chip" data-category="carnes-pescados-congelados">Platos Preparados Congelados</li>
-        <li class="category-chip" data-category="helados-postres">Carnes y Pescados Congelados</li>
-        <li class="category-chip" data-category="arroces-pastas">Helados y Postres</li>
-        <li class="category-chip" data-category="conservas-encurtidos">Arroces y Pastas</li>
-        <li class="category-chip" data-category="aceites-vinagres">Conservas y Encurtidos</li>
-        <li class="category-chip" data-category="harinas-reposteria">Aceites, Vinagres y Condimentos</li>
-        <li class="category-chip" data-category="cereales-desayuno">Harinas y Repostería</li>
-        <li class="category-chip" data-category="snacks-galletitas">Cereales y Desayuno</li>
-        <li class="category-chip" data-category="salsas-aderezos">Snacks y Galletitas</li>
-        <li class="category-chip" data-category="aguas-refrescos">Aguas y Refrescos</li>
-        <li class="category-chip" data-category="cafe-te">Café, Té e Infusiones</li>
-            }        <li class="category-chip" data-category="panaderia-pasteleria">Panadería y Pastelería</li>
-    </ul>
- 
-
-</nav>
         <div class="filters-actions">
             <div class="filter-group">
                 <label for="sort-select">Ordenar por:</label>
@@ -94,26 +99,48 @@
             </button>
         </div>
 
-      <section class="promotions-section">
-        <img
-          src="./assets/imgs/ofertayogur.png"
-          alt="nose"
-          class="banner-oferta"
-        />
-        <div class="promotions-grid1">
-          </div>
-      </section>
+        <!-- INICIO DEL CARRUSEL DE BANNERS (ANCHO COMPLETO) -->
+<section class="promotions-section carousel-container" id="banner-carousel">
+    <div class="carousel-track">
+        
+        <div class="carousel-slide" style="background-image: url('assets/imgs/bannerDefinitivo.png');">
+            <div class="banner-content">
+                <a href="#" class="banner-btn impact-btn">Conoce el Impacto</a>
+            </div>
+        </div>
 
-      <section id="productos">
-        <!-- Contenedor de productos para vista.usuario.js -->
-        <div class="product-grid" id="product-grid-container"></div>
-      </section>
+        <div class="carousel-slide" style="background-image: url('assets/imgs/comprasBaner.png');">
+            <div class="banner-content offer-content">
+      
+                <a href="#" class="banner-btn offer-btn">Ver Ofertas</a>
+            </div>
+        </div>
 
-      <section class="promotions-section-banco-alimentos">
+        <div class="carousel-slide" style="background-image: url('assets/imgs/comprasBaner.png');">
+            <div class="banner-content">
+                <a href="#" class="banner-btn impact-btn">Descubre más</a>
+            </div>
+        </div>
+        
+    </div>
+</section>
+<div class="carousel-dots" id="carousel-dots"></div>
+
+        <!-- PUNTOS DE NAVEGACIÓN DEL CARRUSEL -->
+        <div class="carousel-dots" id="carousel-dots"></div>
+        <!-- FIN DEL CARRUSEL DE BANNERS -->
+
+        <section id="productos" class="mt-8">
+            <!-- Contenedor de productos para vista.usuario.js -->
+            <div class="product-grid" id="product-grid-container"></div>
+        </section>
+
+        <section class="promotions-section-banco-alimentos">
+            <!-- Contenido del banco de alimentos -->
         </section>
     </main>
 
-      <!-- --- Footer ---- -->
+    <!-- --- Footer ---- -->
     <footer class="main-footer">
         <div class="container">
             <div class="footer-content">
@@ -141,7 +168,63 @@
         </div>
     </footer>
 
+    <!-- Scripts existentes -->
     <script src="./js-vivi/cart-persistence.js"></script>
     <script src="./js-vivi/vista.usuario.js"></script>
+    
+    <!-- NUEVO SCRIPT JS PARA LA FUNCIONALIDAD DEL CARRUSEL -->
+    <script>
+        const track = document.querySelector('.carousel-track');
+        const slides = Array.from(document.querySelectorAll('.carousel-slide'));
+        const dotsContainer = document.getElementById('carousel-dots');
+        let currentIndex = 0;
+        const slideInterval = 5000; // 5 segundos
+
+        // 1. Funcionalidad de Carrusel
+        function updateCarousel() {
+            const offset = -currentIndex * 100;
+            // Usa una transición suave definida en CSS
+            track.style.transform = `translateX(${offset}%)`; 
+            updateDots();
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateCarousel();
+        }
+
+        // 2. Navegación con Puntos (Dots)
+        function createDots() {
+            slides.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    currentIndex = index;
+                    updateCarousel();
+                    // Reiniciar el intervalo al hacer click
+                    clearInterval(autoSlide);
+                    autoSlide = setInterval(nextSlide, slideInterval);
+                });
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function updateDots() {
+            const dots = Array.from(document.querySelectorAll('.dot'));
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        // Inicialización
+        window.onload = function() {
+            // Asegurarse de que el DOM esté completamente cargado antes de inicializar
+            createDots();
+            updateCarousel();
+            // 3. Auto-avance (automático)
+            let autoSlide = setInterval(nextSlide, slideInterval);
+        };
+    </script>
   </body>
 </html>
