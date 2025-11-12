@@ -263,92 +263,8 @@
 .promotion-card.promotion-banco-alimentos img {
     height: 200px; /* Un poco más de altura para la imagen del banco de alimentos si lo deseas */
 }
-/* Estilos generales para el cuerpo de la página */
-body {
-    display: flex; /* Usamos Flexbox para el layout principal */
-    flex-direction: column; /* Apilamos el header, nav y main verticalmente */
-    min-height: 100vh;
-    font-family: 'Montserrat', sans-serif;
-    margin: 0;
-    background-color: #f0f2f5;
-}
-
-/* Encabezado: mantiene el logo, buscador y acciones de usuario arriba */
-.main-header {
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 10px 20px;
-    position: sticky !important;
-    top: 0;
-    z-index: 100;
-}
-
-.header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
-}
-
-/* Header element styles removed - using estilos-tienda.css for consistency across all consumer pages */
-
-.content {
-    padding: 20px 40px;
-    flex-grow: 1;
-}
-/* === Estilos para la barra de navegación lateral === */
-.main-nav-lateral {
-    position: fixed; /* Mantiene la barra en su lugar al hacer scroll */
-    top: 0;
-    left: 0;
-    width: 200px;
-    height: 100vh; /* Ocupa toda la altura de la pantalla */
-    background-color: white;
-    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
-    padding-top: 100px; /* Ajusta este valor para dejar espacio debajo del encabezado */
-    z-index: 99;
-    display: flex;
-    flex-direction: column;
-}
-
-.main-nav-lateral a {
-    text-decoration: none;
-    color: #555;
-    font-weight: 600;
-    padding: 15px 20px;
-    border-left: 5px solid transparent;
-    transition: all 0.3s ease;
-    display: block; /* Asegura que el enlace ocupe todo el ancho */
-}
-
-.main-nav-lateral a:hover,
-.main-nav-lateral a.active {
-    background-color: #ecf0f1;
-    border-left-color: #27ae60;
-    color: #27ae60;
-}
-
-/* === Ajuste del contenido principal para dejar espacio a la barra lateral === */
-.main-content-shifted {
-    margin-left: 200px; /* Desplaza el contenido principal hacia la derecha */
-    padding: 20px;
-}
 
 
-/* Pie de página */
-.main-footer {
-    background-color: var(--secondary-color);
-    color: var(--bg-medium);
-    text-align: center;
-    padding: 20px;
-    margin-top: 50px;
-}
 /* === Estilos para el banner de ofertas === */
 .banner-oferta {
     width: 100%; /* Asegura que la imagen ocupe todo el ancho disponible */
@@ -425,35 +341,65 @@ body {
     height: 300px; /* Ajusta la altura de las imágenes de las tarjetas de servicio */
     object-fit: cover;
 }
-
-/* BARRA DE NAVEGACIÓN NUEVA*/
-/* --- NUEVO: Estilo para la Navegación Horizontal --- */
-.main-nav-horizontal {
-  display: flex;
-  justify-content: center; /* Centra los links */
-  align-items: center;
-  gap: 40px; /* Espacio entre links */
-  padding: 15px 0;
-  border-bottom: 1px solid #e0e0e0; /* Línea divisoria */
-  background-color: #ffffff;
+/* Estilos para la nueva barra de navegación de categorías */
+.category-navigation {
+    /* Fondo para que se destaque del resto del header, similar al diseño */
+    background-color: #f8f8f8; 
+    border-top: 1px solid #eee;
+    padding: 10px 0;
+    /* Clave: Permite el desplazamiento horizontal */
+    overflow-x: auto; 
+    white-space: nowrap; /* Evita que los chips se envuelvan a la siguiente línea */
+    /* Ocultar la barra de desplazamiento en navegadores WebKit (Chrome, Safari) */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
-.main-nav-horizontal a {
-  text-decoration: none;
-  color: #555;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 1.1rem;
-  padding-bottom: 5px;
-  border-bottom: 3px solid transparent; /* Borde inferior para el "activo" */
-  transition: color 0.2s ease, border-bottom-color 0.2s ease;
+/* Ocultar la barra de desplazamiento */
+.category-navigation::-webkit-scrollbar {
+    display: none;
 }
 
-.main-nav-horizontal a:hover {
-  color: #000;
+.category-list {
+    list-style: none;
+    padding: 0 20px;
+    margin: 0;
+    display: flex; /* Mantiene todos los chips en línea */
 }
 
-.main-nav-horizontal a.active {
-  color: #28a745; /* Verde Vértice */
-  border-bottom-color: #28a745; /* Línea verde para el link activo */
+.category-chip {
+    display: inline-block;
+    padding: 8px 18px; /* Aumentado el padding para que se parezca más a un chip */
+    margin-right: 10px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    background-color: white; 
+    border: 1px solid #ccc;
+    border-radius: 20px; /* Bordes redondeados */
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    /* Asegura que no se seleccione texto al hacer clic */
+    user-select: none; 
+    flex-shrink: 0; /* Evita que los elementos se encojan */
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* Estilo para el chip de Ofertas (verde) */
+.category-chip.offer-chip {
+    background-color: #4CAF50; /* Verde fuerte */
+    color: white;
+    border-color: #4CAF50;
+    font-weight: bold;
+}
+
+/* Estilo para simular el estado activo (puedes usar una clase 'active' con JS) */
+.category-chip:hover {
+    background-color: #e0e0e0;
+}
+
+.category-chip.active {
+    background-color: #008000; /* Verde de Vértice para activo */
+    color: white;
+    border-color: #008000;
 }

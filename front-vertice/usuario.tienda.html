@@ -12,7 +12,10 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Sulphur+Point:wght@700&display=swap"
     />
-    <link rel="stylesheet" href="./assets/css/estilos-tienda.css" />
+  <link rel="stylesheet" href="./assets/css/estilos-tienda.css" />
+  <link rel="stylesheet" href="./assets/css/shared.css">
+  <link rel="stylesheet" href="./assets/css/estilos-productos.css" />
+      <link rel="stylesheet" href="./assets/css/comercio-pickup.css" />
     <link
       rel="icon"
       type="image/x-icon"
@@ -60,7 +63,8 @@
     <main class="main-content">
       <section id="inicio" class="hero-section">
         <div class="hero-content">
-          <h1>Bienvenido a Vértice</h1>
+          <h1>REINVENTÁ LA COMPRA.</h1>
+          <h1>COMBATE EL DESPERDICIO.</h1>
           <p>Descubre productos locales y sostenibles al mejor precio.</p>
           <a href="../front-vertice/vista-producto-user.html" class="cta-button"
             >Ver Productos</a
@@ -68,37 +72,59 @@
         </div>
       </section>
 
-      <section id="productos">
-        <div class="section-header">
-          <h2>Productos Disponibles</h2>
-          <div class="filters-nav">
+<section id="productos">
+    <div class="section-header">
+        <h2>Productos Disponibles</h2>
+        
+        <nav class="category-chips-nav">
+       <ul class="category-list">
+        <li class="category-chip offer-chip active" data-category="todas-ofertas">Todas las Ofertas</li>
+        
+        <li class="category-chip" data-category="bebidas">Bebidas</li>        
+        <li class="category-chip" data-category="carnes-aves">Frutas y Verduras</li>
+        <li class="category-chip" data-category="pescados-mariscos">Carnes y Aves</li>
+        <li class="category-chip" data-category="lacteos-huevos">Lácteos y Huevos</li>
+        <li class="category-chip" data-category="comidas-preparadas">Pescados y Mariscos</li>
+        <li class="category-chip" data-category="vegetales-congelados">Comidas Preparadas</li>
+        <li class="category-chip" data-category="platos-congelados">Vegetales Congelados</li>
+        <li class="category-chip" data-category="carnes-pescados-congelados">Platos Preparados Congelados</li>
+        <li class="category-chip" data-category="helados-postres">Carnes y Pescados Congelados</li>
+        <li class="category-chip" data-category="arroces-pastas">Helados y Postres</li>
+        <li class="category-chip" data-category="conservas-encurtidos">Arroces y Pastas</li>
+        <li class="category-chip" data-category="aceites-vinagres">Conservas y Encurtidos</li>
+        <li class="category-chip" data-category="harinas-reposteria">Aceites, Vinagres y Condimentos</li>
+        <li class="category-chip" data-category="cereales-desayuno">Harinas y Repostería</li>
+        <li class="category-chip" data-category="snacks-galletitas">Cereales y Desayuno</li>
+        <li class="category-chip" data-category="salsas-aderezos">Snacks y Galletitas</li>
+        <li class="category-chip" data-category="aguas-refrescos">Aguas y Refrescos</li>
+        <li class="category-chip" data-category="cafe-te">Café, Té e Infusiones</li>
+         <li class="category-chip" data-category="panaderia-pasteleria">Panadería y Pastelería</li>
+    </ul>
+        </nav>
+        
+        <div class="filters-actions">
             <div class="filter-group">
-              <label for="sort-select">Ordenar por:</label>
-              <select id="sort-select">
-                <option value="default">Por defecto</option>
-                <option value="a-z">Nombre (A-Z)</option>
-                <option value="z-a">Nombre (Z-A)</option>
-                <option value="menor-precio">Menor precio</option>
-                <option value="mayor-precio">Mayor precio</option>
-              </select>
+                <label for="sort-select">Ordenar por:</label>
+                <select id="sort-select">
+                    <option value="default">Por defecto</option>
+                    <option value="menor-precio">Menor precio</option>
+                    <option value="mayor-precio">Mayor precio</option>
+                    <option value="a-z">Nombre (A-Z)</option>
+                    <option value="z-a">Nombre (Z-A)</option>
+                </select>
             </div>
-            <div class="filter-group">
-              <label for="category-select">Categoría:</label>
-              <select id="category-select">
-                <option value="todas">Todas</option>
-                <option value="comida-por-caducarse">
-                  Comida por caducarse
-                </option>
-                <option value="desperfecto-fisico">Desperfecto Físico</option>
-              </select>
-            </div>
-          </div>
+            <!-- <button id="defect-toggle" class="filter-toggle-button">
+                Mostrar solo Desperfectos Físicos
+            </button> -->
         </div>
+        
+    </div>
+</section>
 
         <div class="product-grid" id="product-grid"></div>
 
         <div class="load-more-container">
-          <a href="../front-vertice/vista-producto-user.html" class="cta-button"
+          <a href="./vista-producto-user.html" class="cta-button"
             >Ver Más Productos</a
           >
         </div>
@@ -166,8 +192,32 @@
       </div>
     </div>
 
+    <!-- --- Footer ---- -->
     <footer class="main-footer">
-      <p>© 2025 Vértice. Todos los derechos reservados.</p>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo-section">
+                    <img src="assets/imgs/v-vertice.png" alt="Vértice Logo" class="footer-logo">
+                    <p>IPF &copy;2025 Vértice.</p>
+                </div>
+                <div class="footer-links-section">
+                    <ul> 
+                        <li><a href="usuario.tienda.html">| Inicio</a></li>
+                        <li><a href="vista-producto-user.html">| Productos</a></li>
+                        <li><a href="consumidor-contactanos.html">| Contáctanos</a></li>
+                        <li><a href="consumidor-pickup.html">| Puntos Pick Up |</a></li>
+                    </ul>
+                </div>
+                <div class="footer-socials-section">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
 
     <script src="./js-vivi/cart-persistence.js"></script>

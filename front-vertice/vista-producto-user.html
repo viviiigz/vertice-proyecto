@@ -13,7 +13,10 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Sulphur+Point:wght@700&display=swap"
     />
   <link rel="stylesheet" href="./assets/css/estilos-tienda.css" />
+  <link rel="stylesheet" href="./assets/css/shared.css">
   <link rel="stylesheet" href="./assets/css/estilos-productos.css" />
+      <link rel="stylesheet" href="./assets/css/comercio-pickup.css" />
+
     <link
       rel="icon"
       type="image/x-icon"
@@ -23,49 +26,73 @@
   </head>
 <body>
     <header class="main-header">
-      <div class="header-top">
-        <div class="logo-container">
-          <img
-            src="./assets/imgs/vertice-logo-largo (1).png"
-            alt="Logo de Vértice"
-            class="header-logo"
-          />
+        <div class="header-top">
+            <div class="logo-container">
+                <img src="./assets/imgs/vertice-logo-largo (1).png" alt="Logo de Vértice" class="header-logo" />
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Buscar productos..." />
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="header-actions">
+                <a href="/front-vertice/profile.consumidor.html" class="profile-btn"><i class="fas fa-user"></i> Mi Perfil</a>
+                <button class="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" class="cart-count">0</span>
+                </button>
+            </div>
         </div>
-        <div class="search-bar">
-          <input
-            type="text"
-            id="search-input"
-            placeholder="Buscar productos..."
-          />
-          <button id="search-btn"><i class="fas fa-search"></i></button>
-        </div>
-        <div class="header-actions">
-          <a href="#" class="profile-btn"
-            ><i class="fas fa-user"></i> Mi Perfil</a
-          >
-          <button class="cart-btn">
-            <i class="fas fa-shopping-cart"></i>
-            <span id="cart-count" class="cart-count">0</span>
-          </button>
-        </div>
-      </div>
         <nav class="main-nav">
-          <a href="./usuario.tienda.html">Inicio</a>
-          <a href="./vista-producto-user.html" class="active">Productos</a>
-          <a href="./consumidor-contactanos.html">Contáctanos</a>
-          <a href="./consumidor-pickup.html">Puntos Pick Up</a>
+            <a href="./usuario.tienda.html">Inicio</a>
+            <a href="./vista-producto-user.html">Productos</a>
+            <a href="./consumidor-contactanos.html">Contáctanos</a>
+            <a href="./consumidor-pickup.html" class="active">Puntos Pick Up</a>
         </nav>
     </header>
 
     <main class="main-content">
-      <section class="category-carousel-section">
-        <div class="carousel-nav">
-          <a href="#todos" class="active">Todos</a>
-          <a href="./consumidor-lacteos.html">Lacteos</a>
-          <a href="./consumidor-bebidas.html">Bebidas</a>
-          <a href="./consumidor-frescos.html">Frescos</a> 
+<nav class="category-navigation">
+    <ul class="category-list">
+        <li class="category-chip offer-chip active" data-category="todas-ofertas">Todas las Ofertas</li>
+        
+        <li class="category-chip" data-category="bebidas">Bebidas</li>        
+        <li class="category-chip" data-category="carnes-aves">Frutas y Verduras</li>
+        <li class="category-chip" data-category="pescados-mariscos">Carnes y Aves</li>
+        <li class="category-chip" data-category="lacteos-huevos">Lácteos y Huevos</li>
+        <li class="category-chip" data-category="comidas-preparadas">Pescados y Mariscos</li>
+        <li class="category-chip" data-category="vegetales-congelados">Comidas Preparadas</li>
+        <li class="category-chip" data-category="platos-congelados">Vegetales Congelados</li>
+        <li class="category-chip" data-category="carnes-pescados-congelados">Platos Preparados Congelados</li>
+        <li class="category-chip" data-category="helados-postres">Carnes y Pescados Congelados</li>
+        <li class="category-chip" data-category="arroces-pastas">Helados y Postres</li>
+        <li class="category-chip" data-category="conservas-encurtidos">Arroces y Pastas</li>
+        <li class="category-chip" data-category="aceites-vinagres">Conservas y Encurtidos</li>
+        <li class="category-chip" data-category="harinas-reposteria">Aceites, Vinagres y Condimentos</li>
+        <li class="category-chip" data-category="cereales-desayuno">Harinas y Repostería</li>
+        <li class="category-chip" data-category="snacks-galletitas">Cereales y Desayuno</li>
+        <li class="category-chip" data-category="salsas-aderezos">Snacks y Galletitas</li>
+        <li class="category-chip" data-category="aguas-refrescos">Aguas y Refrescos</li>
+        <li class="category-chip" data-category="cafe-te">Café, Té e Infusiones</li>
+            }        <li class="category-chip" data-category="panaderia-pasteleria">Panadería y Pastelería</li>
+    </ul>
+ 
+
+</nav>
+        <div class="filters-actions">
+            <div class="filter-group">
+                <label for="sort-select">Ordenar por:</label>
+                <select id="sort-select">
+                    <option value="default">Por defecto</option>
+                    <option value="menor-precio">Menor precio</option>
+                    <option value="mayor-precio">Mayor precio</option>
+                    <option value="a-z">Nombre (A-Z)</option>
+                    <option value="z-a">Nombre (Z-A)</option>
+                </select>
+            </div>
+            <button id="defect-toggle" class="filter-toggle-button">
+                Mostrar solo Desperfectos Físicos
+            </button>
         </div>
-      </section>
 
       <section class="promotions-section">
         <img
@@ -86,8 +113,32 @@
         </section>
     </main>
 
+      <!-- --- Footer ---- -->
     <footer class="main-footer">
-      <p>© 2025 Vértice. Todos los derechos reservados.</p>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo-section">
+                    <img src="assets/imgs/v-vertice.png" alt="Vértice Logo" class="footer-logo">
+                    <p>IPF &copy;2025 Vértice.</p>
+                </div>
+                <div class="footer-links-section">
+                    <ul> 
+                        <li><a href="usuario.tienda.html">| Inicio</a></li>
+                        <li><a href="vista-producto-user.html">| Productos</a></li>
+                        <li><a href="consumidor-contactanos.html">| Contáctanos</a></li>
+                        <li><a href="consumidor-pickup.html">| Puntos Pick Up |</a></li>
+                    </ul>
+                </div>
+                <div class="footer-socials-section">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
 
     <script src="./js-vivi/cart-persistence.js"></script>
