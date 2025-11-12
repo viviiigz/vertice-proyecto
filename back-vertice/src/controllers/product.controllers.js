@@ -39,9 +39,10 @@ export const createProduct = async (req, res) => {
 // Escenario B (páginas de categoría, tiene tipo_producto): devolver productos con ese tipo_producto
 //    y categoria != 'para-donar'
 // Extras: soportar búsqueda libre (q), y otros filtros exactos si se extendiera.
+// Paginación: query params ?page=1&limit=10 (default: page=1, limit=50)
 export const getProducts = async (req, res) => {
   try {
-    const { tipo_producto, q } = req.query;
+    const { tipo_producto, q, page = 1, limit = 50 } = req.query;
 
     let filter;
 
@@ -70,16 +71,36 @@ export const getProducts = async (req, res) => {
       };
     }
 
+    // Convertir a número y validar paginación
+    const pageNum = Math.max(1, parseInt(page));
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit))); // Max 100 por página
+    const skip = (pageNum - 1) * limitNum;
+
+    // Obtener el total de productos que cumplen el filtro
+    const total = await Product.countDocuments(filter);
+
+    // Obtener productos paginados
     const products = await Product.find(filter)
       .populate('user_id', 'username email role')
+      .skip(skip)
+      .limit(limitNum)
       .lean();
 
     if (process.env.NODE_ENV !== 'production') {
       console.log('[GET /api/productos] filter usado =>', JSON.stringify(filter));
-      console.log(`[GET /api/productos] total devuelto => ${products.length}`);
+      console.log(`[GET /api/productos] page=${pageNum}, limit=${limitNum}, total=${total}, devuelto=${products.length}`);
     }
 
-    return res.status(200).json(products);
+    return res.status(200).json({
+      products,
+      pagination: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum),
+        hasMore: skip + products.length < total
+      }
+    });
   } catch (error) {
     console.error('Error en getProducts:', error);
     return res.status(500).json({ message: 'Error al obtener los productos', error: error.message });

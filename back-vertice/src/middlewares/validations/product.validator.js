@@ -17,11 +17,11 @@ export const validateProduct = [
     .withMessage("El precio original es obligatorio")
     .isFloat({ gt: 0 })
     .withMessage("El precio original debe ser un número mayor que 0"),
+  // El precio en oferta es OPCIONAL. Permitir 0 (sin descuento) o cualquier número >= 0
   body("precio_descuento")
-    .notEmpty()
-    .withMessage("El precio con descuento es obligatorio")
-    .isFloat({ gt: 0 })
-    .withMessage("El precio con descuento debe ser un número mayor que 0"),
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage("El precio con descuento debe ser un número válido (0 o mayor)"),
   body("fecha_caducidad_cercana")
     .optional()
     .isISO8601()

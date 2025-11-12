@@ -13,62 +13,68 @@
     <style>
         /* --- NUEVO ESTILO PARA SIDEBAR (Look Horizontal) --- */
 
-/* 1. Resetea el estilo de los links del sidebar */
-.sidebar-nav a {
-  /* Quita cualquier fondo de botón (como el gris del 'active') */
-  background-color: transparent !important; 
-  
-  /* Quita el subrayado y pone bordes redondeados */
-  text-decoration: none;
-  border-radius: 8px;
-  
-  /* Ajusta el espaciado para que se vea limpio */
-  padding: 12px 24px;
-  margin: 4px 10px; /* Margen para centrarlo y separarlo */
-  
-  /* Estilo de texto (COPIADO de tu barra horizontal) */
-  color: #555;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 1rem; /* Un poco más chico para el sidebar */
-  
-  /* Borde para el 'active' (empezará transparente) */
-  border-left: 4px solid transparent; 
-  
-  /* Transición suave */
-  transition: color 0.2s ease, background-color 0.2s ease, border-left-color 0.2s ease;
-}
+        /* 1. Resetea el estilo de los links del sidebar */
+        .sidebar-nav a {
+            /* Quita cualquier fondo de botón (como el gris del 'active') */
+            background-color: transparent !important;
 
-/* 2. Estilo al pasar el mouse (Hover) */
-.sidebar-nav a:hover {
-  color: #000;
-  background-color: #f8f9fa; /* Un fondo gris muy sutil */
-}
+            /* Quita el subrayado y pone bordes redondeados */
+            text-decoration: none;
+            border-radius: 8px;
 
-/* 3. Estilo del link ACTIVO */
-.sidebar-nav a.active {
-  color: #28a745; /* ¡El verde Vértice! */
-  font-weight: 700;
-  background-color: transparent; /* Se asegura que no tenga fondo */
-  
-  /* En lugar de un "subrayado" (que se ve mal en vertical),
+            /* Ajusta el espaciado para que se vea limpio */
+            padding: 12px 24px;
+            margin: 4px 10px;
+            /* Margen para centrarlo y separarlo */
+
+            /* Estilo de texto (COPIADO de tu barra horizontal) */
+            color: #555;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            /* Un poco más chico para el sidebar */
+
+            /* Borde para el 'active' (empezará transparente) */
+            border-left: 4px solid transparent;
+
+            /* Transición suave */
+            transition: color 0.2s ease, background-color 0.2s ease, border-left-color 0.2s ease;
+        }
+
+        /* 2. Estilo al pasar el mouse (Hover) */
+        .sidebar-nav a:hover {
+            color: #000;
+            background-color: #f8f9fa;
+            /* Un fondo gris muy sutil */
+        }
+
+        /* 3. Estilo del link ACTIVO */
+        .sidebar-nav a.active {
+            color: #28a745;
+            /* ¡El verde Vértice! */
+            font-weight: 700;
+            background-color: transparent;
+            /* Se asegura que no tenga fondo */
+
+            /* En lugar de un "subrayado" (que se ve mal en vertical),
     ponemos un "borde izquierdo" verde.
   */
-  border-left-color: #28a745; 
-  
-  /* Ajusta el padding para que el texto se alinee */
-  padding-left: 20px; /* (24px - 4px del borde) */
-}
+            border-left-color: #28a745;
 
-/* 4. (Opcional) Oculta el título "Administración" si lo tienes */
-.sidebar-nav h3 {
-  display: none;
-}
+            /* Ajusta el padding para que el texto se alinee */
+            padding-left: 20px;
+            /* (24px - 4px del borde) */
+        }
 
-/* Contenedor principal del perfil para centrarlo y darle sombra */
-.profile-btn,
-.cart-btn {
-    background-color: var(--bg-medium);
+        /* 4. (Opcional) Oculta el título "Administración" si lo tienes */
+        .sidebar-nav h3 {
+            display: none;
+        }
+
+        /* Contenedor principal del perfil para centrarlo y darle sombra */
+        .profile-btn,
+        .cart-btn {
+            background-color: var(--bg-medium);
             border: none;
             padding: 10px 15px;
             border-radius: 20px;
@@ -90,6 +96,8 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             max-width: 800px;
             margin: 2rem auto;
+            position: relative;
+            /* Para posicionar acciones absolutas dentro de la tarjeta */
         }
 
         /* Contenedor del encabezado del perfil para la disposición flexible */
@@ -226,6 +234,8 @@
         /* Estilos para el resto del formulario */
         .profile-form-body {
             text-align: left;
+            padding-bottom: 90px;
+            /* espacio para que los botones inferiores no tapen contenido */
         }
 
         .form-group {
@@ -237,6 +247,17 @@
             color: #444;
             margin-bottom: 0.5rem;
             display: block;
+        }
+
+        .display-field {
+            padding: 12px 15px;
+            font-size: 1em;
+            color: #333;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            min-height: 46px;
+            display: flex;
+            align-items: center;
         }
 
         .form-control {
@@ -259,6 +280,36 @@
             display: flex;
             justify-content: flex-end;
             gap: 10px;
+        }
+
+        .bottom-left-actions {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 2;
+        }
+
+        .bottom-right-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2;
+        }
+
+        /* util para ocultar elementos en modo visualización/edición */
+        .hidden {
+            display: none !important;
+        }
+
+        .form-actions-hidden {
+            display: none !important;
         }
 
         .btn {
@@ -320,8 +371,9 @@
             </div>
             <nav class="sidebar-nav">
                 <a href="./usuario.tienda.html">Inicio</a>
-                <a href="vista-producto-user.html" class="active"> Productos</a>
-                <a href="#"> Contáctanos </a>
+                <a href="./vista-producto-user.html">Productos</a>
+                <a href="./consumidor-pickup.html">Puntos Pick Up</a>
+                <a href="./consumidor-contactanos.html">Contáctanos</a>
             </nav>
         </aside>
 
@@ -352,34 +404,53 @@
                     </div>
 
                     <div class="profile-form-body">
+                        <!-- Acciones inferiores (derecha): Editar o Guardar/Cancelar -->
+                        <div class="bottom-right-actions">
+                            <button type="button" class="btn btn-secondary" id="editar-perfil-btn">Editar
+                                Perfil</button>
+                            <div class="form-actions form-actions-hidden" id="form-actions-edit">
+                                <button type="button" class="btn btn-secondary" id="cancelar-edicion">Cancelar</button>
+                                <button type="button" class="btn btn-primary" id="guardar-cambios-btn">Guardar
+                                    Cambios</button>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="telefono-comercio">Teléfono</label>
-                            <input type="tel" id="telefono-comercio" name="telefono" class="form-control"
+                            <!-- Texto de visualización -->
+                            <div id="display-telefono" class="display-field">—</div>
+                            <!-- Input para modo edición -->
+                            <input type="tel" id="telefono-comercio" name="telefono" class="form-control hidden"
                                 placeholder="Ej. +54 9 11 1234-5678" />
                         </div>
                         <div class="form-group">
                             <label for="email-comercio">Email</label>
-                            <input type="email" id="email-comercio" name="email" class="form-control"
+                            <!-- Email siempre texto plano -->
+                            <div id="display-email" class="display-field">—</div>
+                            <!-- Input oculto para uso interno de scripts (no visible) -->
+                            <input type="email" id="email-comercio" name="email" class="form-control hidden"
                                 placeholder="Ej. correo@consumidor.com" readonly />
                         </div>
-                        <!-- <div class="form-group"> EN ESTE CASO NO NECESITAMOS DIRECCIÓN
+                        <!-- Dirección comentada porque consumidores no la necesitan -->
+                        <!-- <div class="form-group">
                             <label for="direccion-comercio">Dirección</label>
-                            <input type="text" id="direccion-comercio" name="direccion" class="form-control"
+                            <div id="display-direccion" class="display-field">—</div>
+                            <input type="text" id="direccion-comercio" name="direccion" class="form-control hidden"
                                 placeholder="Ej. Calle 123, Ciudad" />
                         </div> -->
                         <div class="form-group">
                             <label for="descripcion-comercio">Descripción</label>
-                            <textarea id="descripcion-comercio" name="descripcion" class="form-control" rows="4"
+                            <div id="display-descripcion" class="display-field" style="white-space: pre-wrap;">—</div>
+                            <textarea id="descripcion-comercio" name="descripcion" class="form-control hidden" rows="4"
                                 placeholder="Describete como consumidor, que buscas, etc.."></textarea>
                         </div>
-                        <div class="form-actions form-actions-hidden" id="form-actions-edit">
-                            <button type="button" class="btn btn-secondary" id="cancelar-edicion">Cancelar</button>
-                            <button type="button" class="btn btn-primary" id="guardar-cambios-btn">Guardar
-                                Cambios</button>
+
+                        <!-- Logout siempre visible (inferior izquierda) -->
+                        <div class="bottom-left-actions">
+                            <button id="cerrar-sesion-btn" class="btn btn-logout">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                            </button>
                         </div>
-                        <button id="cerrar-sesion-btn" class="btn btn-logout">
-                            <i class="fas fa-sign-out-alt"></i> Cerrar sesión
-                        </button>
                     </div>
                 </div>
             </div>
@@ -406,10 +477,70 @@
             }
         });
 
-        // La foto se carga desde la BD mediante perfil.js (función cargarPerfil)
-        
-        // Evento para el botón "Cerrar sesión" (ya manejado por perfil.js)
-        // La función setupCerrarSesion() en perfil.js maneja el logout
+        // Lógica de edición (toggle visualización/edición)
+        (function () {
+            const editBtn = document.getElementById('editar-perfil-btn');
+            const actions = document.getElementById('form-actions-edit');
+            const cancelarBtn = document.getElementById('cancelar-edicion');
+            const guardarBtn = document.getElementById('guardar-cambios-btn');
+
+            const campos = [
+                { input: document.getElementById('telefono-comercio'), display: document.getElementById('display-telefono') },
+                { input: document.getElementById('descripcion-comercio'), display: document.getElementById('display-descripcion') },
+            ];
+
+            function showViewMode() {
+                // Mostrar texto, ocultar inputs, ocultar acciones, mostrar Editar
+                campos.forEach(({ input, display }) => {
+                    if (input) input.classList.add('hidden');
+                    if (display) display.classList.remove('hidden');
+                });
+                if (actions) actions.classList.add('form-actions-hidden');
+                if (editBtn) editBtn.classList.remove('hidden');
+                window.isEditing = false;
+            }
+
+            function showEditMode() {
+                // Mostrar inputs, ocultar texto, mostrar acciones, ocultar Editar
+                campos.forEach(({ input, display }) => {
+                    if (display) display.classList.add('hidden');
+                    if (input) input.classList.remove('hidden');
+                });
+                if (actions) actions.classList.remove('form-actions-hidden');
+                if (editBtn) editBtn.classList.add('hidden');
+                // Guardar snapshot inicial para cancelar
+                window._perfilEditInitial = campos.reduce((acc, { input, display }) => {
+                    acc[input.id] = input.value || '';
+                    return acc;
+                }, {});
+                window.isEditing = true;
+            }
+
+            function cancelarCambios() {
+                // Restaurar valores iniciales
+                const init = window._perfilEditInitial || {};
+                campos.forEach(({ input, display }) => {
+                    if (input && init.hasOwnProperty(input.id)) {
+                        input.value = init[input.id];
+                    }
+                    if (display) {
+                        display.textContent = (input?.value || '').trim() || '—';
+                    }
+                });
+                showViewMode();
+            }
+
+            // Exponer función global para que perfil.js pueda cerrar modo edición tras guardar
+            window.toggleEditMode = (flag) => {
+                if (flag) showEditMode(); else showViewMode();
+            };
+
+            if (editBtn) editBtn.addEventListener('click', showEditMode);
+            if (cancelarBtn) cancelarBtn.addEventListener('click', cancelarCambios);
+
+            // Iniciar en modo visualización
+            showViewMode();
+        })();
     </script>
 </body>
 

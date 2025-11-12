@@ -373,6 +373,36 @@ body {
     border-top: 1px solid #ddd;
 }
 
+/* ---- Estilos para Scroll Infinito ---- */
+.infinite-scroll-loader {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 30px;
+}
+
+.infinite-scroll-loader .spinner-border {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #28a745;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.infinite-scroll-end {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 30px;
+    color: #666;
+    font-size: 1rem;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
     .footer-content {
@@ -392,5 +422,10 @@ body {
     }
     .footer-socials-section .social-icons {
         justify-content: center; /* Centrar los iconos en columna */
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px;
     }
 }

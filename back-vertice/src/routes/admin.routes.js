@@ -77,18 +77,10 @@ router.post('/solicitudes/:id/aceptar', async (req, res) => {
   try {
     const { id } = req.params;
     await UserModel.findByIdAndUpdate(id, { estadoVerificacion: 'aprobado' });
-    // Si la solicitud es AJAX, responder JSON para que el front pueda actualizar sin recargar
-    if (req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest') {
-      return res.json({ success: true, action: 'aprobado', id });
-    }
-    // Si no es AJAX, redirigir de regreso al panel
-    return res.redirect('/api/admin/solicitudes');
+    return res.json({ success: true, action: 'aprobado', id });
   } catch (error) {
     console.error('Error al aceptar la solicitud:', error);
-    if (req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest') {
-      return res.status(500).json({ success: false, error: 'Error al aceptar la solicitud' });
-    }
-    return res.status(500).send('Error al aceptar la solicitud');
+    return res.status(500).json({ success: false, error: 'Error al aceptar la solicitud' });
   }
 });
 
@@ -97,16 +89,10 @@ router.post('/solicitudes/:id/rechazar', async (req, res) => {
   try {
     const { id } = req.params;
     await UserModel.findByIdAndUpdate(id, { estadoVerificacion: 'rechazado' });
-    if (req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest') {
-      return res.json({ success: true, action: 'rechazado', id });
-    }
-    return res.redirect('/api/admin/solicitudes');
+    return res.json({ success: true, action: 'rechazado', id });
   } catch (error) {
     console.error('Error al rechazar la solicitud:', error);
-    if (req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest') {
-      return res.status(500).json({ success: false, error: 'Error al rechazar la solicitud' });
-    }
-    return res.status(500).send('Error al rechazar la solicitud');
+    return res.status(500).json({ success: false, error: 'Error al rechazar la solicitud' });
   }
 });
 

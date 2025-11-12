@@ -5,15 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vértice</title>
 
-     <!-- ---- Navbar ---- -->
-    <!-- Vincula el archivo CSS -->
-    <link rel="stylesheet" href="../front-vertice/assets/css/vertice.css">
-    <!-- Incluye el icono de la página -->
+    <!-- Preload recursos críticos -->
+    <link rel="preload" href="../front-vertice/assets/css/vertice.css" as="style">
+    <link rel="preload" href="assets/imgs/vertice-logo-largo (1).png" as="image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sulphur+Point:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- DNS Prefetch para recursos externos -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+    <!-- CSS Crítico inline para Above the Fold -->
+    <style>
+        /* Critical CSS - Solo lo necesario para hero/navbar */
+        body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif;line-height:1.6;color:#333;background-color:#f0f2f5}
+        header{position:sticky;top:0;z-index:1000;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+        .navbar{display:flex;justify-content:space-between;align-items:center;padding:15px 40px;max-width:1400px;margin:0 auto}
+        .logo img{height:50px;width:auto}
+        .hero-section{min-height:70vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:60px 20px}
+        .headline{font-size:3rem;font-weight:700;margin-bottom:20px}
+        .headline-destacado{color:#ffd700}
+        .sub-headline{font-size:1.3rem;margin-bottom:30px;opacity:.95}
+        .hero-cta-buttons{display:flex;gap:20px;flex-wrap:wrap}
+        .cta-primary,.cta-secondary{padding:15px 35px;border-radius:8px;font-weight:600;text-decoration:none;transition:all .3s}
+        .cta-primary{background:#28a745;color:#fff}
+        .cta-secondary{background:transparent;color:#fff;border:2px solid #fff}
+        .container{max-width:1200px;margin:0 auto;padding:0 20px}
+    </style>
+
+    <!-- Vincula el archivo CSS completo (defer para no bloquear) -->
+    <link rel="stylesheet" href="../front-vertice/assets/css/vertice.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="../front-vertice/assets/css/vertice.css"></noscript>
+    
+    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="../front-vertice/assets/imgs/v-vertice.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Font Awesome - Defer para no bloquear -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
+    
+    <!-- Google Fonts - Async load -->
+    <link href="https://fonts.googleapis.com/css2?family=Sulphur+Point:wght@300;400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 </head>
 <body>
     <header>
@@ -61,23 +93,31 @@
     </div>
 </section>
 
-<!-- ---- Que hacemos seccion ---- -->
-         <section class="what-we-do-text-section">
-    <div class="content-wrapper">
-        <h2 class="section-title">¿Qué hacemos?</h2>
-        <p class="section-description">
-            Vértice es una plataforma que conecta a comerciantes con excedentes de alimentos con consumidores conscientes que buscan productos de calidad a precios accesibles. Juntos, reducimos el desperdicio y fomentamos un consumo responsable.
-        </p>
-    </div>
-</section>
+<!-- Contenedor para lazy loading - Las secciones se cargarán dinámicamente -->
+<div id="lazy-sections-container"></div>
 
-<section class="torn-paper-section">
-    <div class="torn-paper-border"></div>
-</section>
+<!-- Template: Que hacemos seccion (oculto inicialmente) -->
+<template id="template-what-we-do">
+    <section class="what-we-do-text-section lazy-section">
+        <div class="content-wrapper">
+            <h2 class="section-title">¿Qué hacemos?</h2>
+            <p class="section-description">
+                Vértice es una plataforma que conecta a comerciantes con excedentes de alimentos con consumidores conscientes que buscan productos de calidad a precios accesibles. Juntos, reducimos el desperdicio y fomentamos un consumo responsable.
+            </p>
+        </div>
+    </section>
+</template>
 
+<!-- Template: Torn paper section -->
+<template id="template-torn-paper">
+    <section class="torn-paper-section lazy-section">
+        <div class="torn-paper-border"></div>
+    </section>
+</template>
 
-     <!-- ---- Why vertice section ---- -->
-      <section class="why-vertice-section">
+<!-- Template: Why vertice section -->
+<template id="template-why-vertice">
+    <section class="why-vertice-section lazy-section">
     <div class="container">
         <h2 class="section-title">¿Por qué elegir Vértice?</h2>
         <p class="section-description-sub">En Vértice, no solo salvas comida, sino que te sumas a una red de consumidores conscientes que eligen un modelo más justo para todos.</p>
@@ -86,7 +126,7 @@
             
             <div class="vertice-benefit-card">
                 <div class="card-image-wrapper">
-                    <img src="assets/imgs/carrito.png" alt="Rescatá comida y ahorrá dinero" class="benefit-img">
+                    <img src="assets/imgs/carrito.png" alt="Rescatá comida y ahorrá dinero" class="benefit-img" loading="lazy" width="200" height="200">
                 </div>
                 <div class="card-content">
                     <i class="fas fa-heartbeat benefit-icon"></i>
@@ -99,7 +139,7 @@
             
             <div class="vertice-benefit-card">
                 <div class="card-image-wrapper">
-                    <img src="assets/imgs/sandwich.png" alt="Disfrutá de calidad y sabor" class="benefit-img">
+                    <img src="assets/imgs/sandwich.png" alt="Disfrutá de calidad y sabor" class="benefit-img" loading="lazy" width="200" height="200">
                 </div>
                 <div class="card-content">
                     <i class="fas fa-heartbeat benefit-icon"></i>
@@ -112,7 +152,7 @@
 
             <div class="vertice-benefit-card">
                 <div class="card-image-wrapper">
-                    <img src="assets/imgs/mundo.png" alt="Generá un impacto positivo" class="benefit-img">
+                    <img src="assets/imgs/mundo.png" alt="Generá un impacto positivo" class="benefit-img" loading="lazy" width="200" height="200">
                 </div>
                 <div class="card-content">
                     <i class="fas fa-heartbeat benefit-icon"></i>
@@ -125,27 +165,26 @@
             
         </div>
     </div>
-</section>
+    </section>
+</template>
 
-
-
-            
-        <!-- ---- foros Section ---- -->
-         <section class="press-section">
+<!-- Template: Foros Section -->
+<template id="template-press">
+    <section class="press-section lazy-section">
     <div class="container">
         <h2 class="section-title">Foros</h2>
         
         <div class="press-cards-grid">
             
             <a href="https://www.bancodealimentos.org.ar/landing/desperdicio-de-alimentos/" target="_blank" class="press-card">
-                <img src="assets/imgs/residuos.jpg" alt="El desperdicio de alimentos en Argentina y el mundo" class="press-image">
+                <img src="assets/imgs/residuos.jpg" alt="El desperdicio de alimentos en Argentina y el mundo" class="press-image" loading="lazy" width="400" height="250">
                 <div class="press-text-content">
                     <h3 class="press-card-title">El desperdicio de alimentos en Argentina y el mundo</h3>
                 </div>
             </a>
             
             <a href="https://www.humanium.org/es/ninos-que-mueren-de-hambre-mientras-que-nosotros-desperdiciamos-la-comida/" target="_blank" class="press-card">
-                <img src="assets/imgs/verticehambruna.jpg" alt="Niños que mueren de hambre mientras que nosotros desperdiciamos la comida." class="press-image">
+                <img src="assets/imgs/verticehambruna.jpg" alt="Niños que mueren de hambre mientras que nosotros desperdiciamos la comida." class="press-image" loading="lazy" width="400" height="250">
                 <div class="press-text-content">
                     <h3 class="press-card-title">Niños que mueren de hambre mientras que nosotros desperdiciamos la comida</h3>
                 </div>
@@ -153,10 +192,12 @@
 
         </div>
     </div>
-</section>
+    </section>
+</template>
 
-        <!-- ---- Final CTA Section ---- -->
-        <section class="final-cta-section">
+<!-- Template: Final CTA Section -->
+<template id="template-final-cta">
+    <section class="final-cta-section lazy-section">
             <div class="container">
                 <h2 class="section-title">No más desperdicio. Únete a Vértice hoy mismo.</h2>
                 <div class="final-cta-buttons">
@@ -164,7 +205,9 @@
                     <a href="registro.html" class="cta-secondary">Regístrate como Comerciante</a>
                 </div>
             </div>
-        </section>
+    </section>
+</template>
+
     </main>
 
     <!-- --- Footer ---- -->
@@ -172,7 +215,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo-section">
-                    <img src="assets/imgs/v-vertice.png" alt="Vértice Logo" class="footer-logo">
+                    <img src="assets/imgs/v-vertice.png" alt="Vértice Logo" class="footer-logo" loading="lazy" width="80" height="80">
                     <p>IPF &copy;2025 Vértice.</p>
                 </div>
                 <div class="footer-links-section">
@@ -194,5 +237,7 @@
             </div>
         </div>
     </footer>
+
+    <script src="./js-vivi/vertice-lazy-load.js"></script>
 </body>
 </html>

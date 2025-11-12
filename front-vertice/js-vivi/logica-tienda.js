@@ -219,7 +219,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================================
     // LÓGICA DE VISUALIZACIÓN Y FILTRADO
     // ========================================
-    function mostrarProductos(productosAMostrar) {
+    let mostrandoTodos = false; // Estado para controlar si se muestran todos los productos
+    const MAX_PRODUCTOS_INICIAL = 6; // Máximo de productos a mostrar inicialmente
+
+    function mostrarProductos(productosAMostrar, forzarTodos = false) {
         if (!productGrid) return;
         
         productGrid.innerHTML = '';
@@ -228,7 +231,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        productosAMostrar.forEach(producto => {
+        // Determinar cuántos productos mostrar
+        const productosMostrar = (mostrandoTodos || forzarTodos) ? productosAMostrar : productosAMostrar.slice(0, MAX_PRODUCTOS_INICIAL);
+
+        productosMostrar.forEach(producto => {
             const card = document.createElement('div');
             card.className = 'product-card';
             card.dataset.id = producto.id;
@@ -252,10 +258,30 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             productGrid.appendChild(card);
         });
+
+        // Actualizar visibilidad del botón "Ver más productos"
+        actualizarBotonVerMas(productosAMostrar.length);
     }
 
-    function aplicarFiltrosYOrden() {
+    function actualizarBotonVerMas(totalProductos) {
+        const loadMoreContainer = document.querySelector('.load-more-container');
+        if (!loadMoreContainer) return;
+
+        // Si ya se están mostrando todos o hay 6 o menos productos, ocultar el botón
+        if (mostrandoTodos || totalProductos <= MAX_PRODUCTOS_INICIAL) {
+            loadMoreContainer.style.display = 'none';
+        } else {
+            loadMoreContainer.style.display = 'block';
+        }
+    }
+
+    function aplicarFiltrosYOrden(desdeVerMas = false) {
         if (!productGrid || !searchInput || !sortSelect || !categorySelect) return;
+
+        // Si NO viene desde "Ver más", resetear el estado (porque el usuario cambió filtros)
+        if (!desdeVerMas && mostrandoTodos) {
+            mostrandoTodos = false;
+        }
 
         let productosFiltrados = [...productos];
         const searchTerm = searchInput.value.toLowerCase();
@@ -659,6 +685,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (searchInput) searchInput.addEventListener('input', aplicarFiltrosYOrden);
             if (sortSelect) sortSelect.addEventListener('change', aplicarFiltrosYOrden);
             if (categorySelect) categorySelect.addEventListener('change', aplicarFiltrosYOrden);
+
+            // Evento para el botón "Ver más productos"
+            const verMasBtn = document.getElementById('ver-mas-btn');
+            if (verMasBtn) {
+                verMasBtn.addEventListener('click', () => {
+                    mostrandoTodos = true;
+                    aplicarFiltrosYOrden(true); // Pasar true para indicar que viene desde "Ver más"
+                    mostrarMensajeInfo('Mostrando todos los productos disponibles');
+                });
+            }
 
             // Eventos de click en el grid de productos
             productGrid.addEventListener('click', (e) => {
