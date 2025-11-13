@@ -520,11 +520,11 @@ body {
     background-color: #388e3c;
 }
 .offer-btn {
-    background-color: #FF5722; /* Naranja/Rojo de oferta */
+    background-color: #3000b6; /* Naranja/Rojo de oferta */
     color: white;
 }
 .offer-btn:hover {
-    background-color: #e64a19;
+    background-color:#240086;
 }
 
 

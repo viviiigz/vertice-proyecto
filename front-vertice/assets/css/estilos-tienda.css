@@ -933,7 +933,7 @@ body {
 }
 
 .filter-toggle-button {
-    background-color: #ff9800; /* Color de acento para la acción de filtrado */
+    background-color: #3c02b0; /* Color de acento para la acción de filtrado */
     color: #fff;
     border: none;
     padding: 10px 15px;
@@ -944,7 +944,7 @@ body {
 }
 
 .filter-toggle-button:hover {
-    background-color: #e68900;
+    background-color: #1f0076;
 }
 /* Estilos Generales */
 body {
