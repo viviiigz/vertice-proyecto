@@ -203,7 +203,7 @@ body {
 
 /* SECCIÓN DE INICIO */
 .hero-section {
-    background-image:url('/assets/imgs/carBienvenida.png'); /* Ruta relativa simplificada, si funciona correctamente */
+    background-image:url('/front-vertice/assets/imgs/carBienvenida.png') !important; /* Ruta relativa simplificada, si funciona correctamente */
     color: var(--text-color-light);
     background-size: cover;
     background-position: center center;
