@@ -818,6 +818,11 @@ body {
     margin-top: 20px;
 
 }
+.main-nav a.active {
+    color: var(--primary-color); /* O el color verde de Vértice */
+    font-weight: 700;
+    border-bottom: 2px solid var(--primary-color); /* A veces lleva una línea abajo */
+}
 /* Variables de color y tipografía */
 :root {
     --primary-color: #008744;
