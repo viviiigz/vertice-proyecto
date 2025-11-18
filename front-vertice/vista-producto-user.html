@@ -40,7 +40,7 @@
           <button id="search-btn"><i class="fas fa-search"></i></button>
         </div>
         <div class="header-actions">
-          <a href="#" class="profile-btn"
+          <a href="./profile.consumidor.html" class="profile-btn"
             ><i class="fas fa-user"></i> Mi Perfil</a
           >
           <button class="cart-btn">
@@ -52,6 +52,7 @@
         <nav class="main-nav">
           <a href="./usuario.tienda.html">Inicio</a>
           <a href="./vista-producto-user.html" class="active">Productos</a>
+          <a href="./consumidor.mis-pedidos.html">Mis Pedidos</a>
           <a href="./consumidor-contactanos.html">Contáctanos</a>
           <a href="./consumidor-pickup.html">Puntos Pick Up</a>
         </nav>
@@ -90,7 +91,19 @@
       <p>© 2025 Vértice. Todos los derechos reservados.</p>
     </footer>
 
+    <script src="./js-vivi/notifications.js"></script>
     <script src="./js-vivi/cart-persistence.js"></script>
+    <script>
+        // Agregar funcionalidad al botón del carrito
+        document.addEventListener('DOMContentLoaded', () => {
+            const cartBtn = document.querySelector('.cart-btn');
+            if (cartBtn) {
+                cartBtn.addEventListener('click', () => {
+                    window.location.href = './consumidor.carrito.html';
+                });
+            }
+        });
+    </script>
     <script type="module" src="./js-vivi/vista.usuario.js"></script>
   </body>
 </html>

@@ -18,7 +18,7 @@ const pedidoSchema = new mongoose.Schema({
   // Qué productos compró
   productos: [
     {
-      productoId: { type: mongoose.Schema.Types.ObjectId, ref: 'Producto' },
+      productoId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
       cantidad: { type: Number, required: true },
       precioEnElMomento: { type: Number, required: true } // Precio al que se vendió
     }
@@ -43,7 +43,7 @@ const pedidoSchema = new mongoose.Schema({
   },
   estado: {
     type: String,
-    enum: ['pendiente', 'completado', 'cancelado'],
+    enum: ['pendiente', 'aceptado', 'rechazado', 'entregado', 'cancelado'],
     default: 'pendiente'
   }
 }, { timestamps: true }); // timestamps: true agrega createdAt y updatedAt

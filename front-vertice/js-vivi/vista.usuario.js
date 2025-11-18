@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function vaciarCarrito() {
         if (window.cartManager) {
             window.cartManager.clearCart();
-            alert('El carrito ha sido vaciado y está listo para nuevas compras.');
+            window.notify.success('El carrito ha sido vaciado y está listo para nuevas compras.');
         }
     }
 
@@ -32,16 +32,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function agregarAlCarrito(idProducto) {
+        console.log('Intentando agregar al carrito, ID:', idProducto);
+        console.log('CartManager disponible:', !!window.cartManager);
+        
         const producto = allProducts.find(p => (p._id || p.id) == idProducto);
+        console.log('Producto encontrado:', producto);
+        
         if (producto && window.cartManager) {
-            window.cartManager.addItem({
+            const result = window.cartManager.addItem({
                 id: producto._id || producto.id,
                 nombre_producto: producto.nombre_producto,
                 precio_descuento: producto.precio_descuento,
                 precio_original: producto.precio_original,
-                imagenes: [producto.foto_url ? "http://localhost:3000/uploads/" + producto.foto_url : './assets/imgs/placeholder.png']
+                imagenes: [producto.foto_url ? "http://localhost:3000/uploads/" + producto.foto_url : './assets/imgs/placeholder.png'],
+                user_id: producto.user_id // ✅ Agregar el comercianteId al carrito
             });
-            alert(producto.nombre_producto + " ha sido agregado al carrito.");
+            console.log('Producto agregado al carrito:', result);
+            window.notify.success(`✓ ${producto.nombre_producto} agregado al carrito`, 3000);
+        } else {
+            console.error('Error: Producto o CartManager no disponible');
+            if (!producto) console.error('Producto no encontrado');
+            if (!window.cartManager) console.error('CartManager no inicializado');
         }
     }
 

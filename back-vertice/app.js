@@ -36,8 +36,17 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true }));
+
+// Logger middleware - Ver todas las peticiones
+app.use((req, res, next) => {
+    console.log(`📥 ${req.method} ${req.path}`);
+    next();
+});
+
+// Aumentamos el límite por defecto porque algunas peticiones contienen imágenes en base64 (fotoPerfil)
+// Ajusta este valor según el tamaño máximo esperado (p. ej. 5mb, 10mb)
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Configurar EJS como motor de vistas
 const __filename = fileURLToPath(import.meta.url);

@@ -8,12 +8,12 @@ export const getEstadisticasComerciante = async (req, res) => {
     try {
         const comercianteId = new mongoose.Types.ObjectId(req.user.id);
 
-        // 1. Calcular métricas de pedidos 'completado'
+        // 1. Calcular métricas de pedidos 'entregado' (ambos marcaron como entregado)
         const completedOrdersStats = await Pedido.aggregate([
             {
                 $match: {
                     comercianteId: comercianteId,
-                    estado: 'completado'
+                    estado: 'entregado'
                 }
             },
             {
@@ -24,12 +24,12 @@ export const getEstadisticasComerciante = async (req, res) => {
             }
         ]);
 
-        // 2. Calcular total de productos vendidos
+        // 2. Calcular total de productos vendidos (solo pedidos entregados)
         const productosVendidosStats = await Pedido.aggregate([
             {
                 $match: {
                     comercianteId: comercianteId,
-                    estado: 'completado'
+                    estado: 'entregado'
                 }
             },
             { $unwind: '$productos' },
@@ -41,12 +41,12 @@ export const getEstadisticasComerciante = async (req, res) => {
             }
         ]);
 
-        // 3. Calcular ventas por mes
+        // 3. Calcular ventas por mes (solo pedidos entregados)
         const ventasPorMes = await Pedido.aggregate([
             {
                 $match: {
                     comercianteId: comercianteId,
-                    estado: 'completado'
+                    estado: 'entregado'
                 }
             },
             {
@@ -60,10 +60,19 @@ export const getEstadisticasComerciante = async (req, res) => {
             }
         ]);
 
-        // 4. Contar pedidos pendientes
+        // 4. Contar pedidos pendientes del día actual solamente
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Inicio del día
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1); // Inicio del día siguiente
+
         const nuevosPedidos = await Pedido.countDocuments({
             comercianteId: comercianteId,
-            estado: 'pendiente'
+            estado: 'pendiente',
+            createdAt: {
+                $gte: today,
+                $lt: tomorrow
+            }
         });
 
         // Formatear resultados

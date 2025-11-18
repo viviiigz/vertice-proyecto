@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo - Sistema de Notificaciones Vértice</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4cd309;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .demo-section {
+            margin-bottom: 30px;
+        }
+
+        .demo-section h2 {
+            color: #333;
+            border-bottom: 2px solid #4cd309;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .demo-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4cd309, #3db307);
+        }
+
+        .btn-error {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+        }
+
+        .btn-multiple {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4cd309;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .feature-card .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .feature-card h3 {
+            font-size: 16px;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .feature-card p {
+            font-size: 13px;
+            color: #666;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>✨ Sistema de Notificaciones Vértice</h1>
+        <p class="subtitle">Notificaciones bonitas que reemplazan los alerts nativos</p>
+
+        <!-- Demo Section -->
+        <div class="demo-section">
+            <h2>🎯 Prueba las Notificaciones</h2>
+            <div class="button-grid">
+                <button class="demo-btn btn-success" onclick="demoSuccess()">
+                    ✓ Success
+                </button>
+                <button class="demo-btn btn-error" onclick="demoError()">
+                    ✕ Error
+                </button>
+                <button class="demo-btn btn-warning" onclick="demoWarning()">
+                    ⚠ Warning
+                </button>
+                <button class="demo-btn btn-info" onclick="demoInfo()">
+                    ℹ Info
+                </button>
+                <button class="demo-btn btn-multiple" onclick="demoMultiple()">
+                    📚 Múltiples
+                </button>
+                <button class="demo-btn btn-clear" onclick="notify.clear()">
+                    🗑️ Limpiar
+                </button>
+            </div>
+
+            <div class="code-example">
+                <strong>Ejemplo de código:</strong><br>
+                window.notify.success('¡Producto agregado!');<br>
+                window.notify.error('Error al procesar');<br>
+                window.notify.warning('Cuidado con esto');<br>
+                window.notify.info('Información importante');
+            </div>
+        </div>
+
+        <!-- Use Cases Section -->
+        <div class="demo-section">
+            <h2>📋 Casos de Uso Reales</h2>
+            <div class="button-grid">
+                <button class="demo-btn btn-success" onclick="demoCarrito()">
+                    🛒 Agregar al Carrito
+                </button>
+                <button class="demo-btn btn-success" onclick="demoPedido()">
+                    ✓ Pedido Creado
+                </button>
+                <button class="demo-btn btn-error" onclick="demoAuth()">
+                    🔒 Error Autenticación
+                </button>
+                <button class="demo-btn btn-warning" onclick="demoVacioCarrito()">
+                    🛒 Carrito Vacío
+                </button>
+                <button class="demo-btn btn-success" onclick="demoVaciar()">
+                    🗑️ Vaciar Carrito
+                </button>
+                <button class="demo-btn btn-info" onclick="demoProcesando()">
+                    ⏳ Procesando...
+                </button>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="demo-section">
+            <h2>✨ Características</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="icon">🎨</div>
+                    <h3>Diseño Personalizado</h3>
+                    <p>Colores Vértice, animaciones suaves</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">⏱️</div>
+                    <h3>Auto-cierre</h3>
+                    <p>5 segundos por defecto, configurable</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">📱</div>
+                    <h3>Responsive</h3>
+                    <p>Se adapta a móvil y desktop</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🎭</div>
+                    <h3>No Bloquea</h3>
+                    <p>El usuario puede seguir usando la app</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">📚</div>
+                    <h3>Apilables</h3>
+                    <p>Múltiples notificaciones a la vez</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">✕</div>
+                    <h3>Cierre Manual</h3>
+                    <p>Botón × para cerrar cuando quieras</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="demo-section">
+            <h2>📊 Comparación: Antes vs Ahora</h2>
+            
+            <h3 style="color: #dc3545;">❌ Antes (alert nativo)</h3>
+            <button class="demo-btn btn-error" onclick="alert('Este es un alert nativo feo que bloquea la UI')">
+                Ver Alert Nativo (Feo)
+            </button>
+            <div class="code-example" style="border-left-color: #dc3545;">
+                alert('Producto agregado al carrito');<br>
+                // ❌ Bloquea toda la UI<br>
+                // ❌ Diseño feo del navegador<br>
+                // ❌ Solo un botón "OK"
+            </div>
+
+            <h3 style="color: #4cd309; margin-top: 30px;">✅ Ahora (notificación bonita)</h3>
+            <button class="demo-btn btn-success" onclick="notify.success('✓ Producto agregado al carrito')">
+                Ver Notificación (Bonita)
+            </button>
+            <div class="code-example">
+                window.notify.success('✓ Producto agregado al carrito');<br>
+                // ✅ No bloquea la UI<br>
+                // ✅ Diseño bonito personalizado<br>
+                // ✅ Auto-cierre + cierre manual
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Notification System -->
+    <script src="./js-vivi/notifications.js"></script>
+
+    <!-- Demo Functions -->
+    <script>
+        function demoSuccess() {
+            notify.success('¡Operación exitosa! Todo funcionó perfectamente.');
+        }
+
+        function demoError() {
+            notify.error('Hubo un error al procesar tu solicitud. Por favor intenta de nuevo.');
+        }
+
+        function demoWarning() {
+            notify.warning('Advertencia: Solo puedes tener productos de un comerciante a la vez.');
+        }
+
+        function demoInfo() {
+            notify.info('Información: Tu pedido está siendo procesado por el comerciante.');
+        }
+
+        function demoMultiple() {
+            notify.success('Primera notificación');
+            setTimeout(() => notify.info('Segunda notificación'), 500);
+            setTimeout(() => notify.warning('Tercera notificación'), 1000);
+            setTimeout(() => notify.error('Cuarta notificación'), 1500);
+        }
+
+        // Casos de uso reales
+        function demoCarrito() {
+            notify.success('✓ Manzanas Orgánicas agregado al carrito', 3000);
+        }
+
+        function demoPedido() {
+            notify.success('Pedido creado exitosamente. El comerciante debe confirmar tu pedido.', 5000);
+        }
+
+        function demoAuth() {
+            notify.error('Debes iniciar sesión para continuar');
+        }
+
+        function demoVacioCarrito() {
+            notify.warning('Tu carrito está vacío');
+        }
+
+        function demoVaciar() {
+            notify.success('El carrito ha sido vaciado y está listo para nuevas compras.');
+        }
+
+        function demoProcesando() {
+            notify.info('Procesando tu pedido...', 3000);
+        }
+
+        // Mensaje de bienvenida
+        setTimeout(() => {
+            notify.info('👋 ¡Haz clic en los botones para probar las notificaciones!', 4000);
+        }, 500);
+    </script>
+</body>
+</html>

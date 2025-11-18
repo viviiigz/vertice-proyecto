@@ -1,15 +1,63 @@
-// archivo: js/comercio-pedidos.js
+// archivo: js-vivi/comercio-pedidos.js
 
-// 1. URL DE TU API (La ruta que devuelve los pedidos del comerciante)
-const API_URL = '/api/pedidos/comerciante'; 
+// URL DE TU API
+const API_URL = 'http://localhost:3000/api';
+let allPedidos = [];
+let currentFilter = 'pendiente';
 
 /**
  * Función principal que se ejecuta cuando el HTML está listo
  */
 document.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
     cargarPedidos();
     configurarBotonesDeAccion();
+    configurarFiltros();
 });
+
+function checkAuth() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.notify.error('Debes iniciar sesión como comerciante');
+        setTimeout(() => {
+            window.location.href = './login.html';
+        }, 2000);
+    }
+}
+
+function configurarFiltros() {
+    const filterButtons = document.querySelectorAll('.btn-group button');
+    
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Actualizar botones activos
+            filterButtons.forEach(b => {
+                b.classList.remove('btn-primary');
+                b.classList.add('btn-outline-secondary');
+            });
+            btn.classList.remove('btn-outline-secondary');
+            btn.classList.add('btn-primary');
+            
+            // Determinar filtro
+            const btnText = btn.textContent.trim().toLowerCase();
+            if (btnText.includes('pendiente')) {
+                currentFilter = 'pendiente';
+            } else if (btnText.includes('completado')) {
+                // "Completados" incluye: aceptado, entregado
+                currentFilter = 'completado';
+            } else if (btnText.includes('aceptado')) {
+                currentFilter = 'aceptado';
+            } else if (btnText.includes('cancelado')) {
+                // "Cancelados" incluye: cancelado, rechazado
+                currentFilter = 'cancelado';
+            } else {
+                currentFilter = 'todos';
+            }
+            
+            filtrarPedidos();
+        });
+    });
+}
 
 /**
  * Carga los pedidos desde la API y los muestra en la tabla
@@ -21,6 +69,8 @@ async function cargarPedidos() {
         return;
     }
 
+    const token = localStorage.getItem('token');
+    
     // Muestra un spinner de Bootstrap mientras carga
     const spinnerHTML = `
         <tr>
@@ -35,70 +85,121 @@ async function cargarPedidos() {
     tbody.innerHTML = spinnerHTML;
 
     try {
-        const respuesta = await fetch(API_URL); 
+        const respuesta = await fetch(`${API_URL}/pedidos/comerciante`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }); 
         
         if (!respuesta.ok) {
             throw new Error(`Error HTTP ${respuesta.status}: No se pudieron cargar los pedidos`);
         }
 
-        const pedidos = await respuesta.json();
+        const data = await respuesta.json();
+        allPedidos = data.data || [];
         tbody.innerHTML = ''; // Limpia el spinner
 
-        if (pedidos.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No tienes pedidos pendientes.</td></tr>';
+        if (allPedidos.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No tienes pedidos.</td></tr>';
             return;
         }
 
-        pedidos.forEach(pedido => {
-            const nombreCliente = pedido.consumidorId?.nombre || 'Cliente no disponible';
-            
-            // --- ¡AQUÍ ESTÁ EL CAMBIO! ---
-            // Leemos el String simple 'puntoDeRetiro'
-            const puntoRetiro = pedido.puntoDeRetiro || 'Punto no especificado';
-            // --- FIN DEL CAMBIO ---
-
-            // Define el badge de estado
-            let estadoBadge = '';
-            if (pedido.estado === 'pendiente') {
-                estadoBadge = '<span class="badge bg-warning text-dark">Pendiente</span>';
-            } else if (pedido.estado === 'completado') {
-                estadoBadge = '<span class="badge bg-success">Completado</span>';
-            } else {
-                estadoBadge = '<span class="badge bg-danger">Cancelado</span>';
-            }
-
-            // Define los botones de acción
-            let botonesAccion = '';
-            if (pedido.estado === 'pendiente') {
-                botonesAccion = `
-                    <button class="btn btn-success btn-sm btn-completar" title="Completar Pedido" data-id="${pedido._id}">
-                        <i class="fas fa-check"></i>
-                    </button>
-                    <button class="btn btn-danger btn-sm btn-cancelar" title="Cancelar Pedido" data-id="${pedido._id}">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-            }
-
-            // Crea la nueva fila (tr)
-            const fila = document.createElement('tr');
-            fila.id = `pedido-${pedido._id}`;
-            fila.innerHTML = `
-                <td>${nombreCliente}</td>
-                <td>${pedido.productos.length} productos</td>
-                <td>$${pedido.totalVenta}</td>
-                <td>${puntoRetiro}</td> <td>${pedido.horarioRetiro}</td>
-                <td>${estadoBadge}</td>
-                <td>${botonesAccion}</td>
-            `;
-            
-            tbody.appendChild(fila);
-        });
+        filtrarPedidos();
 
     } catch (error) {
         console.error('Error en cargarPedidos:', error);
         tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Error: ${error.message}</td></tr>`;
     }
+}
+
+function filtrarPedidos() {
+    let filtered = allPedidos;
+    
+    if (currentFilter === 'completado') {
+        // Completados: aceptado + entregado
+        filtered = allPedidos.filter(pedido => 
+            pedido.estado === 'aceptado' || pedido.estado === 'entregado'
+        );
+    } else if (currentFilter === 'cancelado') {
+        // Cancelados: cancelado + rechazado
+        filtered = allPedidos.filter(pedido => 
+            pedido.estado === 'cancelado' || pedido.estado === 'rechazado'
+        );
+    } else if (currentFilter !== 'todos') {
+        // Filtro específico
+        filtered = allPedidos.filter(pedido => pedido.estado === currentFilter);
+    }
+    
+    mostrarPedidos(filtered);
+}
+
+function mostrarPedidos(pedidos) {
+    const tbody = document.getElementById('pedidos-tabla-body');
+    tbody.innerHTML = '';
+    
+    if (pedidos.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4">No hay pedidos con el filtro seleccionado.</td></tr>`;
+        return;
+    }
+    
+    pedidos.forEach(pedido => {
+        const consumidor = pedido.consumidorId || {};
+        const nombreCliente = consumidor.username || 'Cliente no disponible';
+        const puntoRetiro = pedido.puntoDeRetiro || 'Punto no especificado';
+
+        // Define el badge de estado
+        let estadoBadge = '';
+        if (pedido.estado === 'pendiente') {
+            estadoBadge = '<span class="badge bg-warning text-dark">Pendiente</span>';
+        } else if (pedido.estado === 'aceptado') {
+            estadoBadge = '<span class="badge bg-info">Aceptado</span>';
+        } else if (pedido.estado === 'entregado') {
+            estadoBadge = '<span class="badge bg-success">Entregado</span>';
+        } else if (pedido.estado === 'rechazado') {
+            estadoBadge = '<span class="badge bg-danger">Rechazado</span>';
+        } else if (pedido.estado === 'cancelado') {
+            estadoBadge = '<span class="badge bg-secondary">Cancelado</span>';
+        } else {
+            estadoBadge = `<span class="badge bg-secondary">${pedido.estado}</span>`;
+        }
+
+        // Define los botones de acción
+        let botonesAccion = '';
+        if (pedido.estado === 'pendiente') {
+            botonesAccion = `
+                <button class="btn btn-success btn-sm btn-aceptar me-1" title="Aceptar Pedido" data-id="${pedido._id}">
+                    <i class="fas fa-check"></i>
+                </button>
+                <button class="btn btn-danger btn-sm btn-rechazar" title="Rechazar Pedido" data-id="${pedido._id}">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+        } else if (pedido.estado === 'aceptado') {
+            botonesAccion = `
+                <button class="btn btn-primary btn-sm btn-entregar me-1" title="Marcar como Entregado" data-id="${pedido._id}">
+                    <i class="fas fa-check-circle"></i>
+                </button>
+                <button class="btn btn-secondary btn-sm btn-cancelar" title="Cancelar Pedido" data-id="${pedido._id}">
+                    <i class="fas fa-ban"></i>
+                </button>
+            `;
+        }
+
+        // Crea la nueva fila (tr)
+        const fila = document.createElement('tr');
+        fila.id = `pedido-${pedido._id}`;
+        fila.innerHTML = `
+            <td>${nombreCliente}<br><small class="text-muted">${consumidor.email || ''}</small></td>
+            <td>#${pedido._id.slice(-6)}<br><small class="text-muted">${pedido.productos.length} producto(s)</small></td>
+            <td><strong>$${pedido.totalVenta.toFixed(2)}</strong></td>
+            <td>${puntoRetiro}</td>
+            <td>${pedido.horarioRetiro}</td>
+            <td>${estadoBadge}</td>
+            <td>${botonesAccion}</td>
+        `;
+        
+        tbody.appendChild(fila);
+    });
 }
 
 /**
@@ -109,17 +210,33 @@ function configurarBotonesDeAccion() {
 
     if (tablaPedidos) {
         tablaPedidos.addEventListener('click', async (e) => {
-            const botonCompletar = e.target.closest('.btn-completar');
+            const botonAceptar = e.target.closest('.btn-aceptar');
+            const botonRechazar = e.target.closest('.btn-rechazar');
             const botonCancelar = e.target.closest('.btn-cancelar');
+            const botonEntregar = e.target.closest('.btn-entregar');
 
-            if (botonCompletar) {
-                const id = botonCompletar.dataset.id;
-                await manejarActualizacionPedido(id, 'completar');
+            if (botonAceptar) {
+                const id = botonAceptar.dataset.id;
+                await manejarActualizacionPedido(id, 'aceptar');
+            }
+
+            if (botonRechazar) {
+                const id = botonRechazar.dataset.id;
+                if (confirm('¿Estás seguro de rechazar este pedido?')) {
+                    await manejarActualizacionPedido(id, 'rechazar');
+                }
             }
 
             if (botonCancelar) {
                 const id = botonCancelar.dataset.id;
-                await manejarActualizacionPedido(id, 'cancelar');
+                if (confirm('¿Estás seguro de cancelar este pedido?')) {
+                    await manejarActualizacionPedido(id, 'cancelar');
+                }
+            }
+
+            if (botonEntregar) {
+                const id = botonEntregar.dataset.id;
+                await manejarActualizacionPedido(id, 'entregar');
             }
         });
     }
@@ -129,36 +246,31 @@ function configurarBotonesDeAccion() {
  * Llama a la API para actualizar el estado del pedido y actualiza la UI
  */
 async function manejarActualizacionPedido(id, accion) {
-    // accion debe ser 'completar' o 'cancelar'
-    const url = `/api/pedidos/${accion}/${id}`;
+    const token = localStorage.getItem('token');
+    const url = `${API_URL}/pedidos/${accion}/${id}`;
 
     try {
         const respuesta = await fetch(url, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
         });
 
+        const result = await respuesta.json();
+
         if (!respuesta.ok) {
-            throw new Error(`Error al ${accion} el pedido`);
+            throw new Error(result.message || `Error al ${accion} el pedido`);
         }
 
-        // Actualiza la UI sin recargar la página
-        const filaPedido = document.getElementById(`pedido-${id}`);
-        if (filaPedido) {
-            const celdaEstado = filaPedido.querySelector('td:nth-child(6)');
-            const celdaAcciones = filaPedido.querySelector('td:nth-child(7)');
-
-            if (accion === 'completar') {
-                celdaEstado.innerHTML = '<span class="badge bg-success">Completado</span>';
-            } else {
-                celdaEstado.innerHTML = '<span class="badge bg-danger">Cancelado</span>';
-            }
-            
-            celdaAcciones.innerHTML = ''; 
-        }
+        window.notify.success(result.message || 'Pedido actualizado exitosamente');
+        
+        // Recargar pedidos
+        await cargarPedidos();
 
     } catch (error) {
         console.error('Error en manejarActualizacionPedido:', error);
-        alert(`Hubo un error al ${accion} el pedido.`);
+        window.notify.error(error.message || `Hubo un error al ${accion} el pedido.`);
     }
 }

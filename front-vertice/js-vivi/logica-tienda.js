@@ -131,10 +131,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Error al obtener los productos');
             }
             const data = await response.json();
+            
+            // El backend devuelve { products: [...], pagination: {...} }
+            const productos = data.products || data;
+            
             // Filtro defensivo: solo mostrar categorias permitidas
             const permitidas = ['comida-por-caducarse', 'desperfecto-fisico'];
-            const visibles = data.filter(p => permitidas.includes(p.categoria));
-            console.log('[TIENDA] Total backend:', data.length, '| visibles (filtradas):', visibles.length);
+            const visibles = productos.filter(p => permitidas.includes(p.categoria));
+            console.log('[TIENDA] Total backend:', productos.length, '| visibles (filtradas):', visibles.length);
+            
             // Mapea los nombres de las propiedades del backend a los del frontend
             return visibles.map(p => ({
                 id: p.id || p._id,
@@ -679,7 +684,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (productGrid) {
             productos = await obtenerProductos();
             aplicarFiltrosYOrden();
-            actualizarContadorCarrito();
+            // actualizarContadorCarrito(); // Ya no se usa - cart-persistence.js lo maneja
 
             // Eventos para el buscador, filtros y ordenamiento
             if (searchInput) searchInput.addEventListener('input', aplicarFiltrosYOrden);

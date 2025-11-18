@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Carrito - Vértice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #4cd309;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #3da307;
+        }
+        #cart-display {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .cart-count {
+            background: red;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test del Carrito de Vértice</h1>
+    
+    <div class="test-section">
+        <h2>Estado del Carrito</h2>
+        <p>Items en carrito: <span id="cart-count" class="cart-count">0</span></p>
+        <div id="cart-display"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Pruebas</h2>
+        <button onclick="testAddItem()">Agregar Producto de Prueba</button>
+        <button onclick="testGetCart()">Ver Carrito</button>
+        <button onclick="testClearCart()">Vaciar Carrito</button>
+        <button onclick="testLocalStorage()">Ver localStorage</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Log de Eventos</h2>
+        <div id="log" style="background: #000; color: #0f0; padding: 10px; font-family: monospace; min-height: 200px; overflow-y: auto;">
+        </div>
+    </div>
+
+    <script src="./js-vivi/cart-persistence.js"></script>
+    <script>
+        const logDiv = document.getElementById('log');
+        
+        function log(message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            let logMessage = `[${timestamp}] ${message}`;
+            if (data) {
+                logMessage += '\n' + JSON.stringify(data, null, 2);
+            }
+            const p = document.createElement('p');
+            p.textContent = logMessage;
+            p.style.margin = '5px 0';
+            p.style.borderBottom = '1px solid #333';
+            logDiv.appendChild(p);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        // Test inicial
+        document.addEventListener('DOMContentLoaded', () => {
+            log('DOM Cargado');
+            log('window.cartManager disponible:', !!window.cartManager);
+            log('window.CartManager disponible:', !!window.CartManager);
+            
+            if (window.cartManager) {
+                const cart = window.cartManager.getCart();
+                log('Carrito inicial:', cart);
+                displayCart();
+            } else {
+                log('ERROR: cartManager no está disponible', null);
+            }
+        });
+
+        function testAddItem() {
+            log('Intentando agregar producto...');
+            
+            if (!window.cartManager) {
+                log('ERROR: cartManager no disponible');
+                return;
+            }
+
+            const testProduct = {
+                id: 'test-' + Date.now(),
+                nombre_producto: 'Producto de Prueba',
+                precio_original: 100,
+                precio_descuento: 80,
+                imagenes: ['./assets/imgs/placeholder.png']
+            };
+
+            try {
+                const result = window.cartManager.addItem(testProduct);
+                log('Producto agregado exitosamente:', result);
+                displayCart();
+            } catch (error) {
+                log('ERROR al agregar:', error.message);
+            }
+        }
+
+        function testGetCart() {
+            log('Obteniendo carrito...');
+            if (window.cartManager) {
+                const cart = window.cartManager.getCart();
+                log('Carrito actual:', cart);
+                displayCart();
+            } else {
+                log('ERROR: cartManager no disponible');
+            }
+        }
+
+        function testClearCart() {
+            log('Vaciando carrito...');
+            if (window.cartManager) {
+                const result = window.cartManager.clearCart();
+                log('Carrito vaciado:', result);
+                displayCart();
+            } else {
+                log('ERROR: cartManager no disponible');
+            }
+        }
+
+        function testLocalStorage() {
+            log('Verificando localStorage...');
+            const cartData = localStorage.getItem('vertice_cart');
+            if (cartData) {
+                log('Datos en localStorage:', JSON.parse(cartData));
+            } else {
+                log('No hay datos en localStorage');
+            }
+        }
+
+        function displayCart() {
+            const displayDiv = document.getElementById('cart-display');
+            if (!window.cartManager) {
+                displayDiv.innerHTML = '<p style="color: red;">CartManager no disponible</p>';
+                return;
+            }
+
+            const cart = window.cartManager.getCart();
+            
+            if (cart.items.length === 0) {
+                displayDiv.innerHTML = '<p>El carrito está vacío</p>';
+            } else {
+                let html = '<h3>Productos en el carrito:</h3><ul>';
+                cart.items.forEach(item => {
+                    html += `<li>${item.nombre} - $${item.precio} x ${item.quantity}</li>`;
+                });
+                html += '</ul>';
+                html += `<p><strong>Total items: ${cart.count}</strong></p>`;
+                displayDiv.innerHTML = html;
+            }
+        }
+
+        // Listen to cart updates
+        window.addEventListener('cartUpdated', (e) => {
+            log('Evento cartUpdated recibido:', e.detail);
+            displayCart();
+        });
+    </script>
+</body>
+</html>

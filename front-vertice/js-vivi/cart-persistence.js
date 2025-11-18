@@ -6,13 +6,21 @@
 class CartManager {
     constructor() {
         this.storageKey = 'vertice_cart';
-        this.countElement = document.getElementById('cart-count');
+        this.countElement = null;
         this.init();
     }
 
     init() {
-        // Load cart count on page load
-        this.updateCartDisplay();
+        // Wait for DOM to be ready before trying to get the count element
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.countElement = document.getElementById('cart-count');
+                this.updateCartDisplay();
+            });
+        } else {
+            this.countElement = document.getElementById('cart-count');
+            this.updateCartDisplay();
+        }
         
         // Listen for storage events from other tabs/windows
         window.addEventListener('storage', (e) => {
@@ -110,6 +118,11 @@ class CartManager {
     }
 
     updateCartDisplay() {
+        // Try to get the element if we don't have it yet
+        if (!this.countElement) {
+            this.countElement = document.getElementById('cart-count');
+        }
+        
         if (this.countElement) {
             const count = this.getItemCount();
             this.countElement.textContent = count;
@@ -118,17 +131,12 @@ class CartManager {
     }
 }
 
-// Initialize cart manager when DOM is ready
-let cartManager;
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        cartManager = new CartManager();
-    });
-} else {
-    cartManager = new CartManager();
-}
+// Initialize cart manager immediately
+const cartManager = new CartManager();
 
 // Export for use in other scripts
 window.CartManager = CartManager;
 window.cartManager = cartManager;
+
+console.log('Cart Manager initialized:', window.cartManager);
+

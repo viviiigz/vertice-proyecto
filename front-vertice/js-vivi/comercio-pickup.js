@@ -10,24 +10,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const puntosDeRetiro = [
         { 
             nombre: 'Plaza San Martín (Centro)', 
-            lat: -26.1835, 
-            lng: -58.1752 
+            lat: -26.185145, 
+            lng: -58.174520 
         },
         { 
-            nombre: 'Virgen Desatanudos (Circuito 5)', 
-            lat: -26.1550, 
-            lng: -58.2105 
+            nombre: 'Cruz del Norte Formosa', 
+            lat: -26.197596, 
+            lng: -58.212465 
         },
         { 
-            nombre: 'La Cruz (Costanera)', 
-            lat: -26.1772, 
-            lng: -58.1633 
+            nombre: 'Monumento a la Virgen del Carmen', 
+            lat: -26.157044, 
+            lng: -58.185414 
         }
     ];
 
-    // 3. Coordenadas del centro del mapa (Formosa)
-    const centroFormosa = [-26.177, -58.185];
-    const zoomLevel = 13;
+    // 3. Coordenadas del centro del mapa (promedio de los 3 puntos)
+    const centroFormosa = [-26.180, -58.190];
+    const zoomLevel = 12;
 
     // 4. Inicializa el mapa
     // 'L.map('map')' busca un div con id="map"

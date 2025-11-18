@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Puntos de Pickup</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #4cd309;
+            text-align: center;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #4cd309;
+            padding-bottom: 10px;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .puntos-lista {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .punto-card {
+            border: 2px solid #4cd309;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f9fff9;
+        }
+        .punto-card h3 {
+            color: #4cd309;
+            margin-top: 0;
+        }
+        .coordenadas {
+            font-family: monospace;
+            background: #eee;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        .status.success {
+            background: #4cd309;
+            color: white;
+        }
+        .status.error {
+            background: #dc3545;
+            color: white;
+        }
+        #test-results {
+            margin-top: 20px;
+        }
+        .test-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .test-item.pass {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .test-item.fail {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        button {
+            background: #4cd309;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #3db307;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test - Puntos de Pickup Vértice</h1>
+
+    <div class="test-section">
+        <h2>📍 Mapa de Puntos</h2>
+        <div id="map"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Lista de Puntos</h2>
+        <div class="puntos-lista" id="puntos-lista"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 Tests de Verificación</h2>
+        <button onclick="runTests()">▶ Ejecutar Tests</button>
+        <button onclick="testAPI()">🌐 Test API Backend</button>
+        <div id="test-results"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Puntos de retiro fijos (mismos que comercio-pickup.js)
+        const PUNTOS_RETIRO = [
+            { 
+                nombre: 'Plaza San Martín (Centro)', 
+                direccion: 'Plaza San Martín, Centro, Formosa',
+                lat: -26.1835, 
+                lng: -58.1752,
+                descripcion: 'Punto de retiro en el centro de la ciudad'
+            },
+            { 
+                nombre: 'Virgen Desatanudos (Circuito 5)', 
+                direccion: 'Virgen Desatanudos, Circuito 5, Formosa',
+                lat: -26.1550, 
+                lng: -58.2105,
+                descripcion: 'Punto de retiro en zona de Circuito 5'
+            },
+            { 
+                nombre: 'La Cruz (Costanera)', 
+                direccion: 'La Cruz, Costanera, Formosa',
+                lat: -26.1772, 
+                lng: -58.1633,
+                descripcion: 'Punto de retiro en la costanera'
+            }
+        ];
+
+        let map;
+
+        // Inicializar mapa
+        function initMap() {
+            const centroFormosa = [-26.177, -58.185];
+            map = L.map('map').setView(centroFormosa, 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Icono verde personalizado
+            const iconoVerde = L.icon({
+                iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="30" height="45">
+                        <path fill="#4cd309" stroke="#2d8006" stroke-width="1.5" d="M12 0C7.03 0 3 4.03 3 9c0 7.5 9 18 9 18s9-10.5 9-18c0-4.97-4.03-9-9-9z"/>
+                        <circle fill="white" cx="12" cy="9" r="3.5"/>
+                    </svg>
+                `),
+                iconSize: [30, 45],
+                iconAnchor: [15, 45],
+                popupAnchor: [0, -45]
+            });
+
+            // Agregar marcadores
+            PUNTOS_RETIRO.forEach(punto => {
+                L.marker([punto.lat, punto.lng], { icon: iconoVerde })
+                    .addTo(map)
+                    .bindPopup(`
+                        <h5 style="font-family: 'Montserrat', sans-serif; margin: 0; color: #4cd309;">${punto.nombre}</h5>
+                        <p style="margin: 5px 0 0 0; font-size: 0.9em;">${punto.direccion}</p>
+                    `)
+                    .openPopup();
+            });
+        }
+
+        // Mostrar lista de puntos
+        function displayPuntos() {
+            const container = document.getElementById('puntos-lista');
+            container.innerHTML = PUNTOS_RETIRO.map(punto => `
+                <div class="punto-card">
+                    <h3>📍 ${punto.nombre}</h3>
+                    <p><strong>Dirección:</strong> ${punto.direccion}</p>
+                    <p><strong>Coordenadas:</strong><br>
+                       <span class="coordenadas">Lat: ${punto.lat}, Lng: ${punto.lng}</span>
+                    </p>
+                    <p><strong>Descripción:</strong> ${punto.descripcion}</p>
+                </div>
+            `).join('');
+        }
+
+        // Tests de verificación
+        function runTests() {
+            const results = [];
+
+            // Test 1: Verificar cantidad de puntos
+            results.push({
+                name: 'Cantidad de puntos correcta',
+                pass: PUNTOS_RETIRO.length === 3,
+                message: `${PUNTOS_RETIRO.length} puntos encontrados (esperado: 3)`
+            });
+
+            // Test 2: Verificar que todos tienen coordenadas
+            const todosConCoordenadas = PUNTOS_RETIRO.every(p => p.lat && p.lng);
+            results.push({
+                name: 'Todos los puntos tienen coordenadas',
+                pass: todosConCoordenadas,
+                message: todosConCoordenadas ? 'Todas las coordenadas presentes' : 'Faltan coordenadas'
+            });
+
+            // Test 3: Verificar que todos tienen nombre
+            const todosConNombre = PUNTOS_RETIRO.every(p => p.nombre && p.nombre.length > 0);
+            results.push({
+                name: 'Todos los puntos tienen nombre',
+                pass: todosConNombre,
+                message: todosConNombre ? 'Todos los nombres presentes' : 'Faltan nombres'
+            });
+
+            // Test 4: Verificar que las coordenadas están en rango válido (Formosa)
+            const coordenadasValidas = PUNTOS_RETIRO.every(p => 
+                p.lat >= -26.3 && p.lat <= -26.0 &&
+                p.lng >= -58.3 && p.lng <= -58.0
+            );
+            results.push({
+                name: 'Coordenadas dentro de Formosa',
+                pass: coordenadasValidas,
+                message: coordenadasValidas ? 'Coordenadas válidas para Formosa' : 'Coordenadas fuera de rango'
+            });
+
+            // Test 5: Verificar que Leaflet está cargado
+            results.push({
+                name: 'Librería Leaflet cargada',
+                pass: typeof L !== 'undefined',
+                message: typeof L !== 'undefined' ? 'Leaflet disponible' : 'Leaflet no encontrado'
+            });
+
+            // Test 6: Verificar que el mapa se inicializó
+            results.push({
+                name: 'Mapa inicializado',
+                pass: map !== undefined && map !== null,
+                message: map ? 'Mapa creado correctamente' : 'Mapa no inicializado'
+            });
+
+            displayTestResults(results);
+        }
+
+        // Test de API
+        async function testAPI() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<p>⏳ Probando conexión con API...</p>';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/pedidos/puntos-retiro');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                const apiResults = [
+                    {
+                        name: 'API responde correctamente',
+                        pass: true,
+                        message: `Status: ${response.status} OK`
+                    },
+                    {
+                        name: 'Datos en formato correcto',
+                        pass: data.success === true && Array.isArray(data.data),
+                        message: `Success: ${data.success}, Count: ${data.count || 0}`
+                    },
+                    {
+                        name: 'Puntos encontrados en BD',
+                        pass: data.data && data.data.length > 0,
+                        message: `${data.data?.length || 0} puntos en base de datos`
+                    }
+                ];
+
+                displayTestResults(apiResults);
+
+                if (data.data && data.data.length > 0) {
+                    console.log('Puntos desde API:', data.data);
+                }
+
+            } catch (error) {
+                displayTestResults([
+                    {
+                        name: 'Conexión con API',
+                        pass: false,
+                        message: `Error: ${error.message} - Backend probablemente no está corriendo`
+                    }
+                ]);
+            }
+        }
+
+        // Mostrar resultados de tests
+        function displayTestResults(results) {
+            const container = document.getElementById('test-results');
+            const passCount = results.filter(r => r.pass).length;
+            const totalCount = results.length;
+
+            container.innerHTML = `
+                <div style="margin: 20px 0; padding: 15px; background: ${passCount === totalCount ? '#d4edda' : '#fff3cd'}; border-radius: 5px;">
+                    <strong>Resultado:</strong> ${passCount}/${totalCount} tests pasados
+                </div>
+                ${results.map(result => `
+                    <div class="test-item ${result.pass ? 'pass' : 'fail'}">
+                        <span>${result.pass ? '✓' : '✗'} ${result.name}</span>
+                        <span class="status ${result.pass ? 'success' : 'error'}">${result.message}</span>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Inicializar todo al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Inicializando test de puntos de pickup...');
+            initMap();
+            displayPuntos();
+            console.log('Puntos cargados:', PUNTOS_RETIRO);
+        });
+    </script>
+</body>
+</html>
