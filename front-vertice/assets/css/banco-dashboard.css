@@ -1,0 +1,62 @@
+/* --- CONFIGURACIÓN GENERAL --- */
+body.banco-mode {
+    background-color: #f3f6f9; /* Gris muy suave */
+    font-family: 'Montserrat', sans-serif;
+}
+
+.main-dashboard-container {
+    max-width: 1400px;
+}
+
+/* --- TARJETAS MÉTRICAS (Dashboard) --- */
+.metric-card {
+    background: #fff; border-radius: 12px; padding: 20px;
+    display: flex; align-items: center; gap: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e1e4e8;
+    transition: transform 0.2s;
+}
+.metric-card:hover { transform: translateY(-3px); }
+.metric-card.highlight-green {
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%); color: white;
+}
+.metric-card.highlight-green .metric-icon { background: rgba(255,255,255,0.2); color: white; }
+.metric-card.highlight-green h3 { color: rgba(255,255,255,0.8); }
+.metric-icon {
+    width: 50px; height: 50px; border-radius: 10px; background: #f8f9fa;
+    display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #555;
+}
+.metric-info h3 { font-size: 0.8rem; text-transform: uppercase; margin-bottom: 4px; color: #777; }
+
+/* --- TARJETAS DE DONACIÓN (Catálogo) --- */
+.donation-card {
+    background: #fff; border: 1px solid #eaeaea; border-radius: 10px;
+    overflow: hidden; position: relative; transition: all 0.3s ease;
+}
+.donation-card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.08); border-color: #2e7d32; }
+.card-badge {
+    position: absolute; top: 10px; right: 10px; font-size: 0.7rem; font-weight: bold;
+    padding: 4px 10px; border-radius: 20px; z-index: 2;
+}
+.badge-urgent { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+.badge-normal { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+.donation-img-container {
+    height: 160px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.donation-img-container img { width: 100%; height: 100%; object-fit: cover; }
+.donation-body { padding: 15px; }
+.donation-title { font-size: 1rem; font-weight: 700; margin-bottom: 5px; color: #333; }
+.donation-data { font-size: 0.85rem; color: #555; margin-bottom: 15px; }
+.btn-solicitar { width: 100%; font-weight: 600; font-size: 0.9rem; }
+
+/* --- MAPA Y PANELES --- */
+.panel-container {
+    background: #fff; border-radius: 12px; padding: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #e1e4e8;
+}
+.map-wrapper-innovative {
+    position: relative; border-radius: 16px; overflow: hidden; border: 1px solid #ddd;
+}
+.map-floating-card {
+    position: absolute; top: 20px; right: 20px; width: 300px; background: white;
+    border-radius: 12px; z-index: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
