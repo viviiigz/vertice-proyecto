@@ -48,30 +48,77 @@
         </nav>
     </header>
 
-    <main class="main-content">
-        <div class="container my-5">
-            <h1>Nuestros Puntos de Retiro</h1>
-            <p class="lead mb-4">¡Vértice te conecta! Estos son los puntos públicos donde puedes retirar tus pedidos.
-            </p>
+<main class="main-content">
+    <div class="container my-5">
+        <div class="text-center mb-5 header-section">
+            <h1 class="display-5 fw-bold" style="color: #4a4a4a;">Nuestros Puntos de Retiro</h1>
+            <p class="lead text-muted">¡Vértice te conecta! Estos son los puntos públicos donde puedes retirar tus pedidos.</p>
+        </div>
 
-            <div class="alert alert-primary" role="alert">
-                <h4 class="alert-heading"><i class="fas fa-info-circle"></i> ¿Cómo funciona?</h4>
-                <p>Al centralizar los retiros en puntos conocidos, facilitamos el encuentro entre los comercios y tú de
-                    una manera segura y eficiente. </p>
-                <hr>
-                <p class="mb-0">Puedes comprar en varias tiendas y retirar todo en un mismo lugar.</p>
-            </div>
-
-            <div class="card shadow-sm mt-4">
-                <div class="card-header">
-                    Mapa de Puntos de Retiro (Formosa)
+        <div class="row g-4 mb-5 steps-container">
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="icon-circle">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h5>1. Compra en varias tiendas.</h5>
                 </div>
-                <div class="card-body">
-                    <div id="map" class="map-container"></div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card"> <div class="icon-circle">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h5>2. Centraliza tus retiros.</h5>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="icon-circle">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <h5>3. ¡Recoge todo en un lugar!</h5>
                 </div>
             </div>
         </div>
-    </main>
+
+        <div class="map-wrapper-innovative shadow-lg">
+            <div class="map-header-strip">
+                Mapa de Puntos de Retiro (Formosa)
+            </div>
+            
+            <div id="map" class="map-container-full"></div>
+
+            <div class="map-floating-card" id="floating-details">
+                <div class="search-mini-bar">
+                    <i class="fas fa-search text-muted"></i>
+                    <input type="text" placeholder="Buscar punto..." id="map-search">
+                    <button class="btn-filter"><i class="fas fa-sliders-h"></i></button>
+                </div>
+                
+                <div id="point-info-content">
+                    <div class="point-placeholder text-center mt-3">
+                        <p class="text-muted small">Selecciona un punto en el mapa para ver detalles.</p>
+                    </div>
+                    
+                    <div class="point-details d-none" id="selected-point-template">
+                        <img src="./assets/imgs/local-ejemplo.jpg" alt="Local" class="point-img rounded mt-2"> <h6 class="mt-2 fw-bold mb-0" id="detail-title">Punto Vértice "El Almacén"</h6>
+                        <p class="small text-muted mb-1" id="detail-address">Av. Italia 1234, Formosa</p>
+                        
+                        <div class="rating small text-warning mb-2">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            <span class="text-muted ms-1">(4.8)</span>
+                        </div>
+                        <p class="small mb-2"><i class="far fa-clock text-success"></i> Lun-Vie: 9:00 - 20:00</p>
+                        
+                        <button class="btn btn-success w-100 btn-sm rounded-pill mt-2" onclick="seleccionarPunto()">
+                            Seleccionar este punto
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 
     <footer class="main-footer">
         <div class="container">
