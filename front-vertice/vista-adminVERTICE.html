@@ -3,507 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitudes Pendientes - Admin</title>
-    <!-- Bootstrap 5 CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <title>Admin - Solicitudes Pendientes | Vértice</title>
     
-    <!-- Estilos personalizados con la paleta de colores -->
-    <style>
-        /* Paleta de colores extraída de la imagen */
-        :root {
-            --color-fondo: #f8fdfa; /* Verde muy claro del fondo */
-            --color-primario: #6fbf23; /* Verde intenso del botón */
-            --color-texto-oscuro: #1e392a; /* Verde oscuro del logo "Vértice" */
-            --color-borde-hover: #5da01b;
-        }
-
-        body {
-            background-color: var(--color-fondo);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-
-        /* Estilo para el logo */
-        .navbar-brand {
-            color: var(--color-texto-oscuro) !important;
-            font-weight: 700;
-            font-size: 1.75rem;
-        }
-
-        /* Contenedor principal estilo tarjeta, como en el login */
-        .main-container {
-            max-width: 900px;
-            margin-top: 3rem;
-            margin-bottom: 3rem;
-            background-color: #ffffff;
-            border-radius: 0.75rem;
-            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.07);
-            overflow: hidden; /* Para que la tabla respete los bordes redondeados */
-        }
-
-        .card-title-custom {
-            color: var(--color-texto-oscuro);
-            font-weight: 600;
-        }
-
-        /* Estilos de la tabla */
-        .table {
-            border-color: #dee2e6;
-        }
-
-        .table thead th {
-            color: var(--color-texto-oscuro);
-            background-color: #f9f9f9;
-            border-bottom-width: 2px;
-            font-weight: 600;
-        }
-
-        .table tbody tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .table td {
-            vertical-align: middle;
-        }
-        /* --- INICIO DE MODIFICACIÓN --- */
-        .navbar-brand img {
-            max-height: 50px; /* Controla la altura máxima del logo */
-            width: auto;      /* Mantiene la proporción */
-        }
-        /* --- FIN DE MODIFICACIÓN --- */
-
-        /* Botón personalizado */
-        .btn-primary {
-            background-color: var(--color-primario);
-            border-color: var(--color-primario);
-            font-weight: 500;
-            color: #ffffff;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--color-borde-hover);
-            border-color: var(--color-borde-hover);
-        }
-
-        .btn-primary:focus {
-            box-shadow: 0 0 0 0.25rem rgba(111, 191, 35, 0.5);
-        }
-
-        /* Estilo para el botón de refrescar */
-        #btnRefresh {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        #btnRefresh.refreshing {
-            pointer-events: none;
-            opacity: 0.7;
-        }
-
-        #btnRefresh.refreshing i {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Animación de entrada para filas nuevas */
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .new-row {
-            animation: slideIn 0.5s ease-out;
-            background-color: #f0fff4 !important;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="./assets/css/admin-style.css">
+    <link rel="icon" type="image/x-icon" href="./assets/imgs/v-vertice.png" />
 </head>
 <body>
 
-    <!-- Navbar sencilla solo con el logo -->
-    <nav class="navbar navbar-light bg-white py-3 shadow-sm">
-        <div class="container">
-            <!-- --- INICIO DE MODIFICACIÓN --- -->
-            <a class="navbar-brand" href="#">
-                <!-- Reemplazamos el texto "Vértice." por la imagen -->
-                <img src="/front-vertice/assets/imgs/vertice-logo-largo (1).png" alt="Vértice Logo">
-            </a>
-            <!-- --- FIN DE MODIFICACIÓN --- -->
-        </div>
-    </nav>
+    <div class="d-flex" id="wrapper">
+        <div class="bg-white border-end" id="sidebar-wrapper">
+            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold border-bottom">
+                <img src="./assets/imgs/vertice-logo-largo (1).png" alt="Vértice" height="40">
+            </div>
+            <div class="list-group list-group-flush my-3">
+                <a href="./admin-dashboard.html" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+                <a href="vista-adminVERTICE.html" class="list-group-item list-group-item-action bg-transparent second-text active">
+                    <i class="fas fa-clipboard-list me-2"></i>Solicitudes <span class="badge bg-danger rounded-pill ms-2" id="sidebar-badge-count">0</span>
+                </a>
+                <a href="./admin-comercios.html" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <i class="fas fa-store me-2"></i>Comercios
+                </a>
+                <a href="./admin-reportes.html" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <i class="fas fa-chart-line me-2"></i>Reportes
+                </a>
 
-    <!-- Contenedor principal -->
-    <div class="container">
-        <div class="main-container mx-auto p-4 p-md-5">
+            </div>
+        </div>
+        <div id="page-content-wrapper">
             
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="mb-2 card-title-custom">Solicitudes Pendientes</h2>
-                    <p class="text-muted mb-0">Lista de bancos de alimentos que requieren aprobación.</p>
+            <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
+                    <h2 class="fs-2 m-0 text-dark fw-bold">Gestión de Solicitudes</h2>
                 </div>
-                <div class="d-flex align-items-center gap-3">
-                    <small class="text-muted" id="lastUpdateTime">Última actualización: --</small>
-                    <button type="button" class="btn btn-primary" id="btnRefresh" title="Refrescar solicitudes">
-                        <i class="bi bi-arrow-clockwise"></i> Refrescar
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle second-text fw-bold" href="#" id="navbarDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-shield me-2"></i>Administrador
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#">Configuración</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" id="btnLogout">Cerrar Sesión</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="container-fluid px-4">
+                
+                <div id="adminAlert"></div>
+
+                <div class="row my-4">
+                    <div class="col">
+                        <div class="card shadow-sm border-0 rounded-3">
+                            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 fw-bold text-dark">Bancos Pendientes de Aprobación</h5>
+                                <button class="btn btn-sm btn-outline-primary" onclick="loadSolicitudes()">
+                                    <i class="fas fa-sync-alt"></i> Actualizar
+                                </button>
+                            </div>
+                            
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0 bg-white">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th scope="col" class="ps-4">Nombre Organización</th>
+                                                <th scope="col">Contacto</th>
+                                                <th scope="col">Documentación</th>
+                                                <th scope="col">Estado</th>
+                                                <th scope="col" class="text-end pe-4">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="solicitudesBody">
+                                            <tr id="noDataRow" style="display:none;">
+                                                <td colspan="5" class="text-center py-5">
+                                                    <div class="text-muted">
+                                                        <i class="fas fa-check-circle fa-3x mb-3 text-success opacity-50"></i>
+                                                        <p class="mb-0">¡Todo al día! No hay solicitudes pendientes.</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content h-100">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-file-pdf me-2 text-danger"></i>Documento de Verificación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height: 80vh;">
+                    <iframe id="previewFrame" src="" class="w-100 h-100 border-0 rounded"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Acción (Aprobar/Rechazar) -->
+    <div class="modal fade" id="confirmActionModal" tabindex="-1" aria-labelledby="confirmActionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="confirmActionModalLabel">
+                        <i class="fas fa-question-circle me-2" id="actionIcon"></i><span id="actionTitle"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div id="actionIconLarge" class="mb-3"></div>
+                    <p class="fs-5 mb-2" id="actionMessage"></p>
+                    <p class="text-muted small" id="actionBanco"></p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn" id="confirmActionBtn">
+                        <i class="fas fa-check me-1"></i><span id="confirmActionText"></span>
                     </button>
                 </div>
             </div>
-            
-            <!-- Banner de alertas administrativas -->
-            <div id="adminAlert"></div>
+        </div>
+    </div>
 
-                        <!-- Tabla responsiva -->
-                        <div class="table-responsive">
-                                <table class="table table-hover align-middle" id="solicitudesTable">
-                                        <thead>
-                                                <tr>
-                                                        <th scope="col">Nombre del Banco</th>
-                                                        <th scope="col">Email</th>
-                                                        <th scope="col">Documento</th>
-                                                        <th scope="col">Acciones</th>
-                                                </tr>
-                                        </thead>
-                                        <tbody id="solicitudesBody">
-                                                <tr id="noDataRow" style="display:none;">
-                                                        <td colspan="4" class="text-center text-muted p-4">No hay solicitudes pendientes por el momento.</td>
-                                                </tr>
-                                        </tbody>
-                                </table>
-                        </div> <!-- .table-responsive -->
-        </div> <!-- .main-container -->
-    </div> <!-- .container -->
-
-        <!-- Modal para previsualizar PDF -->
-        <div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Previsualizar documento</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" style="height:80vh;">
-                        <iframe id="previewFrame" src="" style="width:100%; height:100%; border:0;" title="Documento"></iframe>
-                    </div>
+    <!-- Modal de Confirmación de Logout -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="logoutModalLabel">
+                        <i class="fas fa-sign-out-alt me-2 text-warning"></i>Cerrar Sesión
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-exclamation-circle fa-3x text-warning mb-3"></i>
+                    <p class="fs-5 mb-0">¿Estás seguro de que quieres cerrar sesión?</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="confirmLogout">
+                        <i class="fas fa-sign-out-alt me-1"></i>Sí, cerrar sesión
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- El script se carga después del bundle de Bootstrap para evitar errores si bootstrap no está cargado aún. -->
-
-    <!-- Bootstrap 5 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./js-vivi/admin-logic.js"></script>
+    
     <script>
-    // Use full backend URL so page works when served by Live Server (5500) or file://
-    // Recommended: serve the front from the backend (http://localhost:3000/) so cookies work.
-    const API_BASE = 'http://localhost:3000/api/admin';
-        const solicitudesBody = document.getElementById('solicitudesBody');
-        const noDataRow = document.getElementById('noDataRow');
-        const previewModalEl = document.getElementById('previewModal');
-        const previewFrame = document.getElementById('previewFrame');
-        const btnRefresh = document.getElementById('btnRefresh');
-        const lastUpdateTime = document.getElementById('lastUpdateTime');
-        
-        // Crear el modal sólo después de que Bootstrap esté disponible
-        const previewModal = (typeof bootstrap !== 'undefined' && previewModalEl) ? new bootstrap.Modal(previewModalEl) : null;
-        
-        // Variables para polling
-        let pollingInterval = null;
-        const POLLING_INTERVAL_MS = 30000; // 30 segundos
-        let currentSolicitudesIds = new Set(); // Para detectar nuevas solicitudes
-
-            function getAuthHeaders() {
-                const token = localStorage.getItem('token');
-                const headers = {};
-                if (token) headers['Authorization'] = `Bearer ${token}`;
-                return headers;
-            }
-
-            function showAdminAlert(message, type = 'warning') {
-                const adminAlert = document.getElementById('adminAlert');
-                adminAlert.innerHTML = `<div class="alert alert-${type} w-100" role="alert">${message}</div>`;
-            }
-
-            function updateLastUpdateTime() {
-                const now = new Date();
-                const timeString = now.toLocaleTimeString('es-AR', { 
-                    hour: '2-digit', 
-                    minute: '2-digit', 
-                    second: '2-digit' 
-                });
-                lastUpdateTime.textContent = `Última actualización: ${timeString}`;
-            }
-
-            function setRefreshingState(isRefreshing) {
-                if (isRefreshing) {
-                    btnRefresh.classList.add('refreshing');
-                    btnRefresh.disabled = true;
-                } else {
-                    btnRefresh.classList.remove('refreshing');
-                    btnRefresh.disabled = false;
-                }
-            }
-
-            async function loadSolicitudes(isManualRefresh = false) {
-            try {
-                if (isManualRefresh) {
-                    setRefreshingState(true);
-                }
-                
-                console.log('🔍 Obteniendo solicitudes del admin panel...');
-                const headers = getAuthHeaders();
-                console.log('🔐 Headers enviados:', headers);
-                
-                const res = await fetch(`${API_BASE}/solicitudes/data`, { credentials: 'include', headers });
-                console.log('📥 Respuesta recibida - Status:', res.status, res.statusText);
-
-                if (!res.ok) {
-                    // Si la DB no está conectada, el backend responde 503 con DB_NOT_CONNECTED
-                    if (res.status === 503) {
-                        try {
-                            const body = await res.json();
-                            console.log('⚠️ Error 503 - Body:', body);
-                            if (body && body.error === 'DB_NOT_CONNECTED') {
-                                showAdminAlert('La base de datos no está disponible en este momento. Cargando datos de ejemplo para pruebas.', 'info');
-                                // Intentar cargar datos mock para UI (no requiere auth)
-                                const mockRes = await fetch(`${API_BASE}/solicitudes/mock`);
-                                if (mockRes.ok) {
-                                    const mockData = await mockRes.json();
-                                    console.log('📦 Datos mock cargados:', mockData);
-                                    if (mockData.success && Array.isArray(mockData.solicitudes) && mockData.solicitudes.length > 0) {
-                                        noDataRow.style.display = 'none';
-                                        mockData.solicitudes.forEach(s => appendRow(s));
-                                        return;
-                                    }
-                                }
-                                showAdminAlert('No se pudieron cargar datos de ejemplo.', 'danger');
-                                return;
-                            }
-                        } catch (e) {
-                            console.error('❌ Error parseando 503:', e);
-                        }
-                    }
-
-                    if (res.status === 401 || res.status === 403) {
-                        console.error('🚫 No autorizado - Status:', res.status);
-                        showAdminAlert('No estás autorizado. Por favor inicia sesión como admin.', 'warning');
-                    } else {
-                        console.error('❌ Error desconocido - Status:', res.status);
-                        showAdminAlert('Error al obtener solicitudes. Revisa la consola para más detalles.', 'danger');
-                    }
-                    return;
-                }
-
-                const data = await res.json();
-                console.log('✅ Datos recibidos:', data);
-                
-                if (!data.success || !Array.isArray(data.solicitudes)) {
-                    console.warn('⚠️ Respuesta inesperada:', data);
-                    noDataRow.style.display = '';
-                    return;
-                }
-                
-                if (data.solicitudes.length === 0) {
-                    console.log('ℹ️ No hay solicitudes pendientes');
-                    noDataRow.style.display = '';
-                    return;
-                }
-                
-                console.log(`✅ ${data.solicitudes.length} solicitudes pendientes encontradas`);
-                
-                // Detectar nuevas solicitudes ANTES de actualizar el Set
-                const incomingSolicitudesIds = new Set(data.solicitudes.map(s => s._id || s.id));
-                
-                // Identificar solicitudes que ya no existen (fueron aceptadas/rechazadas)
-                const removedIds = Array.from(currentSolicitudesIds).filter(id => !incomingSolicitudesIds.has(id));
-                removedIds.forEach(id => {
-                    const row = solicitudesBody.querySelector(`tr[data-id="${id}"]`);
-                    if (row) row.remove();
-                });
-                
-                // Identificar nuevas solicitudes
-                data.solicitudes.forEach(solicitud => {
-                    const id = solicitud._id || solicitud.id;
-                    const isNew = !currentSolicitudesIds.has(id);
-                    
-                    if (isNew) {
-                        // Solo agregar si es nueva
-                        appendRow(solicitud, true);
-                        currentSolicitudesIds.add(id);
-                    }
-                });
-                
-                // Mostrar/ocultar mensaje de "no hay datos"
-                if (currentSolicitudesIds.size === 0) {
-                    noDataRow.style.display = '';
-                } else {
-                    noDataRow.style.display = 'none';
-                }
-                
-                updateLastUpdateTime();
-            } catch (err) {
-                console.error('💥 Error conectando al servidor:', err);
-                showAdminAlert('Error conectando al servidor: ' + err.message, 'danger');
-            } finally {
-                if (isManualRefresh) {
-                    setRefreshingState(false);
-                }
-            }
-        }
-
-        function appendRow(solicitud, isNew = false) {
-            const tr = document.createElement('tr');
-            tr.dataset.id = solicitud._id || solicitud.id || '';
-            
-            // Agregar clase de animación si es nueva solicitud
-            if (isNew) {
-                tr.classList.add('new-row');
-                // Remover la clase después de la animación
-                setTimeout(() => tr.classList.remove('new-row'), 2000);
-            }
-
-            const tdName = document.createElement('td');
-            tdName.textContent = solicitud.username || solicitud.nombre || '';
-
-            const tdEmail = document.createElement('td');
-            tdEmail.textContent = solicitud.email || '';
-
-            const tdDoc = document.createElement('td');
-            if (solicitud.documentoVerificacion) {
-                const a = document.createElement('a');
-                // Construir URL completa al backend para que funcione correctamente
-                const backendURL = 'http://localhost:3000';
-                const pdfURL = `${backendURL}/uploads/${solicitud.documentoVerificacion}`;
-                a.href = pdfURL;
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-                a.className = 'btn btn-sm btn-primary';
-                a.textContent = 'Ver Documento';
-                // Use modal preview with proper PDF embedding
-                a.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    // Usar #view=FitH para que el PDF se ajuste al iframe
-                    previewFrame.src = pdfURL + '#view=FitH';
-                    if (previewModal) previewModal.show();
-                });
-                tdDoc.appendChild(a);
-            } else {
-                tdDoc.textContent = 'Sin documento';
-            }
-
-            const tdActions = document.createElement('td');
-            const acceptBtn = document.createElement('button');
-            acceptBtn.className = 'btn btn-sm btn-success me-2';
-            acceptBtn.textContent = 'Aceptar';
-            acceptBtn.addEventListener('click', () => handleAction(solicitud, 'aceptar', tr));
-
-            const rejectBtn = document.createElement('button');
-            rejectBtn.className = 'btn btn-sm btn-outline-danger';
-            rejectBtn.textContent = 'Rechazar';
-            rejectBtn.addEventListener('click', () => handleAction(solicitud, 'rechazar', tr));
-
-            tdActions.appendChild(acceptBtn);
-            tdActions.appendChild(rejectBtn);
-
-            tr.appendChild(tdName);
-            tr.appendChild(tdEmail);
-            tr.appendChild(tdDoc);
-            tr.appendChild(tdActions);
-
-            solicitudesBody.appendChild(tr);
-        }
-
-        async function handleAction(solicitud, accion, rowEl) {
-            if (!confirm(`¿Deseas ${accion} la solicitud de ${solicitud.username || solicitud.email}?`)) return;
-            try {
-                const headers = getAuthHeaders();
-                const res = await fetch(`${API_BASE}/solicitudes/${solicitud._id || solicitud.id}/${accion}`, {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers
-                });
-                const json = await res.json();
-                if (res.ok && json.success) {
-                    // Remover del Set de IDs actuales
-                    const id = solicitud._id || solicitud.id;
-                    currentSolicitudesIds.delete(id);
-                    
-                    // Remover fila
-                    rowEl.remove();
-                    
-                    // Si no quedan filas, mostrar mensaje
-                    if (currentSolicitudesIds.size === 0) {
-                        noDataRow.style.display = '';
-                    }
-                } else {
-                    alert('Error procesando la solicitud');
-                }
-            } catch (err) {
-                console.error(err);
-                alert('Error conectando al servidor');
-            }
-        }
-
-        // Iniciar polling automático
-        function startPolling() {
-            // Cargar inmediatamente
-            loadSolicitudes();
-            
-            // Configurar polling cada 30 segundos
-            pollingInterval = setInterval(() => {
-                console.log('🔄 Polling automático - verificando nuevas solicitudes...');
-                loadSolicitudes();
-            }, POLLING_INTERVAL_MS);
-            
-            console.log(`✅ Polling iniciado - actualizará cada ${POLLING_INTERVAL_MS / 1000} segundos`);
-        }
-
-        // Detener polling (útil si el usuario cierra sesión o sale de la página)
-        function stopPolling() {
-            if (pollingInterval) {
-                clearInterval(pollingInterval);
-                pollingInterval = null;
-                console.log('⏹️ Polling detenido');
-            }
-        }
-
-        // Event listener para el botón de refrescar manual
-        btnRefresh.addEventListener('click', () => {
-            console.log('🔄 Refrescando manualmente...');
-            loadSolicitudes(true);
-        });
-
-        // Detener polling cuando el usuario salga de la página
-        window.addEventListener('beforeunload', () => {
-            stopPolling();
-        });
-
-        // Pausar polling cuando la pestaña no está visible (optimización)
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                console.log('⏸️ Pestaña oculta - pausando polling');
-                stopPolling();
-            } else {
-                console.log('▶️ Pestaña visible - reanudando polling');
-                startPolling();
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            startPolling();
-        });
+        var el = document.getElementById("wrapper");
+        var toggleButton = document.getElementById("menu-toggle");
+        toggleButton.onclick = function () {
+            el.classList.toggle("toggled");
+        };
     </script>
 </body>
 </html>
