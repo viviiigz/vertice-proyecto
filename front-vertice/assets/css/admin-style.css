@@ -1,0 +1,129 @@
+:root {
+    --main-bg-color: #6fbf23; /* Verde Vértice */
+    --main-text-color: #6fbf23;
+    --second-text-color: #5e6570;
+    --second-bg-color: #f4f7f6; /* Fondo gris muy suave */
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--second-bg-color);
+    overflow-x: hidden;
+}
+
+.primary-text { color: var(--main-text-color); }
+.second-text { color: var(--second-text-color); }
+.primary-bg { background-color: var(--main-bg-color); }
+
+/* Sidebar Styling */
+#wrapper {
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    margin-left: -15rem;
+    transition: margin 0.25s ease-out;
+    width: 15rem;
+    position: fixed;
+    z-index: 1000;
+}
+
+#sidebar-wrapper .sidebar-heading { padding: 0.875rem 1.25rem; font-size: 1.2rem; }
+#sidebar-wrapper .list-group { width: 15rem; }
+
+#page-content-wrapper {
+    min-width: 100vw;
+    transition: margin 0.25s ease-out;
+    
+}
+
+/* Active State Sidebar */
+#wrapper.toggled #sidebar-wrapper { margin-left: 0; }
+
+/* Links Styling */
+.list-group-item {
+    border: none;
+    padding: 20px 30px;
+    font-size: 15px;
+}
+.list-group-item.active {
+    background-color: transparent;
+    color: var(--main-text-color);
+    font-weight: bold;
+    border-left: 5px solid var(--main-text-color);
+}
+.list-group-item:hover {
+    background-color: #f8fdfa;
+    color: var(--main-text-color);
+}
+
+/* Table Styling */
+.table thead th {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid #eee;
+}
+.table tbody td {
+    padding: 15px 10px;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+/* Responsive Toggles */
+@media (min-width: 768px) {
+    #sidebar-wrapper { margin-left: 0; }
+    #page-content-wrapper { min-width: 0; width: 100%; margin-left: 15rem; }
+    #wrapper.toggled #sidebar-wrapper { margin-left: -15rem; }
+    #wrapper.toggled #page-content-wrapper { margin-left: 0; }
+}
+/* --- ESTILOS DASHBOARD (Tarjetas de Métricas) --- */
+.stat-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #eef2f1;
+    padding: 25px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.stat-card h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.stat-card p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0;
+}
+
+.stat-icon-bg {
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    font-size: 5rem;
+    opacity: 0.1;
+    transform: rotate(-15deg);
+}
+
+/* Variaciones de Color */
+.border-left-success { border-left: 5px solid #6fbf23; }
+.border-left-info { border-left: 5px solid #0dcaf0; }
+.border-left-warning { border-left: 5px solid #ffc107; }
+.border-left-danger { border-left: 5px solid #dc3545; }
+
+.text-vertice { color: #6fbf23; }
