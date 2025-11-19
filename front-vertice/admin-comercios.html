@@ -67,7 +67,7 @@
                     <div class="col-md-6">
                         <div class="input-group shadow-sm">
                             <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
-                            <input type="text" class="form-control border-start-0 ps-0" placeholder="Buscar comercio por nombre o CUIT..." id="searchComercioInput">
+                            <input type="text" class="form-control border-start-0 ps-0" placeholder="Buscar comercio por su nombre..." id="searchComercioInput">
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,6 @@
                                 <thead class="bg-light">
                                     <tr>
                                         <th class="ps-4">Nombre Comercio</th>
-                                        <th>Dirección</th>
                                         <th>Donaciones Totales</th>
                                         <th>Estado</th>
                                         <th class="text-end pe-4">Acciones</th>
@@ -97,6 +96,91 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Perfil del Comercio -->
+    <div class="modal fade" id="comercioPerfilModal" tabindex="-1" aria-labelledby="comercioPerfilModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-light border-0">
+                    <h5 class="modal-title fw-bold" id="comercioPerfilModalLabel">
+                        <i class="fas fa-store me-2 text-success"></i>Perfil del Comercio
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img id="modalFotoPerfil" src="" alt="Foto" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #6fbf23;">
+                        <h4 class="mb-1 fw-bold" id="modalNombreComercio"></h4>
+                        <span class="badge" id="modalEstadoBadge"></span>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="info-box p-3 bg-light rounded">
+                                <p class="text-muted small mb-1"><i class="fas fa-envelope me-2"></i>Email</p>
+                                <p class="mb-0 fw-semibold" id="modalEmail"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box p-3 bg-light rounded">
+                                <p class="text-muted small mb-1"><i class="fas fa-phone me-2"></i>Teléfono</p>
+                                <p class="mb-0 fw-semibold" id="modalTelefono"></p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="info-box p-3 bg-light rounded">
+                                <p class="text-muted small mb-1"><i class="fas fa-map-marker-alt me-2"></i>Dirección</p>
+                                <p class="mb-0 fw-semibold" id="modalDireccion"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box p-3 bg-light rounded">
+                                <p class="text-muted small mb-1"><i class="fas fa-box me-2"></i>Total Productos</p>
+                                <p class="mb-0 fw-semibold fs-4 text-success" id="modalTotalProductos">0</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box p-3 bg-light rounded">
+                                <p class="text-muted small mb-1"><i class="fas fa-calendar me-2"></i>Registrado</p>
+                                <p class="mb-0 fw-semibold" id="modalFechaRegistro"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Logout -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="logoutModalLabel">
+                        <i class="fas fa-sign-out-alt me-2 text-warning"></i>Cerrar Sesión
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-exclamation-circle fa-3x text-warning mb-3"></i>
+                    <p class="fs-5 mb-0">¿Estás seguro de que quieres cerrar sesión?</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="confirmLogout">
+                        <i class="fas fa-sign-out-alt me-1"></i>Sí, cerrar sesión
+                    </button>
+                </div>
             </div>
         </div>
     </div>

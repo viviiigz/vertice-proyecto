@@ -37,7 +37,7 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
-                    <h2 class="fs-2 m-0 text-dark fw-bold">Centro de Reportes</h2>
+                    <h2 class="fs-2 m-0 text-dark fw-bold">Centro de Reportes: Banco de alimentos </h2>
                 </div>
                 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -65,9 +65,9 @@
             <div class="container-fluid px-4">
                 
                 <div class="d-flex gap-2 mb-3">
-                    <button class="btn btn-outline-dark active btn-sm rounded-pill px-3">Todos</button>
-                    <button class="btn btn-outline-danger btn-sm rounded-pill px-3">Urgentes</button>
-                    <button class="btn btn-outline-success btn-sm rounded-pill px-3">Resueltos</button>
+                    <button id="btnFiltroTodos" class="btn btn-outline-dark active btn-sm rounded-pill px-3">Todos</button>
+                    <!-- <button id="btnFiltroUrgentes" class="btn btn-outline-danger btn-sm rounded-pill px-3">Urgentes</button>
+                    <button id="btnFiltroResueltos" class="btn btn-outline-success btn-sm rounded-pill px-3">Resueltos</button> -->
                 </div>
 
                 <div class="card shadow-sm border-0 rounded-3">
@@ -97,6 +97,130 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalle de Reporte -->
+    <div class="modal fade" id="reporteDetalleModal" tabindex="-1" aria-labelledby="reporteDetalleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="reporteDetalleModalLabel">
+                        <i class="fas fa-ticket-alt me-2"></i>Detalle del Reporte <span id="modalReporteTicketId"></span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Información del usuario -->
+                    <div class="bg-light p-3 rounded mb-3">
+                        <h6 class="fw-bold mb-2"><i class="fas fa-user me-2"></i>Reportado por:</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="text-muted">Usuario:</small>
+                                <p class="mb-1" id="modalReporteUsuario"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted">Email:</small>
+                                <p class="mb-1" id="modalReporteEmail"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información del reporte -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <small class="text-muted">Tipo:</small>
+                            <p class="fw-bold" id="modalReporteTipo"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">Prioridad:</small>
+                            <p class="fw-bold" id="modalReportePrioridad"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">Estado:</small>
+                            <p class="fw-bold" id="modalReporteEstado"></p>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted">Asunto:</small>
+                        <p class="fw-bold" id="modalReporteAsunto"></p>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted">Descripción:</small>
+                        <p id="modalReporteDescripcion" class="border-start border-3 border-primary ps-3"></p>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <small class="text-muted">Fecha de creación:</small>
+                            <p id="modalReporteFecha"></p>
+                        </div>
+                        <div class="col-md-6" id="modalReporteLote" style="display: none;">
+                            <small class="text-muted">Lote/Comercio ID:</small>
+                            <p id="modalReporteLoteId"></p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Respuestas del admin -->
+                    <h6 class="fw-bold mb-3"><i class="fas fa-comments me-2"></i>Historial de Respuestas</h6>
+                    <div id="modalReporteRespuestas" class="mb-4">
+                        <p class="text-muted">Sin respuestas aún</p>
+                    </div>
+
+                    <!-- Formulario para responder -->
+                    <div class="bg-light p-3 rounded">
+                        <label class="form-label fw-bold">Agregar Respuesta:</label>
+                        <textarea class="form-control mb-2" id="respuestaReporte" rows="3" placeholder="Escribe tu respuesta..."></textarea>
+                        <button class="btn btn-primary btn-sm" onclick="responderReporte()">
+                            <i class="fas fa-paper-plane me-1"></i>Enviar Respuesta
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-edit me-1"></i>Cambiar Estado
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="cambiarEstadoReporte('pendiente')">Pendiente</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="cambiarEstadoReporte('en_proceso')">En Proceso</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="cambiarEstadoReporte('resuelto')">Resuelto</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="cambiarEstadoReporte('cerrado')">Cerrado</a></li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Logout -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="logoutModalLabel">
+                        <i class="fas fa-sign-out-alt me-2 text-warning"></i>Cerrar Sesión
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-exclamation-circle fa-3x text-warning mb-3"></i>
+                    <p class="fs-5 mb-0">¿Estás seguro de que quieres cerrar sesión?</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="confirmLogout">
+                        <i class="fas fa-sign-out-alt me-1"></i>Sí, cerrar sesión
+                    </button>
+                </div>
             </div>
         </div>
     </div>
