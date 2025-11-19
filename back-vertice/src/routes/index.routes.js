@@ -9,6 +9,7 @@ import pickUpPointRoutes from './pickUpPointRoutes.js';
 import pedidoRoutes from './pedidoRoutes.js';
 import estadisticasRoutes from './estadisticasRoutes.js';
 import publicRoutes from './publicRoutes.js';
+import reporteRoutes from './reporte.routes.js';
 
 
 
@@ -32,5 +33,7 @@ routes.use('/pedidos', pedidoRoutes);
 routes.use('/comercio', estadisticasRoutes);
 //rutas publicas
 routes.use('/api', publicRoutes);
+// rutas de reportes/soporte
+routes.use('/reportes', reporteRoutes); // ahora /api/reportes
 
 export default routes;
