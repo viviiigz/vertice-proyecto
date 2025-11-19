@@ -56,6 +56,10 @@ const userSchema = new mongoose.Schema({
   fotoPerfil: {
     type: String,
     default: null // Puede ser una URL o el nombre del archivo guardado
+  },
+  donacionesTotales: {
+    type: Number,
+    default: 0 // Contador de productos para-donar ya entregados
   }
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
