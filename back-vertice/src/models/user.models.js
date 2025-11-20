@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema({
     default: '',
     maxlength: 200
   },
+  capacidad: {
+    type: Number,
+    default: null // Capacidad de almacenamiento en kg (solo para bancos)
+  },
   fotoPerfil: {
     type: String,
     default: null // Puede ser una URL o el nombre del archivo guardado

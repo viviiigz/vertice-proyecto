@@ -10,34 +10,62 @@ import UserModel from '../models/user.models.js';
 export const crearPedido = async (req, res) => {
     try {
         const consumidorId = req.user.id;
-        const { comercianteId, puntoRetiro, horarioRetiro, totalVenta, productos } = req.body;
+        const userRole = req.user.role;
+        const { comercianteId, puntoRetiro, horarioRetiro, totalVenta, productos, punto_pickup_id, horario_retiro, notas } = req.body;
 
-        // Validación de datos de entrada
-        if (!comercianteId || !puntoRetiro || !horarioRetiro || !totalVenta || !productos || productos.length === 0) {
+        console.log('📥 crearPedido - Usuario:', req.user.email, 'Role:', userRole);
+        console.log('📦 Datos recibidos:', { comercianteId, puntoRetiro, horarioRetiro, punto_pickup_id, horario_retiro, productosCount: productos?.length });
+        console.log('📦 Productos recibidos:', JSON.stringify(productos, null, 2));
+
+        // Validación adaptada para banco de alimentos
+        const pickupPoint = punto_pickup_id || puntoRetiro;
+        const scheduleTime = horario_retiro || horarioRetiro;
+        
+        // Para banco de alimentos, no se requiere comercianteId ni totalVenta
+        if (!pickupPoint || !scheduleTime || !productos || productos.length === 0) {
+            console.error('❌ Validación fallida:', { pickupPoint, scheduleTime, productosLength: productos?.length });
             return res.status(400).json({ success: false, message: 'Faltan datos para crear el pedido.' });
         }
 
-        // Verificar que el comerciante existe
-        const comerciante = await UserModel.findById(comercianteId);
-        if (!comerciante || comerciante.role !== 'comercio') {
-            return res.status(404).json({ success: false, message: 'Comerciante no encontrado.' });
+        let comerciante = null;
+        
+        // Solo verificar comerciante si es un pedido de consumidor regular
+        if (userRole === 'consumidor' && comercianteId) {
+            comerciante = await UserModel.findById(comercianteId);
+            if (!comerciante || comerciante.role !== 'comercio') {
+                return res.status(404).json({ success: false, message: 'Comerciante no encontrado.' });
+            }
         }
 
-        // Validar que todos los productos existan y pertenezcan al comerciante
+        // Validar productos
+        const productosValidados = [];
         for (const item of productos) {
-            const producto = await Product.findById(item.productoId);
+            const productoId = item.producto_id || item.productoId;
+            const producto = await Product.findById(productoId).populate('user_id', 'username email');
+            
             if (!producto) {
+                console.error(`❌ Producto no encontrado: ${productoId}`);
                 return res.status(404).json({ 
                     success: false, 
-                    message: `Producto con ID ${item.productoId} no encontrado.` 
+                    message: `Producto con ID ${productoId} no encontrado.` 
                 });
             }
-            if (producto.user_id.toString() !== comercianteId) {
+            
+            console.log('📦 Producto encontrado:', {
+                id: producto._id,
+                nombre: producto.nombre_producto,
+                user_id: producto.user_id ? producto.user_id._id : null,
+                cantidad_disponible: producto.cantidad_disponible
+            });
+            
+            // Para consumidores, verificar que pertenece al comerciante
+            if (userRole === 'consumidor' && comercianteId && producto.user_id && producto.user_id._id.toString() !== comercianteId) {
                 return res.status(400).json({ 
                     success: false, 
                     message: `El producto ${producto.nombre_producto} no pertenece a este comerciante.` 
                 });
             }
+            
             // Verificar stock disponible
             if (producto.cantidad_disponible < item.cantidad) {
                 return res.status(400).json({ 
@@ -45,28 +73,52 @@ export const crearPedido = async (req, res) => {
                     message: `Stock insuficiente para ${producto.nombre_producto}. Disponible: ${producto.cantidad_disponible}` 
                 });
             }
+            
+            // Para banco, guardar el comercio_id del producto
+            const comercioId = producto.user_id ? producto.user_id._id : null;
+            
+            productosValidados.push({
+                productoId: productoId,
+                producto_id: productoId,
+                cantidad: item.cantidad,
+                comercio_id: comercioId,
+                precioEnElMomento: userRole === 'banco' ? 0 : (producto.precio || 0) // 0 para donaciones
+            });
         }
+        
+        // Determinar el comercianteId (puede venir del producto para banco)
+        const finalComercianteId = comercianteId || (productosValidados.length > 0 ? productosValidados[0].comercio_id : null);
 
         const nuevoPedido = new Pedido({
             consumidorId,
-            comercianteId,
-            productos,
-            totalVenta,
-            horarioRetiro,
-            puntoDeRetiro: puntoRetiro,
-            estado: 'pendiente'
+            comercianteId: finalComercianteId,
+            productos: productosValidados,
+            totalVenta: totalVenta || 0, // Para banco es 0 (donación)
+            horarioRetiro: scheduleTime,
+            puntoDeRetiro: pickupPoint,
+            estado: 'pendiente',
+            notas: notas || (userRole === 'banco' ? 'Solicitud de donación' : '')
         });
 
         await nuevoPedido.save();
 
+        console.log('✅ Pedido creado:', nuevoPedido._id);
+
         res.status(201).json({
             success: true,
-            message: 'Pedido creado exitosamente. El comerciante debe confirmar tu pedido.',
+            message: userRole === 'banco' 
+                ? 'Solicitud de donación creada exitosamente.' 
+                : 'Pedido creado exitosamente. El comerciante debe confirmar tu pedido.',
             data: nuevoPedido
         });
     } catch (error) {
-        console.error('Error al crear el pedido:', error);
-        res.status(500).json({ success: false, message: 'Error del servidor.' });
+        console.error('❌ Error al crear el pedido:', error);
+        console.error('❌ Stack:', error.stack);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error del servidor al crear el pedido.',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 };
 

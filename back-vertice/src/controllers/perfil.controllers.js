@@ -21,6 +21,7 @@ export const getPerfil = async (req, res) => {
         telefono: user.telefono || '',
         direccion: user.direccion || '',
         horarios: user.horarios || '',
+        capacidad: user.capacidad || null,
         fotoPerfil: user.fotoPerfil || '',
         documentoVerificacion: user.documentoVerificacion || '',
         estadoVerificacion: user.estadoVerificacion
@@ -36,7 +37,7 @@ export const getPerfil = async (req, res) => {
 export const updatePerfil = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { descripcion, telefono, direccion, horarios, fotoPerfil } = req.body;
+    const { descripcion, telefono, direccion, horarios, capacidad, fotoPerfil } = req.body;
 
     // Validar que solo se actualicen campos permitidos
     const updateData = {};
@@ -44,15 +45,21 @@ export const updatePerfil = async (req, res) => {
     if (telefono !== undefined) updateData.telefono = telefono;
     if (fotoPerfil !== undefined) updateData.fotoPerfil = fotoPerfil; // Data URL en base64
     
-    // direccion y horarios solo para comercios
+    // Obtener usuario para verificar rol
     const user = await UserModel.findById(userId);
     if (!user) {
       return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
     }
 
-    if (user.role === 'comercio') {
+    // direccion y horarios para comercios y bancos
+    if (user.role === 'comercio' || user.role === 'banco') {
       if (direccion !== undefined) updateData.direccion = direccion;
       if (horarios !== undefined) updateData.horarios = horarios;
+    }
+
+    // capacidad solo para bancos
+    if (user.role === 'banco') {
+      if (capacidad !== undefined) updateData.capacidad = capacidad;
     }
 
     // Actualizar usuario
@@ -74,6 +81,7 @@ export const updatePerfil = async (req, res) => {
         telefono: updatedUser.telefono || '',
         direccion: updatedUser.direccion || '',
         horarios: updatedUser.horarios || '',
+        capacidad: updatedUser.capacidad || null,
         fotoPerfil: updatedUser.fotoPerfil || '',
         documentoVerificacion: updatedUser.documentoVerificacion || '',
         estadoVerificacion: updatedUser.estadoVerificacion

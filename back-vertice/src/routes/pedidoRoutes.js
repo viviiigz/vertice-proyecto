@@ -18,9 +18,9 @@ const router = express.Router();
 // Ruta pública para obtener puntos de retiro
 router.get('/puntos-retiro', getPuntosRetiroPublicos);
 
-// Rutas para consumidores
-router.post('/crear', authMiddleware, authRole(['consumidor']), crearPedido);
-router.get('/consumidor', authMiddleware, authRole(['consumidor']), getPedidosByConsumidor);
+// Rutas para consumidores y bancos
+router.post('/crear', authMiddleware, authRole(['consumidor', 'banco']), crearPedido);
+router.get('/consumidor', authMiddleware, authRole(['consumidor', 'banco']), getPedidosByConsumidor);
 
 // Rutas para comerciantes
 router.get('/comerciante', authMiddleware, authRole(['comercio']), getPedidosByComerciante);
