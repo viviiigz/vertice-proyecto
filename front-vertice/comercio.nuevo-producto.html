@@ -199,29 +199,48 @@
     </main>
     </div>
     
-    <!-- Script de debugging temporal -->
-    <script>
-        console.log('🎬 === PÁGINA COMERCIO.NUEVO-PRODUCTO CARGADA ===');
-        console.log('📍 URL actual:', window.location.href);
-        console.log('🔐 Token en localStorage:', localStorage.getItem('token') ? 'SÍ EXISTE' : 'NO EXISTE');
-        
-        // Detectar cualquier recarga automática
-        window.addEventListener('beforeunload', function(e) {
-            console.log('⚠️ === LA PÁGINA SE VA A RECARGAR ===');
-            console.trace('Stack trace de la recarga:');
-        });
-        
-        // Detectar navegación
-        window.addEventListener('unload', function(e) {
-            console.log('🚪 === SALIENDO DE LA PÁGINA ===');
-        });
-    </script>
-    
     <!-- Script centralizado para toda la lógica de productos -->
     <script src="./js-vivi/logica-tienda.js"></script>
     
     <script>
-        console.log('✅ Script logica-tienda.js cargado');
+        // Ocultar/mostrar campos de precio según categoría
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎬 Script inline de categoría ejecutándose...');
+            
+            const categoriaSelect = document.getElementById('categoria-input');
+            const precioOriginalGroup = document.querySelector('input[name="precio-original"]').closest('.form-group');
+            const precioOfertaGroup = document.querySelector('input[name="precio_descuento"]').closest('.form-group');
+            const precioOriginalInput = document.getElementById('precio-original');
+            
+            if (!categoriaSelect || !precioOriginalGroup || !precioOfertaGroup) {
+                console.error('❌ No se encontraron los elementos necesarios para toggle de precios');
+                return;
+            }
+            
+            function togglePrecioFields() {
+                const categoria = categoriaSelect.value;
+                
+                if (categoria === 'para-donar') {
+                    precioOriginalGroup.style.display = 'none';
+                    precioOfertaGroup.style.display = 'none';
+                    precioOriginalInput.removeAttribute('required');
+                    precioOriginalInput.value = '0';
+                    document.getElementById('precio_descuento').value = '0';
+                    console.log('💚 Categoría para-donar: Campos ocultos, precios en 0');
+                } else {
+                    precioOriginalGroup.style.display = 'block';
+                    precioOfertaGroup.style.display = 'block';
+                    precioOriginalInput.setAttribute('required', 'required');
+                    if (precioOriginalInput.value === '0') {
+                        precioOriginalInput.value = '';
+                    }
+                    console.log('💰 Categoría normal: Campos visibles');
+                }
+            }
+            
+            categoriaSelect.addEventListener('change', togglePrecioFields);
+            togglePrecioFields();
+        });
     </script>
 </body>
 

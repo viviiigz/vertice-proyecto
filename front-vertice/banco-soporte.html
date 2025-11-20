@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
-    
+
     <link rel="stylesheet" href="./assets/css/estilos-tienda.css" />
     <link rel="stylesheet" href="./assets/css/estilos-productos.css">
     <link rel="stylesheet" href="./assets/css/banco-dashboard.css" />
@@ -25,15 +26,17 @@
                 <button id="search-btn"><i class="fas fa-search"></i></button>
             </div>
             <div class="header-actions">
-                <a href="#" class="profile-btn"><i class="fas fa-user"></i> Mi Organización</a>
+                <a href="./profile.banco.html" class="profile-btn"><i class="fas fa-user"></i> Mi Perfil (ONG)</a>
                 <button class="cart-btn"><i class="fas fa-box-open"></i> <span class="cart-count">0</span></button>
             </div>
         </div>
         <nav class="main-nav">
             <a href="./banco.alimentos.html">Inicio</a>
             <a href="./banco-donaciones.html">Donaciones</a>
+            <a href="./banco.mis-pedidos.html" class="nav-link">Mis Solicitudes</a>
             <a href="./banco-soporte.html" class="active">Soporte</a>
             <a href="./banco-pickup.html">Mapa Recolección</a>
+
         </nav>
     </header>
 
@@ -45,7 +48,7 @@
                         <h3 class="mb-0"><i class="fas fa-headset me-2"></i>Mesa de Ayuda Logística</h3>
                         <p class="text-white-50 mb-0">Canal prioritario para Bancos de Alimentos y ONGs.</p>
                     </div>
-                    
+
                     <div class="p-5">
                         <form id="reporteForm">
                             <div id="alertContainer"></div>
@@ -73,7 +76,8 @@
 
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Asunto</label>
-                                <input type="text" class="form-control" id="asunto" placeholder="Resumen breve del problema" required maxlength="200">
+                                <input type="text" class="form-control" id="asunto"
+                                    placeholder="Resumen breve del problema" required maxlength="200">
                             </div>
 
                             <div class="mb-3">
@@ -83,7 +87,9 @@
 
                             <div class="mb-4">
                                 <label class="form-label fw-bold">Descripción del Problema</label>
-                                <textarea class="form-control" id="descripcion" rows="5" placeholder="Describe la situación detalladamente..." required maxlength="2000"></textarea>
+                                <textarea class="form-control" id="descripcion" rows="5"
+                                    placeholder="Describe la situación detalladamente..." required
+                                    maxlength="2000"></textarea>
                             </div>
 
                             <button type="submit" class="btn btn-success w-100 py-2 fw-bold" id="btnEnviarReporte">
@@ -114,7 +120,7 @@
 
 
     </main>
-                <!-- --- Footer ---- -->
+    <!-- --- Footer ---- -->
     <footer class="main-footer">
         <div class="container">
             <div class="footer-content">
@@ -123,7 +129,7 @@
                     <p>IPF &copy;2025 Vértice.</p>
                 </div>
                 <div class="footer-links-section">
-                    <ul> 
+                    <ul>
                         <li><a href="usuario.tienda.html">| Inicio</a></li>
                         <li><a href="vista-producto-user.html">| Productos</a></li>
                         <li><a href="consumidor-contactanos.html">| Contáctanos</a></li>
@@ -167,7 +173,7 @@
             }, 5000);
         }
 
-        document.getElementById('reporteForm').addEventListener('submit', async function(e) {
+        document.getElementById('reporteForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const btnEnviar = document.getElementById('btnEnviarReporte');
@@ -192,14 +198,14 @@
                 const result = await res.json();
 
                 if (res.ok && result.success) {
-                    showAlert(`✅ ${result.mensaje || 'Ticket creado exitosamente'}. Te contactaremos en breve.`, 'success');
+                    showAlert(` ${result.mensaje || 'Ticket creado exitosamente'}. Te contactaremos en breve.`, 'success');
                     document.getElementById('reporteForm').reset();
                 } else {
-                    showAlert(`❌ ${result.error || 'Error al crear el reporte'}`, 'danger');
+                    showAlert(` ${result.error || 'Error al crear el reporte'}`, 'danger');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('❌ Error al conectar con el servidor', 'danger');
+                showAlert(' Error al conectar con el servidor', 'danger');
             } finally {
                 btnEnviar.disabled = false;
                 btnEnviar.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Enviar Reporte';
@@ -207,4 +213,5 @@
         });
     </script>
 </body>
+
 </html>

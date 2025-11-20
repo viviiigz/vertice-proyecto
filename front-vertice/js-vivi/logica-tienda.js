@@ -428,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // IMPORTANTE: Prevenir submit del formulario
+        // IMPORTANTE: Prevenir submit del formulario (MÚLTIPLES CAPAS)
         formNuevoProducto.addEventListener('submit', (e) => {
             console.log('🛑 Submit del formulario interceptado');
             e.preventDefault();
@@ -436,230 +436,115 @@ document.addEventListener('DOMContentLoaded', () => {
             e.stopImmediatePropagation();
             console.log('✅ Submit del formulario bloqueado correctamente');
             return false;
-        });
+        }, true); // Capturar en fase de captura
+        
+        // Segunda capa de prevención
+        formNuevoProducto.onsubmit = (e) => {
+            console.log('🛑 onsubmit interceptado');
+            e.preventDefault();
+            return false;
+        };
 
         // Manejar el click del botón directamente
         const submitBtn = document.getElementById('guardar-producto-btn');
         if (submitBtn) {
-            console.log('✅ Listener agregado al botón de guardar producto');
+            console.log('✅ Botón encontrado');
+            
             submitBtn.addEventListener('click', async (e) => {
-                console.log('🖱️ === CLICK EN BOTÓN GUARDAR PRODUCTO ===');
+                console.log('🖱️ CLICK EN GUARDAR');
                 e.preventDefault();
                 e.stopPropagation();
-                
-                console.log('⏸️ Evento de click detenido');
-                console.log('🚀 Iniciando proceso de guardado...');
 
-                // Deshabilitar el botón para evitar doble submit
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Guardando...';
-                console.log('🔒 Botón deshabilitado temporalmente');
 
                 try {
                     await guardarProducto(submitBtn);
                 } catch (error) {
-                    console.error('💥 Error inesperado en el listener del botón:', error);
+                    console.error('💥 ERROR:', error);
+                    alert('ERROR: ' + error.message);
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Guardar Producto';
                 }
             });
         } else {
-            console.error('❌ NO SE ENCONTRÓ el botón guardar-producto-btn');
+            console.error('❌ Botón no encontrado');
         }
     }
 
     // Función separada para guardar el producto
     async function guardarProducto(submitBtn) {
-    console.log('🚀 === INICIO DE guardarProducto() ===');
-    
-    const nombre = document.getElementById('nombre')?.value?.trim();
-    const descripcion = document.getElementById('descripcion')?.value?.trim();
-    const stock = document.getElementById('stock')?.value;
-    const precioOriginal = document.getElementById('precio-original')?.value;
-    // Campo de oferta es OPCIONAL: si está vacío no debe bloquear el guardado
-    const precioOfertaRaw = document.getElementById('precio_descuento')?.value;
-    const precioOferta = (precioOfertaRaw === '' || precioOfertaRaw == null) ? null : precioOfertaRaw;
+        console.log('🚀 Iniciando guardado...');
+        
+        const nombre = document.getElementById('nombre')?.value?.trim();
+        const descripcion = document.getElementById('descripcion')?.value?.trim();
+        const stock = document.getElementById('stock')?.value;
+        const precioOriginal = document.getElementById('precio-original')?.value;
+        const precioOferta = document.getElementById('precio_descuento')?.value || '0';
         const categoria = document.getElementById('categoria-input')?.value;
         const tipoProducto = document.getElementById('tipo-producto')?.value;
         const imagenFile = fileInput?.files[0];
 
-        console.log('📝 Datos del formulario (previa validación):', {
-            nombre, descripcion, stock, precioOriginal, precioOferta, categoria, tipoProducto,
-            imagen: imagenFile ? imagenFile.name : 'Sin imagen'
-        });
+        console.log('📝 Datos:', { nombre, stock, precioOriginal, categoria });
 
-        // Validar campos obligatorios (precioOferta ya NO es obligatorio)
-        if (!nombre || !stock || !precioOriginal) {
-            console.error('❌ Validación fallida - Campos obligatorios incompletos', { nombre, stock, precioOriginal });
-            mostrarMensajeAdvertencia('Por favor completa los campos obligatorios: Nombre, Stock y Precio Original.');
-            
-            // Re-habilitar el botón
+        // Validación simple
+        if (!nombre || !stock) {
+            alert('Por favor completa Nombre y Stock');
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Guardar Producto';
             }
-            console.log('🛑 === FIN DE guardarProducto() - VALIDACIÓN FALLIDA ===');
             return;
         }
-
-        console.log('✅ Validación exitosa');
+        
+        // Si NO es para-donar, validar precio
+        if (categoria !== 'para-donar' && !precioOriginal) {
+            alert('El precio es obligatorio para productos que no son donaciones');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Guardar Producto';
+            }
+            return;
+        }
 
         // Crear FormData
         const formData = new FormData();
         formData.append('nombre_producto', nombre);
         formData.append('descripcion', descripcion || '');
         formData.append('cantidad_disponible', stock);
-        formData.append('precio_original', precioOriginal);
-    // Solo adjuntar precio_descuento si se ingresó; si no, enviar 0 (o puedes omitirlo según backend)
-    formData.append('precio_descuento', precioOferta != null && precioOferta !== '' ? precioOferta : 0);
+        formData.append('precio_original', categoria === 'para-donar' ? '0' : precioOriginal);
+        formData.append('precio_descuento', categoria === 'para-donar' ? '0' : precioOferta);
         formData.append('categoria', categoria || '');
         formData.append('tipo_producto', tipoProducto || '');
         if (imagenFile) formData.append('foto_url', imagenFile);
 
-        console.log('📦 FormData creado');
+        console.log('📦 FormData listo');
 
         try {
-            console.log('📤 Enviando producto al backend...');
+            console.log('📤 Enviando...');
             const resultado = await crearProducto(formData);
-            console.log('✅ Producto creado exitosamente:', resultado);
+            console.log('✅ Producto creado:', resultado);
             
-            // Guardar flag en sessionStorage para mostrar mensaje en la otra página
-            const payloadMensaje = {
+            // Guardar en sessionStorage
+            sessionStorage.setItem('productoCreado', JSON.stringify({
                 ok: true,
-                tipo: 'exito',
-                texto: '¡Producto guardado correctamente!',
-                nombre: nombre,
-                timestamp: Date.now()
-            };
-            try {
-                sessionStorage.setItem('productoCreado', JSON.stringify(payloadMensaje));
-                console.log('💾 Flag guardado en sessionStorage');
-            } catch (eStore) {
-                console.warn('⚠️ No se pudo guardar productoCreado en sessionStorage:', eStore);
-            }
+                nombre: nombre
+            }));
             
-            // Mostrar mensaje de éxito GRANDE y VISIBLE
-            const mensajeExito = document.createElement('div');
-            mensajeExito.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: #28a745;
-                color: white;
-                padding: 30px 50px;
-                border-radius: 15px;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-                z-index: 999999;
-                font-size: 24px;
-                font-weight: bold;
-                text-align: center;
-            `;
-            mensajeExito.innerHTML = `
-                <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
-                <div>¡Producto "${nombre}" guardado correctamente!</div>
-                <div style="font-size: 16px; margin-top: 10px; opacity: 0.9;">Redirigiendo en 3 segundos...</div>
-                <button style="
-                    margin-top: 20px;
-                    padding: 10px 20px;
-                    background: white;
-                    color: #28a745;
-                    border: 2px solid white;
-                    border-radius: 5px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    font-size: 14px;
-                " onclick="window.location.href='./comercio.producto.html'">
-                    Ir ahora →
-                </button>
-            `;
-            document.body.appendChild(mensajeExito);
-            
-            console.log('🎉 Mensaje de éxito mostrado');
-            console.log('⏰ Esperando 3 segundos antes de redirigir...');
-            
-            // Agregar contador visual
-            let countdown = 3;
-            const countdownInterval = setInterval(() => {
-                countdown--;
-                const countdownDiv = mensajeExito.querySelector('div:last-child');
-                if (countdownDiv) {
-                    countdownDiv.textContent = `Redirigiendo en ${countdown} segundo${countdown !== 1 ? 's' : ''}...`;
-                }
-                console.log(`⏱️ Redirigiendo en ${countdown} segundos...`);
-            }, 1000);
-            
-            // Redirigir después de 3 segundos
-            const redirectTimeout = setTimeout(() => {
-                clearInterval(countdownInterval);
-                console.log('➡️ EJECUTANDO REDIRECCIÓN...');
-                const destino = './comercio.producto.html';
-                console.log('📍 Destino:', destino);
-                console.log('🏁 === FIN DE guardarProducto() - ÉXITO ===');
-                
-                try {
-                    window.location.href = destino;
-                    console.log('✅ window.location.href ejecutado');
-                } catch (e) {
-                    console.error('❌ Error al redirigir:', e);
-                    // Intento alternativo
-                    window.location.replace(destino);
-                }
-            }, 3000);
-            
-            console.log('⏰ Timeout de redirección configurado (ID:', redirectTimeout, ')');
+            // Redirigir INMEDIATAMENTE
+            console.log('➡️ Redirigiendo...');
+            window.location.href = './comercio.producto.html';
+            return;
             
         } catch (error) {
-            console.error('💥 === ERROR EN guardarProducto() ===');
-            console.error('❌ Error completo:', error);
-            console.error('📋 Error message:', error.message);
-            console.error('🔍 Stack trace:', error.stack);
+            console.error('💥 ERROR:', error);
             
-            // Re-habilitar el botón SIEMPRE
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Guardar Producto';
             }
             
-            // Mostrar error GRANDE y VISIBLE
-            const mensajeError = document.createElement('div');
-            mensajeError.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: #dc3545;
-                color: white;
-                padding: 30px 50px;
-                border-radius: 15px;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-                z-index: 999999;
-                font-size: 20px;
-                font-weight: bold;
-                text-align: center;
-                max-width: 600px;
-            `;
-            
-            let mensajeTexto = error.message || 'Error desconocido';
-            
-            mensajeError.innerHTML = `
-                <div style="font-size: 48px; margin-bottom: 10px;">❌</div>
-                <div style="margin-bottom: 10px;">Error al guardar el producto</div>
-                <div style="font-size: 16px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-top: 15px;">
-                    ${mensajeTexto}
-                </div>
-                <div style="font-size: 14px; margin-top: 15px; opacity: 0.9;">
-                    Revisa la consola (F12) para más detalles
-                </div>
-            `;
-            document.body.appendChild(mensajeError);
-            
-            // Auto-cerrar después de 8 segundos
-            setTimeout(() => {
-                mensajeError.remove();
-            }, 8000);
-            
-            console.log('🛑 === FIN DE guardarProducto() - ERROR ===');
+            alert('❌ Error al guardar: ' + (error.message || 'Error desconocido'));
             
             // Si es error de autenticación, redirigir al login después de mostrar el mensaje
             if (error.message && error.message.includes('autenticado')) {

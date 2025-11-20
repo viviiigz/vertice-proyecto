@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil de Banco de Alimentos - Vértice</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sulphur+Point:wght@300;400;700&display=swap" />
+    <link rel="stylesheet" href="./assets/css/comercio.productos.css" />
+    <link rel="icon" type="image/x-icon" href="../front-vertice/assets/imgs/v-vertice.png" />
+    <style>
+        /* Contenedor principal del perfil para centrarlo y darle sombra */
+        .profile-btn,
+        .cart-btn {
+            background-color: var(--bg-medium);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: var(--secondary-color);
+        }
+
+        .profile-btn:hover,
+        .cart-btn:hover {
+            background-color: var(--border-color);
+        }
+
+        .card-perfil-edit {
+            background-color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            margin: 2rem auto;
+            position: relative; /* Para posicionar acciones absolutas dentro de la tarjeta */
+        }
+
+        /* Contenedor del encabezado del perfil para la disposición flexible */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 1px;
+            margin-bottom: 1px;
+            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+            justify-content: center;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .profile-header {
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                text-align: left;
+            }
+        }
+
+        /* Estilos para la imagen de perfil y el botón de carga */
+        .profile-img-container {
+            flex-shrink: 0;
+            margin-right: 20px;
+            position: relative;
+            text-align: center;
+        }
+
+        @media (max-width: 767px) {
+            .profile-img-container {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .profile-img-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #4cd309;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        /* Efecto hover para la imagen de perfil */
+        .profile-img-preview:hover {
+            transform: scale(1.05);
+        }
+
+        .file-upload-box-perfil {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+            cursor: pointer;
+            color: #4cd309;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        /* Efecto hover para el texto de cambiar foto */
+        .file-upload-box-perfil:hover {
+            color: #38a80a;
+        }
+
+        .file-upload-box-perfil .fas {
+            font-size: 1.2rem;
+        }
+
+        /* Contenedor para el nombre y el slogan */
+        .profile-info {
+            flex-grow: 1;
+        }
+
+        /* Estilo para el texto de visualización */
+        .profile-name-display {
+            font-family: "Sulphur Point", sans-serif;
+            font-weight: 700;
+            font-size: 2rem;
+            color: #333;
+            margin: 0;
+        }
+
+        .profile-slogan-display {
+            color: #888;
+            font-style: italic;
+            font-size: 1em;
+            margin: 0;
+        }
+
+        /* Estilo para el input de edición */
+        .editable-input {
+            width: auto;
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 1.5rem;
+            font-family: "Sulphur Point", sans-serif;
+            font-weight: 700;
+            color: #333;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        #input-slogan.editable-input {
+            font-size: 1em;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            font-style: italic;
+            color: #888;
+        }
+
+        .editable-input:focus {
+            outline: none;
+            border-color: #4cd309;
+            box-shadow: 0 0 5px rgba(76, 211, 9, 0.4);
+        }
+
+        /* Clases de utilidad para ocultar/mostrar elementos */
+        .input-hidden {
+            display: none;
+        }
+
+        .form-actions-hidden {
+            display: none !important;
+        }
+
+        /* util para ocultar elementos en modo visualización/edición */
+        .hidden { display: none !important; }
+
+        /* Estilos para el resto del formulario */
+        .profile-form-body {
+            text-align: left;
+            padding-bottom: 90px; /* espacio para que los botones inferiores no tapen contenido */
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .form-control {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            border-color: #4cd309;
+            box-shadow: 0 0 8px rgba(76, 211, 9, 0.3);
+        }
+
+        .form-actions {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .bottom-left-actions {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 2;
+        }
+
+        .bottom-right-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #4cd309;
+            color: #ffffff;
+            border: 1px solid #4cd309;
+        }
+
+        .btn-primary:hover {
+            background-color: #38a80a;
+            border-color: #38a80a;
+        }
+
+        .btn-secondary {
+            background-color: #ffffff;
+            color: #6c757d;
+            border: 1px solid #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e6ea;
+            color: #545b62;
+            border-color: #545b62;
+        }
+
+        /* Estilos para el botón de Cerrar sesión */
+        .btn-logout {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            margin-left: 10px;
+        }
+
+        .btn-logout:hover {
+            background-color: #c82333;
+        }
+
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="./assets/imgs/vertice-logo-largo (1).png" alt="Logo de Vértice" class="brand-logo" />
+            </div>
+            <nav class="sidebar-nav">
+                <a href="./banco.alimentos.html"><i class="fas fa-home"></i> Inicio</a>
+                <h3>Gestión</h3>
+                <a href="./banco-donaciones.html"><i class="fas fa-hand-holding-heart"></i> Donaciones</a>
+                <a href="./banco-soporte.html"><i class="fas fa-headset"></i> Soporte</a>
+                <a href="./banco-pickup.html"><i class="fas fa-map-marked-alt"></i> Mapa Recolección</a>
+                <a href="./profile.banco.html" class="active"><i class="fas fa-user"></i> Mi Perfil</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+    <!--      <header class="header">
+                <div class="header-buttons">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-eye"></i> Visitar mi tienda
+                    </button>
+                    <a href="/front-vertice/profile.comercio.html" class="profile-btn"><i class="fas fa-user"></i> Mi
+                        Perfil</a>
+                </div>
+            </header>-->  
+
+            <div class="content-area">
+                <div class="card-perfil-edit">
+                    <div class="profile-header">
+                        <div class="profile-img-container">
+                            <img src="./assets/imgs/v-vertice.png" alt="Foto de perfil del banco"
+                                class="profile-img-preview" id="profile-img-preview"
+                                onerror="this.onerror=null; this.src='./assets/imgs/v-vertice.png';" />
+                            <div class="file-upload-box-perfil">
+                                <i class="fas fa-camera"></i>
+                                <label for="profile-img-input" class="label-img">Cambiar foto de perfil</label>
+                                <input type="file" id="profile-img-input" name="foto_perfil" accept="image/*"
+                                    class="d-none" />
+                            </div>
+                        </div>
+
+                        <div class="profile-info">
+                            <!-- Nombre de usuario (solo lectura) -->
+                            <div id="nombre-field">
+                                <h1 class="profile-name-display" id="display-nombre">Nombre de Usuario</h1>
+                            </div>
+
+                            <!-- Email (solo lectura - se muestra en el formulario más abajo) -->
+                        </div>
+                    </div>
+
+                    <div class="profile-form-body">
+                        <!-- Acciones inferiores (derecha): Editar o Guardar/Cancelar -->
+                        <div class="bottom-right-actions">
+                            <button type="button" class="btn btn-secondary" id="editar-perfil-btn">Editar Perfil</button>
+                            <div class="form-actions form-actions-hidden" id="form-actions-edit">
+                                <button type="button" class="btn btn-secondary" id="cancelar-edicion">Cancelar</button>
+                                <button type="button" class="btn btn-primary" id="guardar-cambios-btn">Guardar Cambios</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono-comercio">Teléfono de Contacto</label>
+                            <!-- Texto de visualización -->
+                            <div id="display-telefono" class="display-field">—</div>
+                            <!-- Input para modo edición -->
+                            <input type="tel" id="telefono-comercio" name="telefono" class="form-control hidden"
+                                placeholder="Ej. +54 9 11 1234-5678" />
+                        </div>
+                        <div class="form-group">
+                            <label for="email-comercio">Email de la Organización</label>
+                            <!-- Email siempre texto plano -->
+                            <div id="display-email" class="display-field">—</div>
+                            <!-- Input oculto para uso interno de scripts (no visible) -->
+                            <input type="email" id="email-comercio" name="email" class="form-control hidden"
+                                placeholder="Ej. contacto@banco.org" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label for="direccion-comercio">Dirección del Centro</label>
+                            <div id="display-direccion" class="display-field">—</div>
+                            <input type="text" id="direccion-comercio" name="direccion" class="form-control hidden"
+                                placeholder="Ej. Av. Solidaridad 456, Ciudad" />
+                        </div>
+                        <div class="form-group">
+                            <label for="horario-banco">Horarios de Operación</label>
+                            <div id="display-horario" class="display-field">—</div>
+                            <input type="text" id="horario-banco" name="horario" class="form-control hidden"
+                                placeholder="Ej. Lunes a Viernes 8:00-18:00" />
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="capacidad-banco">Capacidad de Almacenamiento (kg)</label>
+                            <div id="display-capacidad" class="display-field">—</div>
+                            <input type="number" id="capacidad-banco" name="capacidad" class="form-control hidden"
+                                placeholder="Ej. 5000" />
+                        </div> -->
+                        <div class="form-group">
+                            <label for="descripcion-comercio">Descripción de la Organización</label>
+                            <div id="display-descripcion" class="display-field" style="white-space: pre-wrap;">—</div>
+                            <textarea id="descripcion-comercio" name="descripcion" class="form-control hidden" rows="4"
+                                placeholder="Describe la misión y actividades de tu banco de alimentos..."></textarea>
+                        </div>
+                        <!-- Logout siempre visible (inferior izquierda) -->
+                        <div class="bottom-left-actions">
+                            <button id="cerrar-sesion-btn" class="btn btn-logout">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script centralizado de perfil -->
+    <script src="./js-vivi/perfil.js"></script>
+    <script>
+        // Variables para la foto de perfil
+        const inputFoto = document.getElementById('profile-img-input');
+        const previewFoto = document.getElementById('profile-img-preview');
+
+        // Evento para previsualizar la imagen seleccionada (solo preview, se guarda al hacer clic en Guardar Cambios)
+        inputFoto.addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const dataURL = e.target.result;
+                    previewFoto.src = dataURL;
+                    // Ya NO guardamos en localStorage, se guardará en la BD al hacer clic en "Guardar Cambios"
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        // Lógica de edición (toggle visualización/edición)
+        (function(){
+            const editBtn = document.getElementById('editar-perfil-btn');
+            const actions = document.getElementById('form-actions-edit');
+            const cancelarBtn = document.getElementById('cancelar-edicion');
+            const guardarBtn = document.getElementById('guardar-cambios-btn');
+
+            const campos = [
+                { input: document.getElementById('telefono-comercio'), display: document.getElementById('display-telefono') },
+                { input: document.getElementById('direccion-comercio'), display: document.getElementById('display-direccion') },
+                { input: document.getElementById('horario-banco'), display: document.getElementById('display-horario') },
+                { input: document.getElementById('capacidad-banco'), display: document.getElementById('display-capacidad') },
+                { input: document.getElementById('descripcion-comercio'), display: document.getElementById('display-descripcion') },
+            ];
+
+            function showViewMode(){
+                // Mostrar texto, ocultar inputs, ocultar acciones, mostrar Editar
+                campos.forEach(({input, display})=>{
+                    if (input) input.classList.add('hidden');
+                    if (display) display.classList.remove('hidden');
+                });
+                if (actions) actions.classList.add('form-actions-hidden');
+                if (editBtn) editBtn.classList.remove('hidden');
+                window.isEditing = false;
+            }
+
+            function showEditMode(){
+                // Mostrar inputs, ocultar texto, mostrar acciones, ocultar Editar
+                campos.forEach(({input, display})=>{
+                    if (display) display.classList.add('hidden');
+                    if (input) input.classList.remove('hidden');
+                });
+                if (actions) actions.classList.remove('form-actions-hidden');
+                if (editBtn) editBtn.classList.add('hidden');
+                // Guardar snapshot inicial para cancelar
+                window._perfilEditInitial = campos.reduce((acc,{input,display})=>{
+                    acc[input.id] = input.value || '';
+                    return acc;
+                },{});
+                window.isEditing = true;
+            }
+
+            function cancelarCambios(){
+                // Restaurar valores iniciales
+                const init = window._perfilEditInitial || {};
+                campos.forEach(({input, display})=>{
+                    if (input && init.hasOwnProperty(input.id)) {
+                        input.value = init[input.id];
+                    }
+                    if (display) {
+                        display.textContent = (input?.value || '').trim() || '—';
+                    }
+                });
+                showViewMode();
+            }
+
+            // Exponer función global para que perfil.js pueda cerrar modo edición tras guardar
+            window.toggleEditMode = (flag) => {
+                if (flag) showEditMode(); else showViewMode();
+            };
+
+            if (editBtn) editBtn.addEventListener('click', showEditMode);
+            if (cancelarBtn) cancelarBtn.addEventListener('click', cancelarCambios);
+
+            // Iniciar en modo visualización
+            showViewMode();
+        })();
+    </script>
+</body>
+
+</html>

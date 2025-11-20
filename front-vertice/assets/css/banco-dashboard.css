@@ -2,6 +2,13 @@
 body.banco-mode {
     background-color: #f3f6f9; /* Gris muy suave */
     font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+body.banco-mode main {
+    flex: 1;
 }
 
 .main-dashboard-container {
@@ -28,11 +35,27 @@ body.banco-mode {
 .metric-info h3 { font-size: 0.8rem; text-transform: uppercase; margin-bottom: 4px; color: #777; }
 
 /* --- TARJETAS DE DONACIÓN (Catálogo) --- */
-.donation-card {
-    background: #fff; border: 1px solid #eaeaea; border-radius: 10px;
-    overflow: hidden; position: relative; transition: all 0.3s ease;
+#donaciones-grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
 }
-.donation-card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.08); border-color: #2e7d32; }
+
+#donaciones-grid > [class*="col-"] {
+    flex: 0 0 auto !important;
+    padding: 0 12px !important;
+    margin-bottom: 24px !important;
+}
+
+.donation-card {
+    background: #fff; border: 2px solid #e9ecef; border-radius: 12px;
+    overflow: hidden; position: relative; transition: all 0.3s ease;
+    height: 100%; display: flex; flex-direction: column;
+}
+.donation-card:hover { 
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12); 
+    border-color: #2e7d32;
+    transform: translateY(-2px);
+}
 .card-badge {
     position: absolute; top: 10px; right: 10px; font-size: 0.7rem; font-weight: bold;
     padding: 4px 10px; border-radius: 20px; z-index: 2;
@@ -40,13 +63,19 @@ body.banco-mode {
 .badge-urgent { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
 .badge-normal { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
 .donation-img-container {
-    height: 160px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; overflow: hidden;
+    height: 200px; 
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    display: flex; align-items: center; justify-content: center; 
+    padding: 15px; overflow: hidden;
 }
-.donation-img-container img { width: 100%; height: 100%; object-fit: cover; }
-.donation-body { padding: 15px; }
+.donation-img-container img { 
+    max-width: 100%; max-height: 100%; 
+    object-fit: contain; border-radius: 8px; 
+}
+.donation-body { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
 .donation-title { font-size: 1rem; font-weight: 700; margin-bottom: 5px; color: #333; }
-.donation-data { font-size: 0.85rem; color: #555; margin-bottom: 15px; }
-.btn-solicitar { width: 100%; font-weight: 600; font-size: 0.9rem; }
+.donation-data { font-size: 0.85rem; color: #555; margin-bottom: 15px; flex-grow: 1; }
+.btn-solicitar { width: 100%; font-weight: 600; font-size: 0.9rem; margin-top: auto; }
 
 /* --- MAPA Y PANELES --- */
 .panel-container {

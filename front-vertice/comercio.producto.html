@@ -425,6 +425,47 @@
     </main>
   </div>
   <script src="./js-vivi/comercio.js"></script>
+  <script>
+    // Verificar si hay mensaje de producto creado
+    document.addEventListener('DOMContentLoaded', () => {
+      const productoCreado = sessionStorage.getItem('productoCreado');
+      if (productoCreado) {
+        try {
+          const data = JSON.parse(productoCreado);
+          if (data.ok) {
+            // Mostrar mensaje de éxito
+            const mensaje = document.createElement('div');
+            mensaje.style.cssText = `
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              background: #28a745;
+              color: white;
+              padding: 20px 30px;
+              border-radius: 10px;
+              box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+              z-index: 999999;
+              font-size: 18px;
+              font-weight: bold;
+              animation: slideIn 0.3s ease-out;
+            `;
+            mensaje.textContent = '✅ ¡Producto "' + (data.nombre || '') + '" guardado correctamente!';
+            document.body.appendChild(mensaje);
+            
+            // Remover después de 4 segundos
+            setTimeout(() => {
+              mensaje.style.animation = 'slideOut 0.3s ease-out';
+              setTimeout(() => mensaje.remove(), 300);
+            }, 4000);
+          }
+        } catch (e) {
+          console.error('Error al parsear productoCreado:', e);
+        }
+        // Limpiar sessionStorage
+        sessionStorage.removeItem('productoCreado');
+      }
+    });
+  </script>
 </body>
 
 </html>

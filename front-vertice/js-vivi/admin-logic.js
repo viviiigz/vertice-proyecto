@@ -8,14 +8,22 @@ let previewModal;
  * Configuración del botón Cerrar Sesión
  */
 function setupLogout() {
+    console.log('🔐 Configurando logout...');
+    
     // Obtener elementos del modal
     const logoutModalEl = document.getElementById('logoutModal');
     const confirmLogoutBtn = document.getElementById('confirmLogout');
     let logoutModal;
 
+    console.log('🔍 Modal encontrado:', !!logoutModalEl);
+    console.log('🔍 Botón confirmar encontrado:', !!confirmLogoutBtn);
+
     // Inicializar modal de Bootstrap
     if (logoutModalEl) {
         logoutModal = new bootstrap.Modal(logoutModalEl);
+        console.log('✅ Modal de Bootstrap inicializado');
+    } else {
+        console.warn('⚠️ No se encontró el modal de logout');
     }
 
     const handleLogoutClick = (e) => {
@@ -50,7 +58,7 @@ function setupLogout() {
                 logoutModal.hide();
             }
             // Redirigir al login
-            window.location.href = '/login.html';
+            window.location.href = './login.html';
         }
     };
 
@@ -58,11 +66,30 @@ function setupLogout() {
     const btnNav = document.getElementById('btnLogout');
     const btnSide = document.getElementById('btnSidebarLogout');
 
-    if(btnNav) btnNav.addEventListener('click', handleLogoutClick);
-    if(btnSide) btnSide.addEventListener('click', handleLogoutClick);
+    console.log('🔍 Botón nav logout encontrado:', !!btnNav);
+    console.log('🔍 Botón sidebar logout encontrado:', !!btnSide);
+
+    if(btnNav) {
+        btnNav.addEventListener('click', handleLogoutClick);
+        console.log('✅ Event listener agregado a btnLogout');
+    } else {
+        console.warn('⚠️ No se encontró el botón btnLogout en el navbar');
+    }
+    
+    if(btnSide) {
+        btnSide.addEventListener('click', handleLogoutClick);
+        console.log('✅ Event listener agregado a btnSidebarLogout');
+    }
     
     // Event listener para el botón de confirmación del modal
-    if(confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', performLogout);
+    if(confirmLogoutBtn) {
+        confirmLogoutBtn.addEventListener('click', performLogout);
+        console.log('✅ Event listener agregado a confirmLogout');
+    } else {
+        console.warn('⚠️ No se encontró el botón confirmLogout');
+    }
+    
+    console.log('✅ Setup de logout completado');
 }
 
 /**
@@ -486,7 +513,8 @@ async function loadComercios() {
             tdNombre.className = "ps-4";
             
             // Construir URL de foto de perfil
-            let fotoPerfil = '/assets/imgs/kiosko.png'; // Imagen por defecto
+            // SVG placeholder como data URI (no requiere conexión)
+            let fotoPerfil = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="150" height="150"%3E%3Crect fill="%236fbf23" width="150" height="150"/%3E%3Ctext fill="white" font-family="Arial" font-size="18" text-anchor="middle" x="75" y="80"%3ESin Foto%3C/text%3E%3C/svg%3E';
             
             if (comercio.fotoPerfil) {
                 // Si es una imagen base64, usarla directamente
@@ -512,7 +540,7 @@ async function loadComercios() {
                     <img src="${fotoPerfil}" alt="${comercio.username}" 
                          class="rounded-circle me-3" 
                          style="width: 50px; height: 50px; object-fit: cover; border: 2px solid #6fbf23; background: #f0f0f0;"
-                         onerror="this.src='/assets/imgs/kiosko.png';">
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Crect fill=%22%236fbf23%22 width=%22150%22 height=%22150%22/%3E%3Ctext fill=%22white%22 font-family=%22Arial%22 font-size=%2218%22 text-anchor=%22middle%22 x=%2275%22 y=%2280%22%3ESin Foto%3C/text%3E%3C/svg%3E';">
                     <div>
                         <p class="mb-0 fw-bold">${comercio.username}</p>
                         <small class="text-muted">${comercio.email}</small>
@@ -579,7 +607,8 @@ async function verPerfilComercio(comercioId) {
             const comercio = data.comercio;
             
             // Construir URL de foto de perfil
-            let fotoPerfil = '/assets/imgs/kiosko.png'; // Imagen por defecto
+            // SVG placeholder como data URI
+            let fotoPerfil = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="150" height="150"%3E%3Crect fill="%236fbf23" width="150" height="150"/%3E%3Ctext fill="white" font-family="Arial" font-size="18" text-anchor="middle" x="75" y="80"%3ESin Foto%3C/text%3E%3C/svg%3E';
             if (comercio.fotoPerfil) {
                 // Si es una imagen base64, usarla directamente
                 if (comercio.fotoPerfil.startsWith('data:image')) {
@@ -596,7 +625,7 @@ async function verPerfilComercio(comercioId) {
             
             document.getElementById('modalFotoPerfil').src = fotoPerfil;
             document.getElementById('modalFotoPerfil').onerror = function() {
-                this.src = '/assets/imgs/kiosko.png';
+                this.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Crect fill=%22%236fbf23%22 width=%22150%22 height=%22150%22/%3E%3Ctext fill=%22white%22 font-family=%22Arial%22 font-size=%2218%22 text-anchor=%22middle%22 x=%2275%22 y=%2280%22%3ESin Foto%3C/text%3E%3C/svg%3E';
             };
             document.getElementById('modalNombreComercio').textContent = comercio.username || 'Sin nombre';
             document.getElementById('modalEmail').textContent = comercio.email || 'No especificado';

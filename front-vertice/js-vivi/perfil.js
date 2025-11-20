@@ -172,14 +172,14 @@ function mostrarDatosPerfil(user) {
         }
     }
 
-    // Campos específicos para comercios
-    if (user.role === 'comercio') {
+    // Campos específicos para comercios y bancos
+    if (user.role === 'comercio' || user.role === 'banco') {
         const direccionEl = document.getElementById('direccion') || 
                             document.getElementById('input-direccion') ||
                             document.getElementById('direccion-comercio');
         const horariosEl = document.getElementById('horarios') || 
                            document.getElementById('input-horarios') ||
-                           document.getElementById('horarios-comercio');
+                           document.getElementById('horario-banco');
         
         if (direccionEl) {
             direccionEl.value = user.direccion || '';
@@ -191,6 +191,22 @@ function mostrarDatosPerfil(user) {
         
         if (horariosEl) {
             horariosEl.value = user.horarios || '';
+            const displayHorario = document.getElementById('display-horario');
+            if (displayHorario && displayHorario !== horariosEl) {
+                displayHorario.textContent = (user.horarios || '').trim() || '—';
+            }
+        }
+    }
+
+    // Campos específicos para bancos
+    if (user.role === 'banco') {
+        const capacidadEl = document.getElementById('capacidad-banco');
+        if (capacidadEl) {
+            capacidadEl.value = user.capacidad || '';
+            const displayCapacidad = document.getElementById('display-capacidad');
+            if (displayCapacidad && displayCapacidad !== capacidadEl) {
+                displayCapacidad.textContent = user.capacidad ? `${user.capacidad} kg` : '—';
+            }
         }
     }
 
@@ -327,7 +343,9 @@ async function guardarCambiosPerfil() {
     
     const horarios = (document.getElementById('horarios') || 
                       document.getElementById('input-horarios') ||
-                      document.getElementById('horarios-comercio'))?.value || '';
+                      document.getElementById('horario-banco'))?.value || '';
+    
+    const capacidad = document.getElementById('capacidad-banco')?.value || null;
     
     // Obtener foto de perfil (Data URL en base64)
     const fotoPerfilEl = document.getElementById('profile-img-preview');
@@ -341,6 +359,11 @@ async function guardarCambiosPerfil() {
         horarios,
         fotoPerfil
     };
+
+    // Agregar capacidad solo si existe (bancos)
+    if (capacidad !== null && capacidad !== '') {
+        datosFormulario.capacidad = parseInt(capacidad);
+    }
 
     console.log('Enviando datos al backend:', datosFormulario);
 
