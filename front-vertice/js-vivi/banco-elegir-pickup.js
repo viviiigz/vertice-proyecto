@@ -328,6 +328,8 @@ async function confirmarSolicitud() {
                 cantidad: p.cantidad || 1
             })),
             punto_pickup_id: selectedPickup._id,
+            punto_pickup_nombre: selectedPickup.nombre,
+            punto_pickup_direccion: selectedPickup.direccion,
             horario_retiro: selectedHorario,
             notas: 'Solicitud de donación para banco de alimentos'
         };

@@ -64,6 +64,17 @@ async function cargarPedidos() {
         allPedidos = data.data || data.pedidos || [];
         console.log('📦 Total de solicitudes:', allPedidos.length);
         
+        // Debug: Ver estructura de pedidos
+        if (allPedidos.length > 0) {
+            console.log('🔍 Primer pedido completo:', allPedidos[0]);
+            console.log('🔍 Campos pickup:', {
+                punto_pickup_nombre: allPedidos[0].punto_pickup_nombre,
+                puntoDeRetiro: allPedidos[0].puntoDeRetiro,
+                horario_retiro: allPedidos[0].horario_retiro,
+                horarioRetiro: allPedidos[0].horarioRetiro
+            });
+        }
+        
         loadingEl.style.display = 'none';
 
         if (allPedidos.length === 0) {
@@ -133,14 +144,18 @@ function createPedidoCard(pedido) {
     const estadoTexto = pedido.estado.charAt(0).toUpperCase() + pedido.estado.slice(1);
 
     // Información del comercio (donante)
-    const comercio = pedido.comercio_id || {};
-    const comercioNombre = comercio.username || 'Comercio';
+    // El backend puede devolver comercio_id o comercianteId
+    const comercio = pedido.comercianteId || pedido.comercio_id || {};
+    const comercioNombre = comercio.username || comercio.nombre || 'Comercio';
     const comercioEmail = comercio.email || '';
 
     // Información de pickup
     const pickup = pedido.punto_pickup_id || {};
-    const pickupNombre = pickup.nombre || 'No especificado';
-    const pickupDireccion = pickup.direccion || '';
+    
+    // PRIORIDAD: Usar punto_pickup_nombre primero (es el nombre legible)
+    // puntoDeRetiro contiene el ID, NO el nombre
+    const pickupNombre = pedido.punto_pickup_nombre || pickup.nombre || 'No especificado';
+    const pickupDireccion = pedido.punto_pickup_direccion || pickup.direccion || '';
 
     // Total de productos
     const totalProductos = pedido.productos.reduce((sum, p) => sum + p.cantidad, 0);
@@ -178,7 +193,7 @@ function createPedidoCard(pedido) {
                 </div>
                 <div class="info-item">
                     <span class="info-label"><i class="fas fa-clock me-1"></i>Horario</span>
-                    <span class="info-value">${pedido.horario_retiro || 'Por coordinar'}</span>
+                    <span class="info-value">${pedido.horario_retiro || pedido.horarioRetiro || 'Por coordinar'}</span>
                 </div>
             </div>
 
@@ -214,11 +229,11 @@ function createProductoItem(producto) {
     const nombre = productoData.nombre_producto || 'Producto';
     const imagen = productoData.foto_url 
         ? `${API_URL}/uploads/${productoData.foto_url}` 
-        : './assets/imgs/placeholder-product.png';
+        : './assets/imgs/alimentos.jpg';
 
     return `
         <div class="producto-item">
-            <img src="${imagen}" alt="${nombre}" class="producto-imagen" onerror="this.src='./assets/imgs/placeholder-product.png'">
+            <img src="${imagen}" alt="${nombre}" class="producto-imagen" onerror="this.src='./assets/imgs/alimentos.jpg'">
             <div class="producto-detalles">
                 <div class="producto-nombre">${nombre}</div>
                 <div class="producto-cantidad">

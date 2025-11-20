@@ -111,24 +111,61 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        var map = L.map('map').setView([-26.1849, -58.1731], 14);
+        // Centrar mapa en Formosa
+        var map = L.map('map').setView([-26.185145, -58.174520], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© Vértice' }).addTo(map);
 
-        // Icono verde
+        // Icono verde para puntos de recolección
         var greenIcon = new L.Icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
             shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
             iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
         });
 
-        // Marcador Ejemplo
-        var marker = L.marker([-26.1849, -58.1731], { icon: greenIcon }).addTo(map);
-        marker.on('click', function () {
-            document.getElementById('placeholder-map').classList.add('d-none');
-            document.getElementById('detail-content').classList.remove('d-none');
-            document.getElementById('map-title').innerText = "Panadería La Estrella";
-            document.getElementById('map-address').innerText = "Av. Italia 1234, Formosa";
-            document.getElementById('map-weight').innerText = "15 kg (Panificados)";
+        // Puntos de recolección fijos
+        const puntosRecoleccion = [
+            {
+                nombre: 'Plaza San Martín (Centro)',
+                direccion: 'Plaza San Martín, Centro, Formosa',
+                latitud: -26.185145,
+                longitud: -58.174520,
+                peso: '20 kg',
+                horario: '8:00 - 18:00'
+            },
+            {
+                nombre: 'Cruz del Norte Formosa',
+                direccion: 'Cruz del Norte, Formosa',
+                latitud: -26.197596,
+                longitud: -58.212465,
+                peso: '15 kg',
+                horario: '9:00 - 17:00'
+            },
+            {
+                nombre: 'Monumento a la Virgen del Carmen',
+                direccion: 'Monumento a la Virgen del Carmen, Formosa',
+                latitud: -26.157044,
+                longitud: -58.185414,
+                peso: '18 kg',
+                horario: '7:00 - 19:00'
+            }
+        ];
+
+        // Crear marcadores para cada punto
+        puntosRecoleccion.forEach(punto => {
+            var marker = L.marker([punto.latitud, punto.longitud], { icon: greenIcon }).addTo(map);
+            
+            marker.on('click', function () {
+                document.getElementById('placeholder-map').classList.add('d-none');
+                document.getElementById('detail-content').classList.remove('d-none');
+                document.getElementById('map-title').innerText = punto.nombre;
+                document.getElementById('map-address').innerText = punto.direccion;
+                document.getElementById('map-weight').innerText = punto.peso + ' disponibles';
+                document.querySelector('#detail-content .text-danger').innerHTML = 
+                    '<i class="far fa-clock me-2"></i> Horario de retiro: ' + punto.horario;
+            });
+
+            // Popup opcional
+            marker.bindPopup(`<b>${punto.nombre}</b><br>${punto.direccion}`);
         });
     </script>
 </body>

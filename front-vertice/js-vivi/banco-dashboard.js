@@ -598,10 +598,10 @@ function renderizarCarrito(cart) {
     
     body.innerHTML = cart.map((item, index) => `
         <div class="carrito-item">
-            <img src="${item.imagen || './assets/imgs/placeholder-product.png'}" 
-                 alt="${item.nombre}" 
-                 class="carrito-item-img"
-                 onerror="this.src='./assets/imgs/placeholder-product.png'">
+            <img src="${item.imagen || './assets/imgs/alimentos.jpg'}" 
+                 alt="${item.nombre}"
+                 class="cart-item-image"
+                 onerror="this.src='./assets/imgs/alimentos.jpg'">
             <div class="carrito-item-info">
                 <div class="carrito-item-nombre">${item.nombre}</div>
                 <div class="carrito-item-donante">

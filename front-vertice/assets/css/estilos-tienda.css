@@ -840,9 +840,6 @@ body {
     --shadow-color: rgba(0, 0, 0, 0.1);
     --font-primary: 'Montserrat', sans-serif;
     --font-secondary: 'Sulphur Point', sans-serif;
-        --primary-color: #2e7d32; /* Verde fuerte de Vértice */
-    --secondary-color: #dcedc8; /* Verde claro para chips */
-    --text-color-dark: #333;
 }
 
 

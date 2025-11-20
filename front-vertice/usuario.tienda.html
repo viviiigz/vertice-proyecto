@@ -177,5 +177,16 @@
 
     <script src="./js-vivi/cart-persistence.js"></script>
     <script src="./js-vivi/logica-tienda.js"></script>
+        <script>
+        // Agregar funcionalidad al botón del carrito
+        document.addEventListener('DOMContentLoaded', () => {
+            const cartBtn = document.querySelector('.cart-btn');
+            if (cartBtn) {
+                cartBtn.addEventListener('click', () => {
+                    window.location.href = './consumidor.carrito.html';
+                });
+            }
+        });
+    </script>
   </body>
 </html>
