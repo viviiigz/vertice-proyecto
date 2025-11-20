@@ -13,10 +13,9 @@ export const validateProduct = [
     .isString()
     .withMessage("La descripción debe ser una cadena de texto"),
   body("precio_original")
-    .notEmpty()
-    .withMessage("El precio original es obligatorio")
-    .isFloat({ gt: 0 })
-    .withMessage("El precio original debe ser un número mayor que 0"),
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage("El precio original debe ser un número válido mayor o igual a 0"),
   // El precio en oferta es OPCIONAL. Permitir 0 (sin descuento) o cualquier número >= 0
   body("precio_descuento")
     .optional()

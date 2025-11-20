@@ -24,6 +24,20 @@ export const createProduct = async (req, res) => {
       foto_url
     };
 
+    // Si la categoría es 'para-donar', asegurar que los precios sean 0
+    if (productData.categoria === 'para-donar') {
+      productData.precio_original = 0;
+      productData.precio_descuento = 0;
+      console.log('💚 Producto para-donar: Precios establecidos en 0');
+    } else {
+      // Para otras categorías, asegurar que tengan precio original
+      if (!productData.precio_original || productData.precio_original === '0') {
+        return res.status(400).json({ 
+          message: 'El precio original es requerido para productos que no son donaciones' 
+        });
+      }
+    }
+
     const savedProduct = await Product.create(productData);
 
     res.status(201).json(savedProduct);

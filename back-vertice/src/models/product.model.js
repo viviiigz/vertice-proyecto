@@ -12,11 +12,13 @@ const productSchema = new mongoose.Schema({
   },
   precio_original: {
     type: Number,
-    required: true
+    required: false,
+    default: 0
   },
   precio_descuento: {
     type: Number,
-    required: true
+    required: false,
+    default: 0
   },
   fecha_caducidad_cercana: {
     type: Date,
