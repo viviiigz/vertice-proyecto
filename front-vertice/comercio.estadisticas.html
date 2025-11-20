@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sulphur+Point:wght@300;400;700&display=swap" />
+    <link rel="stylesheet" href="./assets/css/comercio.productos.css">
   <link rel="stylesheet" href="./assets/css/comercio.estadisticas.css" />
   
   <link rel="icon" type="image/x-icon" href="../front-vertice/assets/imgs/v-vertice.png" />
@@ -61,49 +62,7 @@
     gap: 12px;
     /* <-- Este es el espacio extra */
   }
-  /* --- Estilo de Layout General del Dashboard --- */
 
-  html, body {
-    /* Asegura que la página pueda usar la altura completa */
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa; /* Color de fondo general si algo se "escapa" */
-  }
-
-  .dashboard-container {
-    /* 1. USA FLEXBOX PARA EL LAYOUT */
-    /* Esto divide el contenedor en columnas (sidebar y main) */
-    display: flex;
-    
-    /* 2. ALTURA MÍNIMA DE 100% DE LA VENTANA */
-    /* Esto fuerza al contenedor a ocupar, como mínimo,
-       toda la altura de la pantalla del navegador. */
-    min-height: 100vh;
-  }
-
-  .sidebar {
-    /* 3. ANCHO FIJO PARA EL SIDEBAR */
-    /* (Ajusta este número si quieres que sea más ancho o angosto) */
-    width: 260px;
-    
-    /* Evita que el sidebar se encoja si el contenido es muy grande */
-    flex-shrink: 0;
-    
-    /* Fondo blanco (basado en tus capturas) */
-    background-color: #ffffff;
-    
-    /* Un borde sutil para separarlo del contenido */
-    border-right: 1px solid #e9ecef;
-  }
-
-  .main-content {
-    /* 4. EL CONTENIDO TOMA EL RESTO DEL ESPACIO */
-    /* "flex-grow: 1" le dice que ocupe todo el espacio sobrante */
-    flex-grow: 1;
-    
-    /* El padding y demás ya lo tienes en tu CSS `comercio.productos.css` */
-  }
 </style>
 
 <body>
@@ -114,7 +73,6 @@
       </div>
       <nav class="sidebar-nav">
         <a href="./comercio.estadisticas.html" class="active"><i class="fas fa-chart-line"></i> Estadísticas</a>
-        <h3>Administración</h3>
         <a href="./comercio.producto.html"><i class="fas fa-box"></i> Productos</a>
         <a href="/front-vertice/comercio-pedido.html"><i class="fas fa-sitemap"></i> Pedidos</a>
         <a href="./comercio-pickup.html"><i class="fas fa-map-marker-alt"></i> Pick Up Points</a>

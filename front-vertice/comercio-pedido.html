@@ -14,102 +14,85 @@
         href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sulphur+Point:wght@300;400;700&display=swap" />
 
     <link rel="stylesheet" href="./assets/css/comercio.productos.css" />
-    <link rel="stylesheet" href="./assets/css/comercio-pedidos.css" />
+    <link rel="stylesheet" href="./assets/css/comercio-pedido.css" />
     <link rel="icon" type="image/x-icon" href="../front-vertice/assets/imgs/v-vertice.png" />
 </head>
 
 <style>
-    /* --- Estilo General para los Botones --- */
+  /* --- Estilo General para los Botones --- */
 
-    /* 1. Define el estilo base para TODOS los .btn */
-    .btn {
-        text-decoration: none !important;
-        outline: none !important;
-        box-shadow: none !important;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        padding: 10px 18px;
-        gap: 8px;
-        display: inline-flex;
-        align-items: center;
-        transition: transform 0.2s ease, background-color 0.2s ease;
-    }
-
-    .btn:hover {
-        transform: translateY(-2px);
-    }
-
-    /* 2. ESTILO PARA BOTONES VERDES (Primarios) */
-    .btn-primary {
-        background-color: #28a745;
-        color: white !important;
-    }
-
-    .btn-primary:hover {
-        background-color: #218838;
-    }
-
-    /* 3. ESTILO PARA BOTONES GRISES (Secundarios) */
-    .btn-secondary {
-        background-color: #f0f2f5;
-        color: #444 !important;
-    }
-
-    .btn-secondary:hover {
-        background-color: #e2e6ea;
-    }
-
-    /* 4. ESPACIO ENTRE BOTONES DEL HEADER */
-    .header-buttons {
-        display: flex;
-        gap: 12px;
-        /* <-- Este es el espacio extra */
-    }
-    /* --- Estilo de Layout General del Dashboard --- */
-
-  html, body {
-    /* Asegura que la página pueda usar la altura completa */
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa; /* Color de fondo general si algo se "escapa" */
+  /* 1. Define el estilo base para TODOS los .btn */
+  .btn {
+    text-decoration: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 10px 18px;
+    gap: 8px;
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.2s ease, background-color 0.2s ease;
   }
 
-  .dashboard-container {
-    /* 1. USA FLEXBOX PARA EL LAYOUT */
-    /* Esto divide el contenedor en columnas (sidebar y main) */
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  /* 2. ESTILO PARA BOTONES VERDES (Primarios) */
+  .btn-primary {
+    background-color: #28a745;
+    color: white !important;
+  }
+
+  .btn-primary:hover {
+    background-color: #218838;
+  }
+
+  /* 3. ESTILO PARA BOTONES GRISES (Secundarios) */
+  .btn-secondary {
+    background-color: #f0f2f5;
+    color: #444 !important;
+  }
+
+  .btn-secondary:hover {
+    background-color: #e2e6ea;
+  }
+
+  /* 4. ESPACIO ENTRE BOTONES DEL HEADER */
+  .header-buttons {
     display: flex;
-    
-    /* 2. ALTURA MÍNIMA DE 100% DE LA VENTANA */
-    /* Esto fuerza al contenedor a ocupar, como mínimo,
-       toda la altura de la pantalla del navegador. */
-    min-height: 100vh;
+    gap: 12px;
+    /* <-- Este es el espacio extra */
   }
+  /* --- Estilo de Layout General del Dashboard --- */
+  .content-area {
+    margin-top: 1rem;
+    padding: 2em !important;
+    flex-grow: 1;
+}
 
   .sidebar {
-    /* 3. ANCHO FIJO PARA EL SIDEBAR */
-    /* (Ajusta este número si quieres que sea más ancho o angosto) */
-    width: 260px;
-    
-    /* Evita que el sidebar se encoja si el contenido es muy grande */
-    flex-shrink: 0;
-    
-    /* Fondo blanco (basado en tus capturas) */
-    background-color: #ffffff;
-    
-    /* Un borde sutil para separarlo del contenido */
-    border-right: 1px solid #e9ecef;
-  }
-
-  .main-content {
-    /* 4. EL CONTENIDO TOMA EL RESTO DEL ESPACIO */
-    /* "flex-grow: 1" le dice que ocupe todo el espacio sobrante */
-    flex-grow: 1;
+    width: 270px !important;
+    background-color: #fff;
+    padding: 20px !important;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
     
     /* El padding y demás ya lo tienes en tu CSS `comercio.productos.css` */
-  }
+  
 </style>
+
+
+
 
 <body>
     <div class="dashboard-container">
@@ -120,8 +103,7 @@
             </div>
             <nav class="sidebar-nav">
                 <a href="./comercio.estadisticas.html"><i class="fas fa-chart-line"></i> Estadísticas</a>
-                <h3>Administración</h3>
-                <a href="comercio.producto.html"><i class="fas fa-box"></i> Productos</a>
+                                            <a href="comercio.producto.html"><i class="fas fa-box"></i> Productos</a>
                 <a href="./comercio-pedido.html" class="active"><i class="fas fa-sitemap"></i> Pedidos</a>
                 <a href="/front-vertice/comercio-pickup.html"><i class="fas fa-map-marker-alt"></i> Pick Up Points</a>
             </nav>
