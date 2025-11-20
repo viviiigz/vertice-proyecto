@@ -96,6 +96,8 @@ export const crearPedido = async (req, res) => {
             totalVenta: totalVenta || 0, // Para banco es 0 (donación)
             horarioRetiro: scheduleTime,
             puntoDeRetiro: pickupPoint,
+            punto_pickup_nombre: req.body.punto_pickup_nombre || '',
+            punto_pickup_direccion: req.body.punto_pickup_direccion || '',
             estado: 'pendiente',
             notas: notas || (userRole === 'banco' ? 'Solicitud de donación' : '')
         });

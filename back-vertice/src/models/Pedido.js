@@ -35,6 +35,15 @@ const pedidoSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  // Información adicional del punto de retiro
+  punto_pickup_nombre: {
+    type: String,
+    required: false
+  },
+  punto_pickup_direccion: {
+    type: String,
+    required: false
+  },
   // --- FIN DE CAMBIOS ---
 
   totalVenta: {
@@ -45,6 +54,10 @@ const pedidoSchema = new mongoose.Schema({
     type: String,
     enum: ['pendiente', 'aceptado', 'rechazado', 'entregado', 'cancelado'],
     default: 'pendiente'
+  },
+  notas: {
+    type: String,
+    required: false
   }
 }, { timestamps: true }); // timestamps: true agrega createdAt y updatedAt
 
