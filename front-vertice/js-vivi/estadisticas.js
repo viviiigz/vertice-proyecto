@@ -73,7 +73,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Función para renderizar el gráfico de ventas mensuales
     function renderizarGraficoVentas(ventasPorMes) {
         const labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-        const dataPoints = ventasPorMes.map(item => item.total);
+        const dataPoints = new Array(12).fill(0);
+        (ventasPorMes || []).forEach(item => {
+            const mes = Number(item?.mes);
+            if (mes >= 1 && mes <= 12) {
+                dataPoints[mes - 1] = Number(item?.total) || 0;
+            }
+        });
 
         if (ventasChart) {
             ventasChart.destroy(); // Destruir gráfico anterior si existe
@@ -98,10 +104,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 maintainAspectRatio: false,
                 scales: {
                     y: {
-                        beginAtZero: true,
+                        min: 0,
+                        max: 100000,
                         ticks: {
+                            stepSize: 20000,
                             callback: function(value) {
-                                return '$' + value.toLocaleString();
+                                if (value === 0) return '0';
+                                return `${value / 1000}mil`;
                             }
                         }
                     }

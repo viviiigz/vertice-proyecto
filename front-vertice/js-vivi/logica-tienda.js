@@ -224,10 +224,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================================
     // LÓGICA DE VISUALIZACIÓN Y FILTRADO
     // ========================================
-    let mostrandoTodos = false; // Estado para controlar si se muestran todos los productos
     const MAX_PRODUCTOS_INICIAL = 6; // Máximo de productos a mostrar inicialmente
+    const PRODUCTOS_POR_CLICK = 3; // Cantidad adicional al presionar "Ver más"
+    let cantidadVisible = MAX_PRODUCTOS_INICIAL;
+    let botonExplorarActivo = false;
+    let totalProductosFiltradosActual = 0;
 
-    function mostrarProductos(productosAMostrar, forzarTodos = false) {
+    function mostrarProductos(productosAMostrar) {
         if (!productGrid) return;
         
         productGrid.innerHTML = '';
@@ -236,8 +239,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Determinar cuántos productos mostrar
-        const productosMostrar = (mostrandoTodos || forzarTodos) ? productosAMostrar : productosAMostrar.slice(0, MAX_PRODUCTOS_INICIAL);
+        // Determinar cuántos productos mostrar según la cantidad visible actual
+        const productosMostrar = productosAMostrar.slice(0, cantidadVisible);
 
         productosMostrar.forEach(producto => {
             const card = document.createElement('div');
@@ -270,22 +273,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function actualizarBotonVerMas(totalProductos) {
         const loadMoreContainer = document.querySelector('.load-more-container');
+        const verMasBtn = document.getElementById('ver-mas-btn');
         if (!loadMoreContainer) return;
 
-        // Si ya se están mostrando todos o hay 6 o menos productos, ocultar el botón
-        if (mostrandoTodos || totalProductos <= MAX_PRODUCTOS_INICIAL) {
+        // Si hay pocos productos, ocultar el botón
+        if (totalProductos <= MAX_PRODUCTOS_INICIAL) {
             loadMoreContainer.style.display = 'none';
-        } else {
-            loadMoreContainer.style.display = 'block';
+            return;
+        }
+
+        loadMoreContainer.style.display = 'block';
+
+        if (verMasBtn) {
+            if (botonExplorarActivo) {
+                verMasBtn.textContent = 'Explore más productos aquí';
+            } else {
+                verMasBtn.textContent = 'Ver Más Productos';
+            }
         }
     }
 
     function aplicarFiltrosYOrden(desdeVerMas = false) {
         if (!productGrid || !searchInput || !sortSelect || !categorySelect) return;
 
-        // Si NO viene desde "Ver más", resetear el estado (porque el usuario cambió filtros)
-        if (!desdeVerMas && mostrandoTodos) {
-            mostrandoTodos = false;
+        // Si NO viene desde "Ver más", resetear el estado del botón/cantidad visible
+        if (!desdeVerMas) {
+            cantidadVisible = MAX_PRODUCTOS_INICIAL;
+            botonExplorarActivo = false;
         }
 
         let productosFiltrados = [...productos];
@@ -322,6 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
         }
 
+        totalProductosFiltradosActual = productosFiltrados.length;
         mostrarProductos(productosFiltrados);
     }
 
@@ -584,9 +599,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const verMasBtn = document.getElementById('ver-mas-btn');
             if (verMasBtn) {
                 verMasBtn.addEventListener('click', () => {
-                    mostrandoTodos = true;
-                    aplicarFiltrosYOrden(true); // Pasar true para indicar que viene desde "Ver más"
-                    mostrarMensajeInfo('Mostrando todos los productos disponibles');
+                    if (botonExplorarActivo) {
+                        window.location.href = './vista-producto-user.html';
+                        return;
+                    }
+
+                    // Primer click: mostrar 3 productos más
+                    cantidadVisible = Math.min(
+                        cantidadVisible + PRODUCTOS_POR_CLICK,
+                        totalProductosFiltradosActual
+                    );
+                    botonExplorarActivo = true;
+                    aplicarFiltrosYOrden(true); // Mantener estado actual de filtros y búsqueda
+                    mostrarMensajeInfo('Se cargaron 3 productos más');
                 });
             }
 
