@@ -528,12 +528,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Guardar en sessionStorage
             sessionStorage.setItem('productoCreado', JSON.stringify({
                 ok: true,
-                nombre: nombre
+                texto: '¡Producto creado correctamente!'
             }));
             
-            // Redirigir INMEDIATAMENTE
+            mostrarMensajeExito('¡Producto creado correctamente!');
+
+            // Redirigir luego de mostrar la notificación
             console.log('➡️ Redirigiendo...');
-            window.location.href = './comercio.producto.html';
+            setTimeout(() => {
+                window.location.href = './comercio.producto.html';
+            }, 1200);
             return;
             
         } catch (error) {
@@ -544,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.textContent = 'Guardar Producto';
             }
             
-            alert('❌ Error al guardar: ' + (error.message || 'Error desconocido'));
+            mostrarMensajeError('Error: El producto no pudo ser creado');
             
             // Si es error de autenticación, redirigir al login después de mostrar el mensaje
             if (error.message && error.message.includes('autenticado')) {

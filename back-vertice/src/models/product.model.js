@@ -1,5 +1,46 @@
 import mongoose from 'mongoose';
 
+export const PRODUCT_STATUS_CATEGORIES = ['comida-por-caducarse', 'desperfecto-fisico', 'para-donar'];
+
+export const PRODUCT_TYPE_CATEGORY_ALIASES = {
+  frescos: 'frutas-y-verduras',
+  'frutas y verduras': 'frutas-y-verduras',
+  'frutas/verduras': 'frutas-y-verduras',
+  'carniceria y polleria': 'carniceria-polleria',
+  'desayuno/merienda': 'desayuno-merienda'
+};
+
+export const PRODUCT_TYPE_CATEGORIES = [
+  'lacteos',
+  'frutas-y-verduras',
+  'carniceria-polleria',
+  'congelados',
+  'panaderia',
+  'dietetica',
+  'snack',
+  'desayuno-merienda',
+  'bebidas'
+];
+
+const ALLOWED_PRODUCT_TYPE_VALUES = [...new Set([
+  ...PRODUCT_TYPE_CATEGORIES,
+  ...Object.keys(PRODUCT_TYPE_CATEGORY_ALIASES)
+])];
+
+export const normalizeProductType = (value) => {
+  if (typeof value !== 'string') {
+    return value;
+  }
+
+  const normalizedValue = value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase();
+
+  return PRODUCT_TYPE_CATEGORY_ALIASES[normalizedValue] || normalizedValue;
+};
+
 const productSchema = new mongoose.Schema({
   nombre_producto: {
     type: String,
@@ -36,12 +77,13 @@ const productSchema = new mongoose.Schema({
   categoria: {
     type: String,
     required: false,
-    enum: ['comida-por-caducarse', 'desperfecto-fisico', 'para-donar']
+    enum: PRODUCT_STATUS_CATEGORIES
   },
   tipo_producto: {
     type: String,
     required: false,
-    enum: ['lacteos', 'frescos', 'bebidas']
+    enum: ALLOWED_PRODUCT_TYPE_VALUES,
+    set: normalizeProductType
   },
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -75,6 +117,7 @@ productSchema.set('toObject', {
 // Crear índices para búsquedas más eficientes
 productSchema.index({ user_id: 1 });
 productSchema.index({ categoria: 1 });
+productSchema.index({ tipo_producto: 1 });
 
 const Product = mongoose.model('Product', productSchema);
 

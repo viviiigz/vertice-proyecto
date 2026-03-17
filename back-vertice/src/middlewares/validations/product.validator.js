@@ -1,6 +1,17 @@
 //middleware de productos
 //import Product from "../../models/product.model.js";
 import { body, validationResult } from "express-validator";
+import {
+  PRODUCT_STATUS_CATEGORIES,
+  PRODUCT_TYPE_CATEGORIES,
+  PRODUCT_TYPE_CATEGORY_ALIASES,
+  normalizeProductType
+} from "../../models/product.model.js";
+
+const allowedProductTypes = new Set([
+  ...PRODUCT_TYPE_CATEGORIES,
+  ...Object.keys(PRODUCT_TYPE_CATEGORY_ALIASES)
+]);
 
 export const validateProduct = [
   body("nombre_producto")
@@ -32,12 +43,13 @@ export const validateProduct = [
     .withMessage("La cantidad disponible debe ser un número entero no negativo"),
   body("categoria")
     .optional()
-    .isIn(['comida-por-caducarse', 'desperfecto-fisico', 'para-donar'])
+    .isIn(PRODUCT_STATUS_CATEGORIES)
     .withMessage("La categoría debe ser 'comida-por-caducarse', 'desperfecto-fisico' o 'para-donar'"),
   body("tipo_producto")
     .optional()
-    .isIn(['lacteos', 'frescos', 'bebidas'])
-    .withMessage("El tipo de producto debe ser 'lacteos', 'frescos' o 'bebidas'"),
+    .customSanitizer((value) => normalizeProductType(value))
+    .custom((value) => allowedProductTypes.has(value))
+    .withMessage("El tipo de producto no coincide con una categoría válida"),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

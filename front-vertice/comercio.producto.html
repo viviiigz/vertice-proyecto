@@ -449,7 +449,7 @@
               font-weight: bold;
               animation: slideIn 0.3s ease-out;
             `;
-            mensaje.textContent = '✅ ¡Producto "' + (data.nombre || '') + '" guardado correctamente!';
+            mensaje.textContent = '✅ ' + (data.texto || '¡Producto creado correctamente!');
             document.body.appendChild(mensaje);
             
             // Remover después de 4 segundos

@@ -2,6 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const productGrid = document.getElementById('product-grid-container');
+    const categoryButtons = document.querySelectorAll('.category-carousel-section [data-categoria]');
     const productModal = document.getElementById('product-modal');
     const closeModalBtn = document.querySelector('.close-btn');
     const reiniciarCarritoBtn = document.getElementById('reiniciar-carrito-btn'); 
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const imagenURL = producto.foto_url ? "http://localhost:3000/uploads/" + producto.foto_url : './assets/imgs/placeholder.png';
 
         card.innerHTML = "<img src='" + imagenURL + "' alt='" + producto.nombre_producto + "'><div class='card-content'><h3>" + producto.nombre_producto + "</h3><p class='product-description'>" + (producto.descripcion || '') + "</p><div class='price-info'>" + precioDisplay + "</div></div><div class='product-actions'><button class='add-to-cart-btn' data-id='" + (producto._id || producto.id) + "'>Agregar al carrito</button></div>";
-        
+
         allProducts.push(producto);
         return card;
     }
@@ -64,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const precioDisplayModal = precioOferta ? "<span class='price'>$" + precioOferta + "</span><span class='old-price'>$" + producto.precio_original + "</span>" : "<span class='price'>$" + producto.precio_original + "</span>";
             const imagenURL = producto.foto_url ? "http://localhost:3000/uploads/" + producto.foto_url : './assets/imgs/placeholder.png';
 
-            modalBody.innerHTML = "<img src='" + imagenURL + "' alt='" + producto.nombre_producto + "'><div class='product-details'><div><h2>" + producto.nombre_producto + "</h2><p class='description'>" + (producto.descripcion || 'Sin descripción.') + "</p><p><strong>Stock:</strong> " + (producto.cantidad_disponible || 0) + "</p><p><strong>Categoría:</strong> " + producto.categoria + "</p></div><div><div class='price-info'>" + precioDisplayModal + "</div><button class='modal-add-to-cart' data-id='" + (producto._id || producto.id) + "'>Agregar al carrito</button></div></div>";
+            modalBody.innerHTML = "<img src='" + imagenURL + "' alt='" + producto.nombre_producto + "'><div class='product-details'><div><h2>" + producto.nombre_producto + "</h2><p class='description'>" + (producto.descripcion || 'Sin descripción.') + "</p><p><strong>Stock:</strong> " + (producto.cantidad_disponible || 0) + "</p><p><strong>Tipo:</strong> " + (producto.tipo_producto || 'Sin clasificar') + "</p></div><div><div class='price-info'>" + precioDisplayModal + "</div><button class='modal-add-to-cart' data-id='" + (producto._id || producto.id) + "'>Agregar al carrito</button></div></div>";
             productModal.style.display = 'block';
         }
     }
@@ -73,7 +74,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (productModal) productModal.style.display = 'none';
     }
 
-    function inicializar() {
+    function actualizarCategoriaActiva(categoriaSeleccionada) {
+        categoryButtons.forEach((button) => {
+            button.classList.toggle('active', (button.dataset.categoria || '') === categoriaSeleccionada);
+        });
+    }
+
+    async function aplicarFiltroCategoria(categoriaSeleccionada = '') {
+        if (!productGrid || !scrollManager) return;
+
+        actualizarCategoriaActiva(categoriaSeleccionada);
+
+        // 1) Limpiar datos y grilla
+        allProducts = [];
+        productGrid.innerHTML = '';
+
+        const urlDebug = `http://localhost:3000/api/productos${categoriaSeleccionada ? '?tipo_producto=' + categoriaSeleccionada : ''}`;
+        console.log(`[FiltroCategoria] URL => ${urlDebug}`);
+
+        // 2) Reiniciar paginación y fetch con queryParams nuevos
+        await scrollManager.applyQueryParams(
+            categoriaSeleccionada ? { tipo_producto: categoriaSeleccionada } : {}
+        );
+    }
+
+    async function inicializar() {
         if (!productGrid) {
             console.error('El contenedor de productos no se encontró.');
             return;
@@ -88,7 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
             threshold: 400
         });
 
-        scrollManager.init();
+        // await garantiza que la carga inicial termine antes de que el usuario
+        // pueda generar una race condition con el primer clic de categoría
+        await scrollManager.init();
     }
 
     if (productGrid) {
@@ -127,6 +154,24 @@ document.addEventListener('DOMContentLoaded', () => {
             vaciarCarrito();
         });
     }
+
+    if (categoryButtons.length > 0) {
+        let categoriaEnCurso = false;
+        categoryButtons.forEach((button) => {
+            button.addEventListener('click', async (event) => {
+                event.preventDefault();
+                // Evitar clics dobles mientras se carga una categoría
+                if (categoriaEnCurso) return;
+                categoriaEnCurso = true;
+                try {
+                    const categoriaSeleccionada = event.currentTarget?.dataset?.categoria || '';
+                    await aplicarFiltroCategoria(categoriaSeleccionada);
+                } finally {
+                    categoriaEnCurso = false;
+                }
+            });
+        });
+    }
     
-    inicializar();
+    inicializar().catch(err => console.error('[inicializar] Error:', err));
 });

@@ -218,8 +218,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 font-weight: 500;
                 animation: slideIn 0.3s ease-out;
             `;
-            const nombreProd = dataFlag.nombre ? ` (${dataFlag.nombre})` : '';
-            mensajeDiv.textContent = `✓ ${dataFlag.texto}${nombreProd}`;
+            mensajeDiv.textContent = `✓ ${dataFlag.texto || '¡Producto creado correctamente!'}`;
             document.body.appendChild(mensajeDiv);
             setTimeout(() => {
                 mensajeDiv.style.animation = 'slideOut 0.3s ease-out';

@@ -1,6 +1,21 @@
 // controllers/product.controllers.js
 import Product from "../models/product.model.js";
+import { normalizeProductType } from "../models/product.model.js";
 import { validationResult } from "express-validator";
+
+// Devuelve el valor de filtro MongoDB para tipo_producto según la categoria pedida.
+// Maneja el alias frescos <-> frutas-y-verduras por compatibilidad con datos viejos.
+const buildTipoProductoFilter = (categoria) => {
+  if (!categoria || typeof categoria !== 'string' || !categoria.trim()) {
+    return null;
+  }
+  const cat = normalizeProductType(categoria);
+  if (cat === 'frutas-y-verduras' || cat === 'frescos') {
+    // Productos antiguos usan 'frescos', nuevos usan 'frutas-y-verduras'
+    return { $in: ['frutas-y-verduras', 'frescos'] };
+  }
+  return cat;
+};
 
 // Crear un nuevo producto
 export const createProduct = async (req, res) => {
@@ -23,6 +38,10 @@ export const createProduct = async (req, res) => {
       user_id: userId,
       foto_url
     };
+
+    // Limpiar campos opcionales con string vacío para evitar error de validación de enum en Mongoose
+    if (!productData.tipo_producto) delete productData.tipo_producto;
+    if (!productData.categoria) delete productData.categoria;
 
     // Si la categoría es 'para-donar', asegurar que los precios sean 0
     if (productData.categoria === 'para-donar') {
@@ -47,33 +66,25 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// Obtener productos con nueva lógica de escenarios:
-// Escenario A (página principal, sin query params): devolver productos cuya categoria sea
-//    'comida-por-caducarse' OR 'desperfecto-fisico'
-// Escenario B (páginas de categoría, tiene tipo_producto): devolver productos con ese tipo_producto
-//    y categoria != 'para-donar'
-// Extras: soportar búsqueda libre (q), y otros filtros exactos si se extendiera.
-// Paginación: query params ?page=1&limit=10 (default: page=1, limit=50)
+// GET /api/productos
+// ?categoria=<tipo_producto>  → filtra exactamente por tipo_producto, excluye para-donar
+// sin ?categoria              → devuelve TODOS los productos (excluye para-donar)
+// ?q=<texto>                  → búsqueda textual adicional (acumulable)
+// ?page=N  ?limit=N           → paginación
 export const getProducts = async (req, res) => {
   try {
-    const { tipo_producto, q, page = 1, limit = 50 } = req.query;
+    const { tipo_producto, categoria, q, page = 1, limit = 50 } = req.query;
 
-    let filter;
+    // Acepta el param 'categoria' (nuevo) o 'tipo_producto' (legacy)
+    const rawCategoria = (categoria || tipo_producto || '').trim();
+    const tipoFilter = buildTipoProductoFilter(rawCategoria);
 
-    if (!tipo_producto) {
-      // Escenario A: página principal (sin tipo_producto)
-      filter = {
-        $or: [
-          { categoria: 'comida-por-caducarse' },
-          { categoria: 'desperfecto-fisico' }
-        ]
-      };
-    } else {
-      // Escenario B: página de tipo específico
-      filter = {
-        tipo_producto,
-        categoria: { $ne: 'para-donar' }
-      };
+    // Base: siempre excluir productos de donación del marketplace
+    let filter = { categoria: { $ne: 'para-donar' } };
+
+    if (tipoFilter) {
+      // Filtro específico de tipo_producto
+      filter.tipo_producto = tipoFilter;
     }
 
     // Búsqueda textual opcional

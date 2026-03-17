@@ -28,6 +28,7 @@ export class InfiniteScroll {
         this.isLoading = false;
         this.hasMore = true;
         this.products = []; // Mantener lista de productos ya cargados
+        this.abortController = null;
 
         // Elementos UI
         this.loader = this._createLoader();
@@ -41,6 +42,10 @@ export class InfiniteScroll {
      * Inicializa el scroll infinito: carga primera página y activa listener de scroll
      */
     async init() {
+        // Asegurar que no se dupliquen listeners al reinicializar
+        this._detachScrollListener();
+        this._cancelPendingRequest();
+
         this.container.innerHTML = ''; // Limpiar contenedor
         this.container.appendChild(this.loader);
         await this.loadMore();
@@ -55,12 +60,16 @@ export class InfiniteScroll {
 
         this.isLoading = true;
         this._showLoader();
+        this._cancelPendingRequest();
+        this.abortController = new AbortController();
 
         try {
             const url = this._buildUrl();
             console.log(`[InfiniteScroll] Cargando página ${this.currentPage} => ${url}`);
             
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                signal: this.abortController.signal
+            });
             
             if (!response.ok) {
                 throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -103,9 +112,13 @@ export class InfiniteScroll {
             }
 
         } catch (error) {
+            if (error.name === 'AbortError') {
+                return;
+            }
             console.error('[InfiniteScroll] Error al cargar productos:', error);
             this._showErrorMessage(error.message);
         } finally {
+            this.abortController = null;
             this.isLoading = false;
             this._hideLoader();
         }
@@ -115,18 +128,30 @@ export class InfiniteScroll {
      * Resetea el estado y recarga desde la página 1
      */
     async reset() {
+        this._cancelPendingRequest();
         this.currentPage = 1;
         this.hasMore = true;
         this.products = [];
+        this.isLoading = false;
         this.container.innerHTML = '';
         this.container.appendChild(this.loader);
         await this.loadMore();
     }
 
     /**
+     * Actualiza query params, resetea paginación y recarga desde página 1
+     * @param {Object} queryParams
+     */
+    async applyQueryParams(queryParams = {}) {
+        this.queryParams = queryParams || {};
+        await this.reset();
+    }
+
+    /**
      * Destruye el scroll infinito y limpia listeners
      */
     destroy() {
+        this._cancelPendingRequest();
         this._detachScrollListener();
         this.container.innerHTML = '';
     }
@@ -134,12 +159,27 @@ export class InfiniteScroll {
     // ==================== Métodos privados ====================
 
     _buildUrl() {
+        const sanitizedQueryParams = Object.entries(this.queryParams || {}).reduce((acc, [key, value]) => {
+            if (value === undefined || value === null || value === '') {
+                return acc;
+            }
+            acc[key] = String(value);
+            return acc;
+        }, {});
+
         const params = new URLSearchParams({
-            ...this.queryParams,
-            page: this.currentPage,
-            limit: this.limit
+            ...sanitizedQueryParams,
+            page: String(this.currentPage),
+            limit: String(this.limit)
         });
         return `${this.apiUrl}?${params.toString()}`;
+    }
+
+    _cancelPendingRequest() {
+        if (this.abortController) {
+            this.abortController.abort();
+            this.abortController = null;
+        }
     }
 
     _handleScroll() {
