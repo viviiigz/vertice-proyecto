@@ -600,7 +600,7 @@ function renderizarCarrito(cart) {
         <div class="carrito-item">
             <img src="${item.imagen || './assets/imgs/alimentos.jpg'}" 
                  alt="${item.nombre}"
-                 class="cart-item-image"
+                 class="carrito-item-img"
                  onerror="this.src='./assets/imgs/alimentos.jpg'">
             <div class="carrito-item-info">
                 <div class="carrito-item-nombre">${item.nombre}</div>

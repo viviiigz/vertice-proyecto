@@ -67,6 +67,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
 // Servir la carpeta front-vertice como estática en la raíz para que los HTML se sirvan desde el mismo origen
 // front-vertice está en el directorio padre del back-vertice
 const frontPath = path.join(__dirname, '..', 'front-vertice');
+app.get('/', (req, res) => {
+  res.redirect('/vertice.html');
+});
+app.use('/front-vertice', express.static(frontPath));
 app.use('/', express.static(frontPath));
 
 //rutas de la API
