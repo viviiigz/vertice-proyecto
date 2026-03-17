@@ -26,6 +26,42 @@
     padding: 0;
     background-color: #f8f9fa; /* Color de fondo general si algo se "escapa" */
   }
+  
+  /* 1. Define el estilo base para TODOS los .btn */
+  .btn {
+    /* Quita el "resaltado" (Outline y Shadow de Foco) */
+    text-decoration: none !important; /* Quita cualquier subrayado */
+    outline: none !important;         /* Quita el borde azul de foco */
+    box-shadow: none !important;       /* Quita la sombra de foco de Bootstrap */
+
+    /* Estilo Moderno */
+    border: none;
+    border-radius: 8px;                /* Bordes redondeados */
+    font-weight: 600;
+    padding: 10px 18px;
+    gap: 8px;                          /* Espacio entre icono y texto */
+    
+    /* Permite alinear icono y texto */
+    display: inline-flex; 
+    align-items: center;
+    
+    /* Efecto Hover */
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  /* Efecto "flotar" al pasar el mouse */
+  .btn:hover {
+    transform: translateY(-2px); /* Se eleva un poquito */
+  }
+  /* 3. ESTILO PARA BOTONES GRISES (Secundarios) */
+  /* Se aplica a "Mi Cuenta" y "Filtros" */
+  .btn-secondary {
+    background-color: #f0f2f5; 
+    color: #444 !important;
+  }
+  .btn-secondary:hover {
+    background-color: #e2e6ea; 
+  }
 
   .dashboard-container {
     /* 1. USA FLEXBOX PARA EL LAYOUT */
@@ -75,9 +111,14 @@
                 <a href="comercio-pickup.html" class="active"><i class="fas fa-map-marker-alt"></i> Pick Up Points</a>
             </nav>
         </aside>
-
+  
         <main class="main-content">
             <header class="header">
+         <div class="header-buttons">
+          <a href="./profile.comercio.html" class="btn btn-secondary">
+            <i class="fas fa-user-circle"></i> Mi Perfil
+          </a>
+        </div>
                  </header>
 
             <div class="content-area">
